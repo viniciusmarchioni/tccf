@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scout/repository/teamsrepository.dart';
 import 'dart:math';
 import 'package:scout/util/tipos.dart';
 
@@ -15,7 +16,7 @@ class _TimeEstatisticaState extends State {
   // Aqui você corrige para State<Wid>
   bool value = false;
   Tipos? tipo;
-  String formation = "4-1-2-1-2";
+  String formation = '';
 
   List<String> urlGkp = [
     "https://media.api-sports.io/football/players/123759.png", // Hugo Souza
@@ -75,6 +76,8 @@ class _TimeEstatisticaState extends State {
 
   @override
   Widget build(BuildContext context) {
+    final timesRepository = TimesRepository();
+
     return Container(
         decoration: const BoxDecoration(
             color: Color.fromARGB(158, 134, 132, 131),
@@ -116,7 +119,19 @@ class _TimeEstatisticaState extends State {
                           ]),
                     ],
                   ),
-                  constroiFormacao(formation)
+                  FutureBuilder(
+                    future: formation == ''
+                        ? timesRepository.updateJogadores(131)
+                        : timesRepository.updateJogadoresFormacao(
+                            131, formation),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return constroiFormacao('4-5-1', timesRepository);
+                      }
+                      return const CircularProgressIndicator();
+                    },
+                  ),
+                  //constroiFormacao(formation, timesRepository)
                 ],
               ),
               const ListaPros(),
@@ -126,7 +141,7 @@ class _TimeEstatisticaState extends State {
         ));
   }
 
-  Widget constroiFormacao(String formacao) {
+  Widget constroiFormacao(String formacao, TimesRepository timesRepository) {
     List<int> formacaoList = [
       for (String i in formacao.split("-")) int.parse(i)
     ];
@@ -148,9 +163,11 @@ class _TimeEstatisticaState extends State {
                   Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        for (var i = 0; i < def; i++)
-                          imagemJogador(
-                              urlDef[Random().nextInt(urlDef.length)]),
+                        for (var i = 0;
+                            i < timesRepository.defensores.length;
+                            i++)
+                          imagemJogador(timesRepository.defensores[i].image ??
+                              'https://compras.wiki.ufsc.br/images/thumb/5/56/Erro.png/600px-Erro.png?20180222192440'),
                       ]),
                   for (var i = 0; i < mei.length; i++)
                     Column(
@@ -159,18 +176,20 @@ class _TimeEstatisticaState extends State {
                             : MainAxisAlignment.center,
                         children: [
                           if (mei[i] == 2) Container(),
-                          for (var j = 0; j < mei[i]; j++)
-                            imagemJogador(
-                                urlMei[Random().nextInt(urlMei.length)]),
+                          for (var j = 0; j < timesRepository.meias.length; j++)
+                            imagemJogador(timesRepository.meias[j].image ??
+                                'https://compras.wiki.ufsc.br/images/thumb/5/56/Erro.png/600px-Erro.png?20180222192440'),
                           if (mei[i] == 2) Container(),
                         ]),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (atk == 2) Container(),
-                        for (var i = 0; i < atk; i++)
-                          imagemJogador(
-                              urlAtk[Random().nextInt(urlAtk.length)]),
+                        for (var z = 0;
+                            z < timesRepository.atacantes.length;
+                            z++)
+                          imagemJogador(timesRepository.atacantes[z].image ??
+                              'https://compras.wiki.ufsc.br/images/thumb/5/56/Erro.png/600px-Erro.png?20180222192440'),
                         if (atk == 2) Container(),
                       ]),
                 ]),

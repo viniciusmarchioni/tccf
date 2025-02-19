@@ -1,0 +1,105 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class TimesRepository {
+  List<Jogador> defensores = [];
+  List<Jogador> meias = [];
+  List<Jogador> atacantes = [];
+
+  TimesRepository();
+
+  Future<void> updateJogadores(int idTeam) async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://localhost:5000/jogadores/131/'))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        atacantes = [];
+
+        var def = jsonDecode(response.body)[1]['defensores'];
+        var mei = jsonDecode(response.body)[2]['meias'];
+        var atk = jsonDecode(response.body)[3]['atacantes'];
+
+        for (var j in def) {
+          defensores.add(Jogador.fromJsonAll(j));
+        }
+        for (var j in mei) {
+          meias.add(Jogador.fromJsonAll(j));
+        }
+        for (var j in atk) {
+          atacantes.add(Jogador.fromJsonAll(j));
+        }
+      }
+    } catch (e) {
+      print("Erro" + e.toString());
+      //
+    }
+  }
+
+  Future<void> updateJogadoresFormacao(int idTeam, String formacao) async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://localhost:5000/jogadores/$idTeam/$formacao'))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        atacantes = [];
+
+        var def = jsonDecode(response.body)[1]['defensores'];
+        var mei = jsonDecode(response.body)[2]['meias'];
+        var atk = jsonDecode(response.body)[3]['atacantes'];
+
+        for (var j in def) {
+          defensores.add(Jogador.fromJsonAll(j));
+        }
+        for (var j in mei) {
+          meias.add(Jogador.fromJsonAll(j));
+        }
+        for (var j in atk) {
+          atacantes.add(Jogador.fromJsonAll(j));
+        }
+      }
+    } catch (e) {
+      print("Erro" + e.toString());
+      //
+    }
+  }
+}
+
+class Jogador {
+  String? nome;
+  int? id;
+  int? idTime;
+  String? image;
+  bool? lesionado;
+  List<int> estatisticas = [];
+  String? dataDeNacimento;
+  String? nacionalidade;
+
+  Jogador.fromJsonAll(Map<String, dynamic> json)
+      : id = json['id'],
+        nome = json['nome'],
+        nacionalidade = json['nacionalidade'],
+        dataDeNacimento = json['data_nacimento'],
+        lesionado = json['lesionado'],
+        idTime = json['id_time'],
+        image = json['imagem'];
+}
+
+/*
+
+Games.fromJsonAll(Map<String, dynamic> json)
+      : id = json['id'],
+        team1name = json['team1'],
+        team2name = json['team2'],
+        team1score = json['score1'],
+        team2score = json['score2'],
+        country1 = json['country1'],
+        country2 = json['country2'],
+        date = DateTime.parse(json['date']),
+        championship = json['championship'],
+        rate = double.parse(json['rate']),
+        type = _toGameType(json['type']);
+
+
+ */
