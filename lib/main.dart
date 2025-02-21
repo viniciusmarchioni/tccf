@@ -37,10 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Tipos? tipo = Tipos.time;
   String pesquisabox = "";
   String formation = "4-1-2-1-2";
+  int idTime = 131;
 
   void vaiptime(int id) {
-    print(id);
     setState(() {
+      idTime = id;
       tipo = Tipos.time;
     });
   }
@@ -87,8 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Builder(
           builder: (context) {
             if (tipo == Tipos.time) {
-              return const TimeEstatisticas(
-                idTime: 131,
+              return TimeEstatisticas(
+                idTime: idTime,
               );
             } else if (tipo == Tipos.jogador) {
               return const JogadorEstatisticas();

@@ -12,7 +12,7 @@ class TimeEstatisticas extends StatefulWidget {
   }
 }
 
-class _TimeEstatisticaState extends State {
+class _TimeEstatisticaState extends State<TimeEstatisticas> {
   bool value = false;
   Tipos? tipo;
   String formacaoSelecionada = '';
@@ -25,7 +25,8 @@ class _TimeEstatisticaState extends State {
   }
 
   Future<void> _loadFormacoes() async {
-    List<String> fetchedFormacoes = await timesRepository.updateFormacoes(131);
+    List<String> fetchedFormacoes =
+        await timesRepository.updateFormacoes(widget.idTime);
     setState(() {
       formacoes = fetchedFormacoes;
       if (formacoes.isNotEmpty) {
@@ -78,9 +79,9 @@ class _TimeEstatisticaState extends State {
                   ),
                   FutureBuilder(
                     future: formacaoSelecionada == ''
-                        ? timesRepository.updateJogadores(131)
+                        ? timesRepository.updateJogadores(widget.idTime)
                         : timesRepository.updateJogadoresFormacao(
-                            131, formacaoSelecionada),
+                            widget.idTime, formacaoSelecionada),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return constroiFormacao(

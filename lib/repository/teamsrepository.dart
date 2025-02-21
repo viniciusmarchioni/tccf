@@ -14,7 +14,7 @@ class TimesRepository {
   Future<void> updateJogadores(int idTeam) async {
     try {
       final response = await http
-          .get(Uri.parse('http://localhost:5000/jogadores/131/'))
+          .get(Uri.parse('http://localhost:5000/jogadores/$idTeam/'))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         defensores = [];
