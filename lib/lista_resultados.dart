@@ -33,7 +33,7 @@ class ListaResultadosState extends State<ListaResultados> {
   Widget listEx(int indice, List results) {
     return GestureDetector(
       onTap: () {
-        print("indice: $indice");
+        //print("indice: $indice");
       },
       child: Container(
         color: results[indice] is _Jogador ? Colors.white : Colors.deepOrange,

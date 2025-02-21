@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo;
+  Tipos? tipo = Tipos.time;
   String pesquisabox = "";
   String formation = "4-1-2-1-2";
 

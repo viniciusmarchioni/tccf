@@ -6,6 +6,8 @@ class TimesRepository {
   List<Jogador> defensores = [];
   List<Jogador> meias = [];
   List<Jogador> atacantes = [];
+  List<String> formacoes = [];
+  String formacaoSem = "";
 
   TimesRepository();
 
@@ -15,11 +17,14 @@ class TimesRepository {
           .get(Uri.parse('http://localhost:5000/jogadores/131/'))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
+        defensores = [];
+        meias = [];
         atacantes = [];
 
         var def = jsonDecode(response.body)[1]['defensores'];
         var mei = jsonDecode(response.body)[2]['meias'];
         var atk = jsonDecode(response.body)[3]['atacantes'];
+        formacaoSem = jsonDecode(response.body)[4]['formacao'];
 
         for (var j in def) {
           defensores.add(Jogador.fromJsonAll(j));
@@ -32,7 +37,7 @@ class TimesRepository {
         }
       }
     } catch (e) {
-      print("Erro" + e.toString());
+      //print("Erro" + e.toString());
       //
     }
   }
@@ -43,6 +48,8 @@ class TimesRepository {
           .get(Uri.parse('http://localhost:5000/jogadores/$idTeam/$formacao'))
           .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
+        defensores = [];
+        meias = [];
         atacantes = [];
 
         var def = jsonDecode(response.body)[1]['defensores'];
@@ -60,9 +67,26 @@ class TimesRepository {
         }
       }
     } catch (e) {
-      print("Erro" + e.toString());
+      //print("Erro" + e.toString());
       //
     }
+  }
+
+  Future<List<String>> updateFormacoes(int idTeam) async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://localhost:5000/times/$idTeam'))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body)['formacoes'];
+        for (String i in json) {
+          formacoes.add(i);
+        }
+      }
+    } catch (e) {
+      //
+    }
+    return formacoes;
   }
 }
 

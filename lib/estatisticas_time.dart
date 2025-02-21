@@ -13,71 +13,29 @@ class TimeEstatisticas extends StatefulWidget {
 }
 
 class _TimeEstatisticaState extends State {
-  // Aqui você corrige para State<Wid>
   bool value = false;
   Tipos? tipo;
-  String formation = '';
+  String formacaoSelecionada = '';
+  final timesRepository = TimesRepository();
+  List<String> formacoes = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadFormacoes();
+  }
 
-  List<String> urlGkp = [
-    "https://media.api-sports.io/football/players/123759.png", // Hugo Souza
-    "https://media.api-sports.io/football/players/195499.png", // Matheus Donelli
-  ];
-
-  List<String> urlDef = [
-    "https://media.api-sports.io/football/players/1085.png", // André Ramalho
-    "https://media.api-sports.io/football/players/2411.png", // Fagner
-    "https://media.api-sports.io/football/players/5794.png", // Rodrigo Garro
-    "https://media.api-sports.io/football/players/9742.png", // Matheus Bidu
-    "https://media.api-sports.io/football/players/9992.png", // Gustavo Henrique
-    "https://media.api-sports.io/football/players/10085.png", // Cacá
-    "https://media.api-sports.io/football/players/36784.png", // Diego Palacios
-    "https://media.api-sports.io/football/players/47116.png", // Héctor Hernández
-    "https://media.api-sports.io/football/players/63964.png", // Félix Torres
-    "https://media.api-sports.io/football/players/80534.png", // Caetano
-    "https://media.api-sports.io/football/players/160436.png", // Raniele
-    "https://media.api-sports.io/football/players/237102.png", // Matheus Araújo
-    "https://media.api-sports.io/football/players/361665.png", // Léo Mana
-    "https://media.api-sports.io/football/players/363693.png", // Breno Bidon
-  ];
-
-  List<String> urlMei = [
-    "https://media.api-sports.io/football/players/687.png", // Maycon
-    "https://media.api-sports.io/football/players/2426.png", // André Carrillo
-    "https://media.api-sports.io/football/players/2521.png", // Ángel Romero
-    "https://media.api-sports.io/football/players/10067.png", // Alex Santana
-    "https://media.api-sports.io/football/players/50268.png", // Igor Coronado
-    "https://media.api-sports.io/football/players/53148.png", // José Martínez
-    "https://media.api-sports.io/football/players/54093.png", // Hugo
-  ];
-
-  List<String> urlAtk = [
-    "https://media.api-sports.io/football/players/667.png", // Memphis Depay
-    "https://media.api-sports.io/football/players/9329.png", // Pedro Raul
-    "https://media.api-sports.io/football/players/9577.png", // Charles
-    "https://media.api-sports.io/football/players/10007.png", // Yuri Alberto
-    "https://media.api-sports.io/football/players/10161.png", // Matheuzinho
-    "https://media.api-sports.io/football/players/70299.png", // Talles Magno
-    "https://media.api-sports.io/football/players/80534.png", // Caetano
-    "https://media.api-sports.io/football/players/312615.png", // Giovane
-    "https://media.api-sports.io/football/players/403953.png", // Ryan Gustavo
-  ];
-
-  void setTipo(String str) {
+  Future<void> _loadFormacoes() async {
+    List<String> fetchedFormacoes = await timesRepository.updateFormacoes(131);
     setState(() {
-      if (str == "Corinthians") {
-        tipo = Tipos.time;
-      } else if (str == "Coronado") {
-        tipo = Tipos.jogador;
-      } else {
-        tipo = null;
+      formacoes = fetchedFormacoes;
+      if (formacoes.isNotEmpty) {
+        formacaoSelecionada = formacoes[0]; // Define um valor padrão
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final timesRepository = TimesRepository();
-
     return Container(
         decoration: const BoxDecoration(
             color: Color.fromARGB(158, 134, 132, 131),
@@ -105,33 +63,35 @@ class _TimeEstatisticaState extends State {
                                 value: "Paulistão", label: 'Paulistão')
                           ]),
                       DropdownMenu(
-                          requestFocusOnTap: false,
                           onSelected: (value) {
                             setState(() {
-                              formation = value ?? formation;
+                              formacaoSelecionada =
+                                  value ?? timesRepository.formacoes[0];
                             });
                           },
-                          dropdownMenuEntries: const [
-                            DropdownMenuEntry(value: "4-4-2", label: '4-4-2'),
-                            DropdownMenuEntry(value: "4-3-3", label: '4-3-3'),
-                            DropdownMenuEntry(
-                                value: "4-1-2-1-2", label: '4-1-2-1-2')
+                          requestFocusOnTap: false,
+                          dropdownMenuEntries: [
+                            for (String i in formacoes)
+                              DropdownMenuEntry(value: i, label: i)
                           ]),
                     ],
                   ),
                   FutureBuilder(
-                    future: formation == ''
+                    future: formacaoSelecionada == ''
                         ? timesRepository.updateJogadores(131)
                         : timesRepository.updateJogadoresFormacao(
-                            131, formation),
+                            131, formacaoSelecionada),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        return constroiFormacao('4-5-1', timesRepository);
+                        return constroiFormacao(
+                            formacaoSelecionada == ''
+                                ? formacoes[0]
+                                : formacaoSelecionada,
+                            timesRepository);
                       }
                       return const CircularProgressIndicator();
                     },
                   ),
-                  //constroiFormacao(formation, timesRepository)
                 ],
               ),
               const ListaPros(),
@@ -145,9 +105,16 @@ class _TimeEstatisticaState extends State {
     List<int> formacaoList = [
       for (String i in formacao.split("-")) int.parse(i)
     ];
-    int def = formacaoList[0];
     List<int> mei = formacaoList.sublist(1, formacaoList.length - 1);
     int atk = formacaoList.last;
+    List<List<Jogador>> buffer = [];
+    int start = 0;
+
+    for (int i in mei) {
+      buffer.add(timesRepository.meias.sublist(start, start + i));
+      start += i;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -159,30 +126,31 @@ class _TimeEstatisticaState extends State {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  imagemJogador(urlGkp[Random().nextInt(urlGkp.length)]),
+                  imagemJogador(
+                      "https://media.api-sports.io/football/players/123759.png"),
                   Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //coluna zagueiros
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        for (var i = 0;
-                            i < timesRepository.defensores.length;
-                            i++)
+                        for (var i = 0; i < formacaoList[0]; i++)
                           imagemJogador(timesRepository.defensores[i].image ??
                               'https://compras.wiki.ufsc.br/images/thumb/5/56/Erro.png/600px-Erro.png?20180222192440'),
                       ]),
-                  for (var i = 0; i < mei.length; i++)
+                  for (List<Jogador> i in buffer)
                     Column(
-                        mainAxisAlignment: mei[i] != 1
-                            ? MainAxisAlignment.spaceBetween
+                        //colunas meias
+                        mainAxisAlignment: i.length != 1
+                            ? MainAxisAlignment.spaceAround
                             : MainAxisAlignment.center,
                         children: [
-                          if (mei[i] == 2) Container(),
-                          for (var j = 0; j < timesRepository.meias.length; j++)
-                            imagemJogador(timesRepository.meias[j].image ??
+                          if (i.length == 2) Container(),
+                          for (Jogador j in i)
+                            imagemJogador(j.image ??
                                 'https://compras.wiki.ufsc.br/images/thumb/5/56/Erro.png/600px-Erro.png?20180222192440'),
-                          if (mei[i] == 2) Container(),
+                          if (i.length == 2) Container(),
                         ]),
                   Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         if (atk == 2) Container(),
                         for (var z = 0;
