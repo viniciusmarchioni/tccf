@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scout/repository/teamsrepository.dart';
-import 'dart:math';
 import 'package:scout/util/tipos.dart';
 
 class TimeEstatisticas extends StatefulWidget {
