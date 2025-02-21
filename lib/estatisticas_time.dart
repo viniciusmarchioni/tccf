@@ -3,7 +3,8 @@ import 'package:scout/repository/teamsrepository.dart';
 import 'package:scout/util/tipos.dart';
 
 class TimeEstatisticas extends StatefulWidget {
-  const TimeEstatisticas({super.key});
+  final int idTime;
+  const TimeEstatisticas({super.key, required this.idTime});
 
   @override
   State<StatefulWidget> createState() {

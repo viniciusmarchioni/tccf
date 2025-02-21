@@ -38,6 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String pesquisabox = "";
   String formation = "4-1-2-1-2";
 
+  void vaiptime(int id) {
+    print(id);
+    setState(() {
+      tipo = Tipos.time;
+    });
+  }
+
   void setTipo(String str) {
     setState(() {
       if (str == "Corinthians") {
@@ -80,12 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Builder(
           builder: (context) {
             if (tipo == Tipos.time) {
-              return const TimeEstatisticas();
+              return const TimeEstatisticas(
+                idTime: 131,
+              );
             } else if (tipo == Tipos.jogador) {
               return const JogadorEstatisticas();
             } else if (tipo == Tipos.pesquisa) {
               return Center(
-                child: ListaResultados(controller.text),
+                child: ListaResultados(controller.text, fun: vaiptime),
               );
             } else {
               return Container();
