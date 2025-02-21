@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:scout/repository/pesquisarepository.dart';
+
 class ListaResultados extends StatefulWidget {
   final String pesquisa;
   const ListaResultados(this.pesquisa, {super.key});
@@ -10,6 +12,21 @@ class ListaResultados extends StatefulWidget {
 }
 
 class ListaResultadosState extends State<ListaResultados> {
+  PesquisaRepository pesquisaRepository = PesquisaRepository();
+
+  Future<void> _carregaPesquisa(String pesquisa) async {
+    await pesquisaRepository.pesquisa(pesquisa);
+    setState(() {
+      pesquisaRepository.times = pesquisaRepository.times;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _carregaPesquisa(widget.pesquisa);
+  }
+
   @override
   Widget build(BuildContext context) {
     List results = [];
@@ -47,7 +64,7 @@ class ListaResultadosState extends State<ListaResultados> {
                 Text((results[indice] as _Jogador).nome),
                 Text((results[indice] as _Jogador).time),
               ],
-              if (results[indice] is _Time)
+              if (results[indice] is Time)
                 Text((results[indice] as _Time).nome),
             ],
           )

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PesquisaRepository {
-  List<Times> times = [];
+  List<Time> times = [];
 
   PesquisaRepository();
 
@@ -18,7 +18,7 @@ class PesquisaRepository {
         var body = jsonDecode(response.body)['times'];
 
         for (var i in body) {
-          times.add(Times.fromJsonAll(i));
+          times.add(Time.fromJsonAll(i));
         }
       }
     } catch (e) {
@@ -27,13 +27,13 @@ class PesquisaRepository {
   }
 }
 
-class Times {
+class Time {
   int? id;
   String? nome;
 
-  Times();
+  Time();
 
-  Times.fromJsonAll(Map<String, dynamic> json)
+  Time.fromJsonAll(Map<String, dynamic> json)
       : id = json['id'],
         nome = json['nome'];
 }
