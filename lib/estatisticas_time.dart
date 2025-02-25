@@ -224,46 +224,50 @@ class _ListaProsState extends State<ListaPros> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Switch(
-          value: switchValue,
-          onChanged: (value) {
-            setState(() {
-              switchValue = value;
-            });
-          },
-        ),
-        if (!switchValue) ...[
-          for (_Estat i in qualidades)
-            Container(
-                margin: const EdgeInsets.all(10),
-                child: Text.rich(
-                  style: const TextStyle(fontSize: 20),
-                  TextSpan(children: [
-                    TextSpan(text: i.desc),
-                    TextSpan(
-                        text: i.porcentagem,
-                        style: const TextStyle(color: Colors.green)),
-                    TextSpan(text: i.fim)
-                  ]),
-                ))
-        ] else ...[
-          for (_Estat i in defeitos)
-            Container(
-                margin: const EdgeInsets.all(10),
-                child: Text.rich(
-                  style: const TextStyle(fontSize: 20),
-                  TextSpan(children: [
-                    TextSpan(text: i.desc),
-                    TextSpan(
-                        text: i.porcentagem,
-                        style: const TextStyle(color: Colors.red)),
-                    TextSpan(text: i.fim)
-                  ]),
-                ))
+    return Expanded(
+      child: Column(
+        children: [
+          Switch(
+            value: switchValue,
+            onChanged: (value) {
+              setState(() {
+                switchValue = value;
+              });
+            },
+          ),
+          if (!switchValue) ...[
+            for (_Estat i in qualidades)
+              Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Text.rich(
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 20),
+                    TextSpan(children: [
+                      TextSpan(text: i.desc),
+                      TextSpan(
+                          text: i.porcentagem,
+                          style: const TextStyle(color: Colors.green)),
+                      TextSpan(text: i.fim)
+                    ]),
+                  ))
+          ] else ...[
+            for (_Estat i in defeitos)
+              Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Text.rich(
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 20),
+                    TextSpan(children: [
+                      TextSpan(text: i.desc),
+                      TextSpan(
+                          text: i.porcentagem,
+                          style: const TextStyle(color: Colors.red)),
+                      TextSpan(text: i.fim)
+                    ]),
+                  ))
+          ],
         ],
-      ],
+      ),
     );
   }
 }

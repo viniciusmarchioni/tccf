@@ -52,12 +52,9 @@ class ListaResultadosState extends State<ListaResultados> {
           child: Row(children: [
             Image.network(
                 "https://media.api-sports.io/football/players/5794.png"),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(time.nome ?? 'Erro', overflow: TextOverflow.ellipsis),
-              ],
-            )
+            Expanded(
+                child:
+                    Text(time.nome ?? 'Erro', overflow: TextOverflow.ellipsis)),
           ]),
         ),
       ),
