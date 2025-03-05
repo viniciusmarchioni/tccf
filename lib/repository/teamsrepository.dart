@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TimesRepository {
+  Jogador goleiro = Jogador(Estatisticas());
   List<Jogador> defensores = [];
   List<Jogador> meias = [];
   List<Jogador> atacantes = [];
@@ -21,6 +22,8 @@ class TimesRepository {
         meias = [];
         atacantes = [];
 
+        goleiro =
+            Jogador.fromJsonAll(jsonDecode(response.body)[0]['goleiros'][0]);
         var def = jsonDecode(response.body)[1]['defensores'];
         var mei = jsonDecode(response.body)[2]['meias'];
         var atk = jsonDecode(response.body)[3]['atacantes'];
@@ -100,6 +103,8 @@ class Jogador {
   String? dataDeNacimento;
   String? nacionalidade;
 
+  Jogador(this.estatisticas);
+
   Jogador.fromJsonAll(Map<String, dynamic> json)
       : id = json['id'],
         nome = json['nome'],
@@ -115,6 +120,8 @@ class Estatisticas {
   double? estatistica1;
   double? estatistica2;
   double? estatistica3;
+
+  Estatisticas();
 
   Estatisticas.fromJsonAll(Map<String, dynamic> json)
       : estatistica1 = json['estatistica1'],

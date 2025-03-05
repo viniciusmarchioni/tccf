@@ -19,6 +19,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
   String formacaoSelecionada = '';
   final timesRepository = TimesRepository();
   List<String> formacoes = [];
+  bool erro = false;
+
   @override
   void initState() {
     super.initState();
@@ -71,11 +73,15 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                             widget.idTime, formacaoSelecionada),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        return constroiFormacao(
-                            formacaoSelecionada == ''
-                                ? formacoes[0]
-                                : formacaoSelecionada,
-                            timesRepository);
+                        try {
+                          return constroiFormacao(
+                              formacaoSelecionada == ''
+                                  ? formacoes[0]
+                                  : formacaoSelecionada,
+                              timesRepository);
+                        } catch (e) {
+                          return const Center(child: Text("Erro de Conexão"));
+                        }
                       }
                       return const CircularProgressIndicator();
                     },
@@ -105,7 +111,6 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
       buffer.add(timesRepository.meias.sublist(start, start + i));
       start += i;
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -117,8 +122,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  imagemJogador(
-                      "https://media.api-sports.io/football/players/123759.png"),
+                  imagemJogador(timesRepository.goleiro.image ??
+                      'https://compras.wiki.ufsc.br/images/thumb/5/56/Erro.png/600px-Erro.png?20180222192440'),
                   Column(
                       //coluna zagueiros
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -298,20 +303,66 @@ class _ListaProsState extends State<ListaPros> {
                     ))
             ]
           ] else ...[
-            for (_Estat i in defeitos)
-              Container(
-                  margin: const EdgeInsets.all(10),
-                  child: Text.rich(
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 20),
-                    TextSpan(children: [
-                      TextSpan(text: i.desc),
-                      TextSpan(
-                          text: i.porcentagem,
-                          style: const TextStyle(color: Colors.red)),
-                      TextSpan(text: i.fim)
-                    ]),
-                  ))
+            for (Jogador i in timesRepository.defensores) ...[
+              if ((i.estatisticas.estatistica1 ?? 0) <
+                  (mediaRepository.medias.desarmes ?? 0))
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text.rich(
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 20),
+                      TextSpan(children: [
+                        TextSpan(
+                            text:
+                                "${i.nome} obteve uma média de desarmes abaixo que a média de defensores da Serie A. "),
+                        TextSpan(
+                            text:
+                                i.estatisticas.estatistica1?.toStringAsFixed(2),
+                            style: const TextStyle(color: Colors.red)),
+                        const TextSpan(text: "/partida.")
+                      ]),
+                    ))
+            ],
+            for (Jogador i in timesRepository.meias) ...[
+              if ((i.estatisticas.estatistica1 ?? 0) <
+                  (mediaRepository.medias.passesCertos ?? 0))
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text.rich(
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 20),
+                      TextSpan(children: [
+                        TextSpan(
+                            text:
+                                "${i.nome} obteve uma média de passes certos abaixo da média de meias da Serie A. "),
+                        TextSpan(
+                            text:
+                                i.estatisticas.estatistica1?.toStringAsFixed(2),
+                            style: const TextStyle(color: Colors.red)),
+                        const TextSpan(text: "/partida!")
+                      ]),
+                    ))
+            ],
+            for (Jogador i in timesRepository.atacantes) ...[
+              if ((i.estatisticas.estatistica1 ?? 0) <
+                  (mediaRepository.medias.gols ?? 0))
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text.rich(
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 20),
+                      TextSpan(children: [
+                        TextSpan(
+                            text:
+                                "${i.nome} obteve uma média de gols abaixo dos atacantes da Serie A. "),
+                        TextSpan(
+                            text:
+                                i.estatisticas.estatistica1?.toStringAsFixed(2),
+                            style: const TextStyle(color: Colors.red)),
+                        const TextSpan(text: "/partida!")
+                      ]),
+                    ))
+            ]
           ],
         ],
       ),
