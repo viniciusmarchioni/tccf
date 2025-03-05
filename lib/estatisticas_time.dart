@@ -52,22 +52,18 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      DropdownMenu(
-                          onSelected: (value) {
-                            setState(() {
-                              formacaoSelecionada =
-                                  value ?? timesRepository.formacoes[0];
-                            });
-                          },
-                          requestFocusOnTap: false,
-                          dropdownMenuEntries: [
-                            for (String i in formacoes)
-                              DropdownMenuEntry(value: i, label: i)
-                          ]),
-                    ],
-                  ),
+                  DropdownMenu(
+                      onSelected: (value) {
+                        setState(() {
+                          formacaoSelecionada =
+                              value ?? timesRepository.formacoes[0];
+                        });
+                      },
+                      requestFocusOnTap: false,
+                      dropdownMenuEntries: [
+                        for (String i in formacoes)
+                          DropdownMenuEntry(value: i, label: i)
+                      ]),
                   FutureBuilder(
                     future: formacaoSelecionada == ''
                         ? timesRepository.updateJogadores(widget.idTime)
