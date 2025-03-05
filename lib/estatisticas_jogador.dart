@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scout/estatisticas_time.dart';
 
 class JogadorEstatisticas extends StatefulWidget {
   const JogadorEstatisticas({super.key});
@@ -57,7 +56,14 @@ class _JogadorEstatisticaState extends State {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [containerNota(), const ListaPros(), Container()],
+                children: [
+                  containerNota(),
+                  /*
+                  const ListaPros(
+                    formacao: "",
+                  ),*/
+                  Container()
+                ],
               )
             ]),
           ),

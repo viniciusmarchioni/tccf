@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scout/repository/media_repository.dart';
 import 'package:scout/repository/teamsrepository.dart';
 import 'package:scout/util/tipos.dart';
 
@@ -53,16 +54,6 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                 children: [
                   Row(
                     children: [
-                      const DropdownMenu(
-                          requestFocusOnTap: false,
-                          dropdownMenuEntries: [
-                            DropdownMenuEntry(
-                                value: "Brasileirão", label: 'Brasileirão'),
-                            DropdownMenuEntry(
-                                value: "Libertadores", label: 'Libertadores'),
-                            DropdownMenuEntry(
-                                value: "Paulistão", label: 'Paulistão')
-                          ]),
                       DropdownMenu(
                           onSelected: (value) {
                             setState(() {
@@ -95,7 +86,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                   ),
                 ],
               ),
-              const ListaPros(),
+              ListaPros(
+                formacao: formacaoSelecionada,
+                id: widget.idTime,
+              ),
               Container()
             ],
           ),
@@ -178,7 +172,9 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
 }
 
 class ListaPros extends StatefulWidget {
-  const ListaPros({super.key});
+  final String formacao;
+  final int id;
+  const ListaPros({super.key, required this.formacao, required this.id});
 
   @override
   State<StatefulWidget> createState() => _ListaProsState();
@@ -186,25 +182,8 @@ class ListaPros extends StatefulWidget {
 
 class _ListaProsState extends State<ListaPros> {
   bool switchValue = false;
-
-  List<_Estat> qualidades = [
-    _Estat("Maior porcentagem de passes certos na Série A. ", "88.02%", "!"),
-    _Estat(
-        "Menor número de gols sofridos na temporada. ", "0.85 ", "por jogo."),
-    _Estat(
-        "Maior número de vitórias consecutivas em casa. ", "12 ", "vitórias!"),
-    _Estat("Maior posse de bola média por jogo", "62.5%. ", "."),
-    _Estat("Melhor aproveitamento de finalizações no gol. ", "45%", "!"),
-    _Estat("Menor número de faltas cometidas por jogo. ", "9 ", "faltas."),
-    _Estat(
-        "Maior média de dribles bem sucedidos por jogo. ", "6.8 ", "dribles."),
-    _Estat(
-        "Menor número de cartões amarelos por temporada. ", "35 ", "cartões."),
-    _Estat("Maior número de jogos sem sofrer gol. ", "18 ", "jogos!"),
-    _Estat("Maior precisão em cruzamentos. ", "32%", "!"),
-    _Estat(
-        "Maior número de assistências na temporada. ", "25 ", "assistências."),
-  ];
+  MediaRepository mediaRepository = MediaRepository();
+  TimesRepository timesRepository = TimesRepository();
 
   List<_Estat> defeitos = [
     _Estat(
@@ -222,6 +201,32 @@ class _ListaProsState extends State<ListaPros> {
     _Estat("Maior número de jogos sem marcar gol. ", "8 ", "jogos."),
   ];
 
+  Future<void> _loadMedias() async {
+    await mediaRepository
+        .getMedia(widget.formacao == '' ? '4-2-3-1' : widget.formacao);
+    await timesRepository.updateJogadoresFormacao(widget.id, widget.formacao);
+    setState(() {
+      mediaRepository = mediaRepository;
+      timesRepository = timesRepository;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadMedias();
+  }
+
+  @override
+  void didUpdateWidget(covariant ListaPros oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.formacao != oldWidget.formacao) {
+      _loadMedias();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -236,20 +241,66 @@ class _ListaProsState extends State<ListaPros> {
             },
           ),
           if (!switchValue) ...[
-            for (_Estat i in qualidades)
-              Container(
-                  margin: const EdgeInsets.all(10),
-                  child: Text.rich(
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 20),
-                    TextSpan(children: [
-                      TextSpan(text: i.desc),
-                      TextSpan(
-                          text: i.porcentagem,
-                          style: const TextStyle(color: Colors.green)),
-                      TextSpan(text: i.fim)
-                    ]),
-                  ))
+            for (Jogador i in timesRepository.defensores) ...[
+              if ((i.estatisticas.estatistica1 ?? 0) >
+                  (mediaRepository.medias.desarmes ?? 0))
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text.rich(
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 20),
+                      TextSpan(children: [
+                        TextSpan(
+                            text:
+                                "${i.nome} obteve uma média de desarmes maior que a média de defensores da Serie A. "),
+                        TextSpan(
+                            text:
+                                i.estatisticas.estatistica1?.toStringAsFixed(2),
+                            style: const TextStyle(color: Colors.green)),
+                        const TextSpan(text: "/partida.")
+                      ]),
+                    ))
+            ],
+            for (Jogador i in timesRepository.meias) ...[
+              if ((i.estatisticas.estatistica1 ?? 0) >
+                  (mediaRepository.medias.passesCertos ?? 0))
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text.rich(
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 20),
+                      TextSpan(children: [
+                        TextSpan(
+                            text:
+                                "${i.nome} obteve uma média de passes certos acima da média de meias da Serie A. "),
+                        TextSpan(
+                            text:
+                                i.estatisticas.estatistica1?.toStringAsFixed(2),
+                            style: const TextStyle(color: Colors.green)),
+                        const TextSpan(text: "/partida!")
+                      ]),
+                    ))
+            ],
+            for (Jogador i in timesRepository.atacantes) ...[
+              if ((i.estatisticas.estatistica1 ?? 0) >
+                  (mediaRepository.medias.gols ?? 0))
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text.rich(
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 20),
+                      TextSpan(children: [
+                        TextSpan(
+                            text:
+                                "${i.nome} obteve uma média de gols acima dos atacantes da Serie A. "),
+                        TextSpan(
+                            text:
+                                i.estatisticas.estatistica1?.toStringAsFixed(2),
+                            style: const TextStyle(color: Colors.green)),
+                        const TextSpan(text: "/partida!")
+                      ]),
+                    ))
+            ]
           ] else ...[
             for (_Estat i in defeitos)
               Container(

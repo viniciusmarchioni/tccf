@@ -37,7 +37,7 @@ class TimesRepository {
         }
       }
     } catch (e) {
-      //print("Erro" + e.toString());
+      print("Erro" + e.toString());
       //
     }
   }
@@ -96,7 +96,7 @@ class Jogador {
   int? idTime;
   String? image;
   bool? lesionado;
-  List<int> estatisticas = [];
+  Estatisticas estatisticas;
   String? dataDeNacimento;
   String? nacionalidade;
 
@@ -107,7 +107,19 @@ class Jogador {
         dataDeNacimento = json['data_nacimento'],
         lesionado = json['lesionado'],
         idTime = json['id_time'],
+        estatisticas = Estatisticas.fromJsonAll(json['estatisticas']),
         image = json['imagem'];
+}
+
+class Estatisticas {
+  double? estatistica1;
+  double? estatistica2;
+  double? estatistica3;
+
+  Estatisticas.fromJsonAll(Map<String, dynamic> json)
+      : estatistica1 = json['estatistica1'],
+        estatistica2 = json['estatistica2'],
+        estatistica3 = json['estatistica3'];
 }
 
 /*
