@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TimesRepository {
-  Jogador goleiro = Jogador(Estatisticas());
+  Jogador goleiro = Jogador(EstatisticasMenor());
   List<Jogador> defensores = [];
   List<Jogador> meias = [];
   List<Jogador> atacantes = [];
@@ -99,7 +99,7 @@ class Jogador {
   int? idTime;
   String? image;
   bool? lesionado;
-  Estatisticas estatisticas;
+  EstatisticasMenor estatisticas;
   String? dataDeNacimento;
   String? nacionalidade;
 
@@ -112,18 +112,18 @@ class Jogador {
         dataDeNacimento = json['data_nacimento'],
         lesionado = json['lesionado'],
         idTime = json['id_time'],
-        estatisticas = Estatisticas.fromJsonAll(json['estatisticas']),
+        estatisticas = EstatisticasMenor.fromJsonAll(json['estatisticas']),
         image = json['imagem'];
 }
 
-class Estatisticas {
+class EstatisticasMenor {
   double? estatistica1;
   double? estatistica2;
   double? estatistica3;
 
-  Estatisticas();
+  EstatisticasMenor();
 
-  Estatisticas.fromJsonAll(Map<String, dynamic> json)
+  EstatisticasMenor.fromJsonAll(Map<String, dynamic> json)
       : estatistica1 = json['estatistica1'],
         estatistica2 = json['estatistica2'],
         estatistica3 = json['estatistica3'];

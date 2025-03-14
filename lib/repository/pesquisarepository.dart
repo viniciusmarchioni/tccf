@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 class PesquisaRepository {
   List<Time> times = [];
+  List<JogadorTime> jogadores = [];
 
   PesquisaRepository();
 
@@ -15,10 +16,14 @@ class PesquisaRepository {
 
       if (response.statusCode == 200) {
         times = [];
-        var body = jsonDecode(response.body)['times'];
+        var body = jsonDecode(response.body);
 
-        for (var i in body) {
+        for (var i in body['times']) {
           times.add(Time.fromJsonAll(i));
+        }
+
+        for (var i in body['jogadores']) {
+          jogadores.add(JogadorTime.fromJsonAll(i));
         }
       }
     } catch (e) {
@@ -36,4 +41,19 @@ class Time {
   Time.fromJsonAll(Map<String, dynamic> json)
       : id = json['id'],
         nome = json['nome'];
+}
+
+class JogadorTime {
+  int? id;
+  String? nome;
+  String? image;
+  String? nomeTime;
+
+  JogadorTime();
+
+  JogadorTime.fromJsonAll(Map<String, dynamic> json)
+      : id = json['id'],
+        nome = json['nome'],
+        image = json['imagem'],
+        nomeTime = json['nometime'];
 }

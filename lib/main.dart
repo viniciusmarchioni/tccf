@@ -34,15 +34,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.time;
-  String pesquisabox = "";
-  String formation = "4-1-2-1-2";
-  int idTime = 131;
+  Tipos? tipo = Tipos.jogador;
+  int idTime = 131; // ID Corinthians
+  int idJogador = 5794; // ID Garro
 
   void vaiptime(int id) {
     setState(() {
       idTime = id;
       tipo = Tipos.time;
+    });
+  }
+
+  void vaipjogador(int id) {
+    setState(() {
+      idJogador = id;
+      tipo = Tipos.jogador;
     });
   }
 
@@ -92,10 +98,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 idTime: idTime,
               );
             } else if (tipo == Tipos.jogador) {
-              return const JogadorEstatisticas();
+              return JogadorEstatisticas(
+                idJogador: idJogador,
+              );
             } else if (tipo == Tipos.pesquisa) {
               return Center(
-                child: ListaResultados(controller.text, fun: vaiptime),
+                child: ListaResultados(
+                  controller.text,
+                  onTeamClick: vaiptime,
+                  onPlayerClick: vaipjogador,
+                ),
               );
             } else {
               return Container();
@@ -104,36 +116,3 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 }
-
-class _Teste extends StatefulWidget {
-  final String str;
-  const _Teste(this.str);
-
-  @override
-  State<StatefulWidget> createState() => _TesteState();
-}
-
-class _TesteState extends State<_Teste> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(widget.str),
-    );
-  }
-}
-
-/*Builder(
-          builder: (context) {
-            if (tipo == Tipos.time) {
-              return const TimeEstatisticas();
-            } else if (tipo == Tipos.jogador) {
-              return const JogadorEstatisticas();
-            } else if (tipo == Tipos.pesquisa) {
-              return Center(
-                child: ListaResultados(controller.text),
-              );
-            } else {
-              return Container();
-            }
-          },
-        ));*/
