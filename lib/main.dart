@@ -34,9 +34,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.jogador;
+  Tipos? tipo;
   int idTime = 131; // ID Corinthians
   int idJogador = 5794; // ID Garro
+  String pesquisa = "";
 
   void vaiptime(int id) {
     setState(() {
@@ -54,13 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void setTipo(String str) {
     setState(() {
-      if (str == "Corinthians") {
-        tipo = Tipos.time;
-      } else if (str == "Coronado") {
-        tipo = Tipos.jogador;
-      } else {
-        tipo = Tipos.pesquisa;
-      }
+      tipo = null;
+      pesquisa = str;
+    });
+
+    setState(() {
+      tipo = Tipos.pesquisa;
     });
   }
 
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (tipo == Tipos.pesquisa) {
               return Center(
                 child: ListaResultados(
-                  controller.text,
+                  pesquisa,
                   onTeamClick: vaiptime,
                   onPlayerClick: vaipjogador,
                 ),

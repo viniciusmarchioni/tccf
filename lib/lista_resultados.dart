@@ -29,6 +29,14 @@ class ListaResultadosState extends State<ListaResultados> {
   }
 
   @override
+  void didUpdateWidget(covariant ListaResultados oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pesquisa != widget.pesquisa) {
+      _carregaPesquisa(widget.pesquisa);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 10,

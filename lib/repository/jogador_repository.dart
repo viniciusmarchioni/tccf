@@ -39,10 +39,11 @@ class JogadorRepository {
         estatisticasFormFav =
             Estatisticas.fromJsonAll(body['estatisticas_formacao_favorita']);
         formacoes = [];
-        for (String i in body['formacoes']) {
-          formacoes.add(i);
+        for (String? i in body['formacoes']) {
+          if (i != null) {
+            formacoes.add(i);
+          }
         }
-
         var response2 = await http
             .get(Uri.parse("http://localhost:5000/teste/pos/$posicaoFavorita"))
             .timeout(const Duration(seconds: 5));

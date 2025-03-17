@@ -9,6 +9,8 @@ class PesquisaRepository {
   PesquisaRepository();
 
   Future<void> pesquisa(String pesquisa) async {
+    times = [];
+    jogadores = [];
     try {
       var response = await http
           .get(Uri.parse('http://localhost:5000/$pesquisa'))
