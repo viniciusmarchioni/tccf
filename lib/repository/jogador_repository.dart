@@ -28,7 +28,7 @@ class JogadorRepository {
       if (response.statusCode == 200) {
         var body = jsonDecode(response.body);
         jogador = Jogador.fromJsonAll(body);
-
+        nomeTime = body['nome_time'];
         nota = body['nota'];
         formacaoFavorita = body['formacao_favorita'];
         posicaoFavorita = body['posicao_favorita'];
