@@ -15,6 +15,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   bool geral = true;
   bool valorSwitch = true;
   TextEditingController controller = TextEditingController();
+  ScrollController controllerSCS = ScrollController();
 
   @override
   void initState() {
@@ -111,16 +112,20 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                           children: [
                             containerNota(
                                 jogadorRepository.estatisticas?.nota ?? 0),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}"),
-                                  Text(
-                                      "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}"),
-                                  Text(
-                                      "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}"),
-                                ]),
+                            Container(
+                              margin: const EdgeInsets.all(25),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}"),
+                                    Text(
+                                        "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}"),
+                                    Text(
+                                        "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}"),
+                                  ]),
+                            ),
                           ],
                         ),
                         if (geral) ...[
@@ -155,23 +160,43 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                               ),
                             ],
                           ),
-                          if (valorSwitch) ...[
-                            for (Widget widget in grandeComparacao(
-                                jogadorRepository.estatisticas,
-                                jogadorRepository.mediaGeral,
-                                jogadorRepository.posicaoFavorita,
-                                valorSwitch)) ...[
-                              widget,
-                            ]
-                          ] else ...[
-                            for (Widget widget in grandeComparacao(
-                                jogadorRepository.estatisticas,
-                                jogadorRepository.mediaGeral,
-                                jogadorRepository.posicaoFavorita,
-                                valorSwitch)) ...[
-                              widget,
-                            ]
-                          ],
+                          Builder(
+                            builder: (context) {
+                              if (valorSwitch) {
+                                List<Widget> pontos = grandeComparacao(
+                                    jogadorRepository.estatisticas,
+                                    jogadorRepository.mediaGeral,
+                                    jogadorRepository.posicaoFavorita,
+                                    valorSwitch);
+
+                                return SingleChildScrollView(
+                                  controller: controllerSCS,
+                                  child: Column(
+                                      children: [for (Widget i in pontos) i]),
+                                );
+                              } else {
+                                List<Widget> pontos = grandeComparacao(
+                                    jogadorRepository.estatisticas,
+                                    jogadorRepository.mediaGeral,
+                                    jogadorRepository.posicaoFavorita,
+                                    valorSwitch);
+                                return ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      color: Colors.white,
+                                      height: 300,
+                                      child: SingleChildScrollView(
+                                        controller: controllerSCS,
+                                        child: Column(
+                                          children: [
+                                            for (Widget i in pontos) i
+                                          ],
+                                        ),
+                                      ),
+                                    ));
+                              }
+                            },
+                          ),
                           Container(),
                         ]
                       ])
@@ -183,33 +208,41 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   }
 
   Widget containerNota(double nota) {
-    return Container(
-      width: 100,
-      height: 100,
-      alignment: Alignment.center,
-      color: Colors.green,
-      child: Text(nota.toString()),
+    Widget x = ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 100,
+        height: 100,
+        alignment: Alignment.center,
+        color: Colors.green,
+        child: Text(nota.toStringAsFixed(2)),
+      ),
     );
+
+    return x;
   }
 
   Widget containerAtributos(Estatisticas estatisticas, String? formacaoFavorita,
       String? posicaoFavorita) {
-    return Container(
-      width: 200,
-      height: 125,
-      alignment: Alignment.center,
-      color: Colors.white,
-      child: Column(children: [
-        if (formacaoFavorita != null) ...[
-          Text("Formação favorita: $formacaoFavorita"),
-        ] else ...[
-          Text("Posição favorita: $posicaoFavorita"),
-        ],
-        Text("Nota: ${estatisticas.nota ?? 0}"),
-        Text("Passes certos: ${estatisticas.passesCertosAvg ?? 0}"),
-        Text("Assistencias: ${estatisticas.assistenciasTotal ?? 0}"),
-        Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}"),
-      ]),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 200,
+        height: 125,
+        alignment: Alignment.center,
+        color: Colors.white,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          if (formacaoFavorita != null) ...[
+            Text("Formação favorita: $formacaoFavorita"),
+          ] else ...[
+            Text("Posição favorita: $posicaoFavorita"),
+          ],
+          Text("Nota: ${estatisticas.nota?.toStringAsFixed(2) ?? 0}"),
+          Text("Passes certos: ${estatisticas.passesCertosTotal ?? 0}"),
+          Text("Assistencias: ${estatisticas.assistenciasTotal ?? 0}"),
+          Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}"),
+        ]),
+      ),
     );
   }
 
@@ -256,13 +289,18 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
 
       if (positivo) {
         if (jogadorValue > mediaValue) {
-          lista.add(Text(
-              "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. $jogadorValue/partida! $mediaValue"));
+          lista.add(Container(
+            margin: const EdgeInsets.symmetric(vertical: 15),
+            child: Text(
+                "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. ${jogadorValue.toStringAsFixed(2)}/partida! ${mediaValue.toStringAsFixed(2)}"),
+          ));
         }
       } else {
         if (jogadorValue < mediaValue) {
-          lista.add(Text(
-              "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. $jogadorValue/partida! $mediaValue"));
+          lista.add(Container(
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: Text(
+                  "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. ${jogadorValue.toStringAsFixed(2)}/partida! ${mediaValue.toStringAsFixed(2)}")));
         }
       }
     });
