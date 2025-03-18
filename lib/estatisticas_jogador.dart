@@ -31,6 +31,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
     await jogadorRepository.getInfo(widget.idJogador);
 
     setState(() {
+      controller.value = const TextEditingValue(text: "Geral");
       jogadorRepository = jogadorRepository;
       carregando = false;
     });
@@ -77,7 +78,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                 ),
                 Text(
                   jogadorRepository.nomeTime ?? "Carregando...",
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ),
                 DropdownMenu(
                   controller: controller,
@@ -114,19 +115,52 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                                 jogadorRepository.estatisticas?.nota ?? 0),
                             Container(
                               margin: const EdgeInsets.all(25),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}"),
-                                    Text(
-                                        "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}"),
-                                    Text(
-                                        "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}"),
-                                    Text(
-                                        "Partidas jogadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}"),
-                                  ]),
+                              child: Builder(
+                                builder: (context) {
+                                  List<Widget> estatisticas = [];
+                                  String? posicaoFavorita =
+                                      jogadorRepository.posicaoFavorita;
+
+                                  if (posicaoFavorita == 'G') {
+                                    estatisticas.add(Text(
+                                        "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}"));
+                                  } else if (posicaoFavorita == 'D') {
+                                    estatisticas.add(Text(
+                                        "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}"));
+                                  } else if (posicaoFavorita == 'M') {
+                                    estatisticas.add(Text(
+                                        "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}"));
+                                  } else {
+                                    estatisticas.add(Text(
+                                        "Gols: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}"));
+                                    estatisticas.add(Text(
+                                        "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}"));
+                                  }
+
+                                  return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        for (Widget i in estatisticas) i,
+                                        Text(
+                                            "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}"),
+                                      ]);
+                                },
+                              ),
                             ),
                           ],
                         ),

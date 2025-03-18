@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'teamsrepository.dart';
 
@@ -14,6 +15,7 @@ class JogadorRepository {
   Estatisticas? estatisticas;
   double? notaAvgForm;
   Estatisticas? mediaGeral;
+  int? partidasJogadas;
 
   List<String> formacoes = [];
 
@@ -33,7 +35,7 @@ class JogadorRepository {
         formacaoFavorita = body['formacao_favorita'];
         posicaoFavorita = body['posicao_favorita'];
         estatisticas = Estatisticas.fromJsonAll(body['estatisticas']);
-
+        partidasJogadas = body['partidas_jogadas'];
         estatisticasPosFav =
             Estatisticas.fromJsonAll(body['estatisticas_posicao_favorita']);
         estatisticasFormFav =
@@ -54,7 +56,7 @@ class JogadorRepository {
         }
       }
     } catch (e) {
-      print("getInfo: $e");
+      debugPrint("getInfo: $e");
     }
   }
 
@@ -68,9 +70,10 @@ class JogadorRepository {
         var body = jsonDecode(response.body);
         nota = body['nota'];
         estatisticas = Estatisticas.fromJsonAll(body['estatisticas']);
+        partidasJogadas = body['partidas_jogadas'];
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 }
