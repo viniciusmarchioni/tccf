@@ -346,32 +346,6 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
       String? posicaofav, bool positivo) {
     List<Widget> lista = [];
 
-    final atributos = {
-      'impedimentosAvg': "impedimentos",
-      'chutesAvg': "chutes",
-      'chutesNoGolAvg': "chutes no gol",
-      'golsAvg': "gols",
-      'golsSofridosAvg': "gols sofridos",
-      'assistenciasAvg': "assistências",
-      'defesasAvg': "defesas",
-      'passesAvg': "passes",
-      'passesChavesAvg': "passes chave",
-      'passesCertosAvg': "passes certos",
-      'desarmesAvg': "desarmes",
-      'bloqueadosAvg': "bloqueios",
-      'interceptadosAvg': "interceptações",
-      'duelosAvg': "duelos",
-      'duelosGanhosAvg': "duelos ganhos",
-      'driblesTentadosAvg': "dribles tentados",
-      'driblesCompletosAvg': "dribles completos",
-      'jogadoresPassadosAvg': "jogadores passados",
-      'faltasSofridasAvg': "faltas sofridas",
-      'faltasCometidasAvg': "faltas cometidas",
-      'cartoesAmarelosAvg': "cartões amarelos",
-      'cartoesVermelhosAvg': "cartões vermelhos",
-      'penaltisCometidosAvg': "penaltis cometidos"
-    };
-
     final atributosPositivos = {
       'chutesAvg': "chutes",
       'chutesNoGolAvg': "chutes no gol",
