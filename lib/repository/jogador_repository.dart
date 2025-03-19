@@ -16,6 +16,7 @@ class JogadorRepository {
   double? notaAvgForm;
   Estatisticas? mediaGeral;
   int? partidasJogadas;
+  List<Destaque> destaques = [];
 
   List<String> formacoes = [];
 
@@ -46,6 +47,11 @@ class JogadorRepository {
             formacoes.add(i);
           }
         }
+
+        destaques = [];
+        for (var i in body['destaques']) {
+          destaques.add(Destaque.fromJsonAll(i));
+        }
         var response2 = await http
             .get(Uri.parse("http://localhost:5000/teste/pos/$posicaoFavorita"))
             .timeout(const Duration(seconds: 5));
@@ -71,6 +77,10 @@ class JogadorRepository {
         nota = body['nota'];
         estatisticas = Estatisticas.fromJsonAll(body['estatisticas']);
         partidasJogadas = body['partidas_jogadas'];
+        destaques = [];
+        for (var i in body['destaques']) {
+          destaques.add(Destaque.fromJsonAll(i));
+        }
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -205,4 +215,15 @@ class Estatisticas {
       'penaltisCometidosAvg': penaltisCometidosAvg,
     };
   }
+}
+
+class Destaque {
+  String? logoTimeMandante;
+  String? logoTimeVisitante;
+  double? nota;
+
+  Destaque.fromJsonAll(Map<String, dynamic> json)
+      : logoTimeMandante = json['logo_mandante'],
+        logoTimeVisitante = json['logo_visitante'],
+        nota = json['nota'];
 }

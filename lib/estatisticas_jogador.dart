@@ -164,6 +164,22 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                             ),
                           ],
                         ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Destaques:"),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(),
+                                  for (Destaque i
+                                      in jogadorRepository.destaques)
+                                    destaque(i),
+                                  Container(),
+                                ]),
+                          ],
+                        ),
                         if (geral) ...[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -261,23 +277,40 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
     );
   }
 
-  Widget containerNota(double nota) {
-    MaterialColor cor = Colors.green;
-
-    if (nota > 7) {
-      cor = Colors.green;
-    } else if (nota > 6.5 && nota < 7) {
-      cor = Colors.amber;
+  MaterialColor corNota(double nota) {
+    if (nota >= 7) {
+      return Colors.green;
+    } else if (nota > 6.5) {
+      return Colors.amber;
     } else {
-      cor = Colors.red;
+      return Colors.red;
     }
+  }
+
+  Widget destaque(Destaque destaque) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Container(
+        color: corNota(destaque.nota ?? 0),
+        height: 50,
+        width: 150,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          Text(destaque.nota.toString()),
+          Image.network(destaque.logoTimeMandante!),
+          Image.network(destaque.logoTimeVisitante!)
+        ]),
+      ),
+    );
+  }
+
+  Widget containerNota(double nota) {
     Widget x = ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
         width: 100,
         height: 100,
         alignment: Alignment.center,
-        color: cor,
+        color: corNota(nota),
         child: Text(nota.toStringAsFixed(2)),
       ),
     );
@@ -339,6 +372,34 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
       'penaltisCometidosAvg': "penaltis cometidos"
     };
 
+    final atributosPositivos = {
+      'chutesAvg': "chutes",
+      'chutesNoGolAvg': "chutes no gol",
+      'golsAvg': "gols",
+      'assistenciasAvg': "assistências",
+      'defesasAvg': "defesas",
+      'passesAvg': "passes",
+      'passesChavesAvg': "passes chave",
+      'passesCertosAvg': "passes certos",
+      'desarmesAvg': "desarmes",
+      'bloqueadosAvg': "bloqueios",
+      'interceptadosAvg': "interceptações",
+      'duelosAvg': "duelos",
+      'duelosGanhosAvg': "duelos ganhos",
+      'driblesTentadosAvg': "dribles tentados",
+      'driblesCompletosAvg': "dribles completos",
+      'jogadoresPassadosAvg': "jogadores passados",
+      'faltasSofridasAvg': "faltas sofridas",
+    };
+
+    final atributosNegativos = {
+      'impedimentosAvg': "impedimentos",
+      'faltasCometidasAvg': "faltas cometidas",
+      'cartoesAmarelosAvg': "cartões amarelos",
+      'cartoesVermelhosAvg': "cartões vermelhos",
+      'penaltisCometidosAvg': "penaltis cometidos"
+    };
+
     final posicoes = {
       "G": "goleiros",
       "D": "defensores",
@@ -346,11 +407,11 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
       "F": "atacantes",
     };
 
-    atributos.forEach((key, value) {
-      double jogadorValue = jogador?.toJson()[key] ?? 0.0;
-      double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
+    if (positivo) {
+      atributosPositivos.forEach((key, value) {
+        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
+        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
 
-      if (positivo) {
         if (jogadorValue > mediaValue) {
           lista.add(Container(
             margin: const EdgeInsets.symmetric(vertical: 15),
@@ -365,27 +426,66 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
             ])),
           ));
         }
-      } else {
+      });
+      atributosNegativos.forEach((key, value) {
+        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
+        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
+
         if (jogadorValue < mediaValue) {
-          lista.add(
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 15),
-              child: Text.rich(
-                TextSpan(children: [
-                  TextSpan(
-                      text:
-                          "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. "),
-                  TextSpan(
-                      text: jogadorValue.toStringAsFixed(2),
-                      style: const TextStyle(color: Colors.red)),
-                  const TextSpan(text: "/partida."),
-                ]),
-              ),
-            ),
-          );
+          lista.add(Container(
+            margin: const EdgeInsets.symmetric(vertical: 15),
+            child: Text.rich(TextSpan(children: [
+              TextSpan(
+                  text:
+                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. "),
+              TextSpan(
+                  text: jogadorValue.toStringAsFixed(2),
+                  style: const TextStyle(color: Colors.green)),
+              const TextSpan(text: "/partida."),
+            ])),
+          ));
         }
-      }
-    });
+      });
+    } else {
+      atributosPositivos.forEach((key, value) {
+        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
+        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
+
+        if (jogadorValue < mediaValue) {
+          lista.add(Container(
+            margin: const EdgeInsets.symmetric(vertical: 15),
+            child: Text.rich(TextSpan(children: [
+              TextSpan(
+                  text:
+                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. "),
+              TextSpan(
+                  text: jogadorValue.toStringAsFixed(2),
+                  style: const TextStyle(color: Colors.red)),
+              const TextSpan(text: "/partida!"),
+            ])),
+          ));
+        }
+      });
+      atributosNegativos.forEach((key, value) {
+        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
+        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
+
+        if (jogadorValue > mediaValue) {
+          lista.add(Container(
+            margin: const EdgeInsets.symmetric(vertical: 15),
+            child: Text.rich(TextSpan(children: [
+              TextSpan(
+                  text:
+                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. "),
+              TextSpan(
+                  text: jogadorValue.toStringAsFixed(2),
+                  style: const TextStyle(color: Colors.red)),
+              const TextSpan(text: "/partida."),
+            ])),
+          ));
+        }
+      });
+    }
     return lista;
   }
 }
