@@ -142,7 +142,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                                         "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}"));
                                   } else {
                                     estatisticas.add(Text(
-                                        "Gols: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}"));
+                                        "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}"));
                                     estatisticas.add(Text(
                                         "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}"));
                                     estatisticas.add(Text(
