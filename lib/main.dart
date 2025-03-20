@@ -34,10 +34,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.jogador;
+  Tipos? tipo = Tipos.pesquisa;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
-  String pesquisa = "";
+  String pesquisa = "Cor";
 
   void vaiptime(int id) {
     setState(() {

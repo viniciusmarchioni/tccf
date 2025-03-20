@@ -37,12 +37,14 @@ class PesquisaRepository {
 class Time {
   int? id;
   String? nome;
+  String? logo;
 
   Time();
 
   Time.fromJsonAll(Map<String, dynamic> json)
       : id = json['id'],
-        nome = json['nome'];
+        nome = json['nome'],
+        logo = json['logo'];
 }
 
 class JogadorTime {

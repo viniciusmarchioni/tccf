@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scout/repository/pesquisarepository.dart';
 
@@ -63,7 +64,12 @@ class ListaResultadosState extends State<ListaResultados> {
             widget.onTeamClick(time.id ?? 131);
           },
           child: Row(children: [
-            Image.asset('assets/images/error_image.png'),
+            CachedNetworkImage(
+              imageUrl: time.logo!,
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) =>
+                  Image.asset('assets/images/error_image.png'),
+            ),
             Expanded(
                 child:
                     Text(time.nome ?? 'Erro', overflow: TextOverflow.ellipsis)),
@@ -85,13 +91,18 @@ class ListaResultadosState extends State<ListaResultados> {
             widget.onPlayerClick(jogador.id ?? 5794);
           },
           child: Row(children: [
-            Image.asset('assets/images/error_image.png'),
+            CachedNetworkImage(
+              imageUrl: jogador.image!,
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) =>
+                  Image.asset('assets/images/error_image.png'),
+            ),
             Expanded(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(jogador.nome ?? 'Erro', overflow: TextOverflow.ellipsis),
-                Text(jogador.nomeTime ?? '')
+                Text(jogador.nomeTime ?? '', overflow: TextOverflow.ellipsis)
               ],
             )),
           ]),

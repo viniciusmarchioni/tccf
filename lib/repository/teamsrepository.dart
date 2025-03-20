@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class TimesRepository {
@@ -40,7 +41,7 @@ class TimesRepository {
         }
       }
     } catch (e) {
-      print("Erro" + e.toString());
+      debugPrint("Erro:$e");
       //
     }
   }
