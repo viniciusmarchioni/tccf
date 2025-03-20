@@ -13,84 +13,69 @@ class TimesRepository {
 
   TimesRepository();
 
-  Future<void> updateJogadores(int idTeam) async {
+  Future<void> getInfo(int idTime) async {
     try {
       final response = await http
-          .get(Uri.parse('http://localhost:5000/jogadores/$idTeam/'))
+          .get(Uri.parse('http://localhost:5000/jogadores/$idTime'))
           .timeout(const Duration(seconds: 5));
+
       if (response.statusCode == 200) {
+        goleiro = Jogador(EstatisticasMenor());
+        defensores = [];
+        meias = [];
+        atacantes = [];
+        formacoes = [];
+
+        var body = jsonDecode(response.body);
+
+        for (var i in body['formações']) {
+          formacoes.add(i.toString());
+        }
+
+        goleiro = Jogador.fromJsonAll(body['goleiro'][0]);
+        for (var i in body['defensores']) {
+          defensores.add(Jogador.fromJsonAll(i));
+        }
+        for (var i in body['meias']) {
+          meias.add(Jogador.fromJsonAll(i));
+        }
+        for (var i in body['atacantes']) {
+          atacantes.add(Jogador.fromJsonAll(i));
+        }
+      }
+    } catch (e) {
+      debugPrint("Erro: $e");
+    }
+  }
+
+  Future<void> updateFormacao(int idTime, String formacao) async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://localhost:5000/times/teste/$idTime/$formacao'))
+          .timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        goleiro = Jogador(EstatisticasMenor());
         defensores = [];
         meias = [];
         atacantes = [];
 
-        goleiro =
-            Jogador.fromJsonAll(jsonDecode(response.body)[0]['goleiros'][0]);
-        var def = jsonDecode(response.body)[1]['defensores'];
-        var mei = jsonDecode(response.body)[2]['meias'];
-        var atk = jsonDecode(response.body)[3]['atacantes'];
-        formacaoSem = jsonDecode(response.body)[4]['formacao'];
+        var body = jsonDecode(response.body);
 
-        for (var j in def) {
-          defensores.add(Jogador.fromJsonAll(j));
+        goleiro = Jogador.fromJsonAll(body['goleiro'][0]);
+        for (var i in body['defensores']) {
+          defensores.add(Jogador.fromJsonAll(i));
         }
-        for (var j in mei) {
-          meias.add(Jogador.fromJsonAll(j));
+        for (var i in body['meias']) {
+          meias.add(Jogador.fromJsonAll(i));
         }
-        for (var j in atk) {
-          atacantes.add(Jogador.fromJsonAll(j));
+        for (var i in body['atacantes']) {
+          atacantes.add(Jogador.fromJsonAll(i));
         }
       }
     } catch (e) {
-      debugPrint("Erro:$e");
-      //
+      debugPrint("Erro: $e");
     }
-  }
-
-  Future<void> updateJogadoresFormacao(int idTeam, String formacao) async {
-    try {
-      final response = await http
-          .get(Uri.parse('http://localhost:5000/jogadores/$idTeam/$formacao'))
-          .timeout(const Duration(seconds: 5));
-      if (response.statusCode == 200) {
-        defensores = [];
-        meias = [];
-        atacantes = [];
-
-        var def = jsonDecode(response.body)[1]['defensores'];
-        var mei = jsonDecode(response.body)[2]['meias'];
-        var atk = jsonDecode(response.body)[3]['atacantes'];
-
-        for (var j in def) {
-          defensores.add(Jogador.fromJsonAll(j));
-        }
-        for (var j in mei) {
-          meias.add(Jogador.fromJsonAll(j));
-        }
-        for (var j in atk) {
-          atacantes.add(Jogador.fromJsonAll(j));
-        }
-      }
-    } catch (e) {
-      //print("Erro" + e.toString());
-      //
-    }
-  }
-
-  Future<List<String>> updateFormacoes(int idTeam) async {
-    try {
-      final response = await http
-          .get(Uri.parse('http://localhost:5000/times/$idTeam'))
-          .timeout(const Duration(seconds: 5));
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body)['formacoes'];
-        for (String i in json) {
-          formacoes.add(i);
-        }
-      }
-    } catch (e) {
-      //
-    }
-    return formacoes;
   }
 }
 
@@ -101,7 +86,7 @@ class Jogador {
   String? image;
   bool? lesionado;
   EstatisticasMenor estatisticas;
-  String? dataDeNacimento;
+  String? dataDeNascimento;
   String? nacionalidade;
 
   Jogador(this.estatisticas);
@@ -110,7 +95,7 @@ class Jogador {
       : id = json['id'],
         nome = json['nome'],
         nacionalidade = json['nacionalidade'],
-        dataDeNacimento = json['data_nacimento'],
+        dataDeNascimento = json['data_nacimento'],
         lesionado = json['lesionado'],
         idTime = json['id_time'],
         estatisticas = EstatisticasMenor.fromJsonAll(json['estatisticas']),
@@ -129,21 +114,3 @@ class EstatisticasMenor {
         estatistica2 = json['estatistica2'],
         estatistica3 = json['estatistica3'];
 }
-
-/*
-
-Games.fromJsonAll(Map<String, dynamic> json)
-      : id = json['id'],
-        team1name = json['team1'],
-        team2name = json['team2'],
-        team1score = json['score1'],
-        team2score = json['score2'],
-        country1 = json['country1'],
-        country2 = json['country2'],
-        date = DateTime.parse(json['date']),
-        championship = json['championship'],
-        rate = double.parse(json['rate']),
-        type = _toGameType(json['type']);
-
-
- */
