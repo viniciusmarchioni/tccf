@@ -9,7 +9,7 @@ class TimesRepository {
   List<Jogador> meias = [];
   List<Jogador> atacantes = [];
   List<String> formacoes = [];
-  String formacaoSem = "";
+  Aproveitamento aproveitamento = Aproveitamento();
   List<EstatisticasMenor> medias = [];
 
   TimesRepository();
@@ -94,6 +94,26 @@ class TimesRepository {
     } catch (e) {
       debugPrint("Erro updateFormacao: $e");
     }
+  }
+}
+
+class Aproveitamento {
+  int vitorias = 0;
+  int empates = 0;
+  int derrotas = 0;
+
+  Aproveitamento();
+
+  Aproveitamento.fromJsonAll(Map<String, int> json) {
+    vitorias = json['vitorias'] ?? 0;
+    empates = json['empates'] ?? 0;
+    derrotas = json['derrotas'] ?? 0;
+  }
+
+  int getPartidas() => vitorias + empates + derrotas;
+
+  double getAproveitamento() {
+    return ((vitorias * 3 + empates) / (getPartidas() * 3)) * 100;
   }
 }
 
