@@ -87,16 +87,24 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                     Expanded(
                       child: Column(
                         children: [
-                          Switch(
-                            trackColor: valorSwitch
-                                ? const MaterialStatePropertyAll(Colors.green)
-                                : const MaterialStatePropertyAll(Colors.red),
-                            value: valorSwitch,
-                            onChanged: (value) {
-                              setState(() {
-                                valorSwitch = value;
-                              });
-                            },
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Na ${controller.text}:"),
+                              Switch(
+                                trackColor: valorSwitch
+                                    ? const MaterialStatePropertyAll(
+                                        Colors.green)
+                                    : const MaterialStatePropertyAll(
+                                        Colors.red),
+                                value: valorSwitch,
+                                onChanged: (value) {
+                                  setState(() {
+                                    valorSwitch = value;
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                           Container(
                             margin: const EdgeInsets.all(50),
