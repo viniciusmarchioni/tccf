@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scout/estatisticas_jogador.dart';
 import 'package:scout/estatisticas_time.dart';
 import 'package:scout/lista_resultados.dart';
+import 'package:scout/pesquisa_avancada.dart';
 import 'package:scout/util/tipos.dart';
 
 void main() {
@@ -84,9 +85,20 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  if (controller.text.isEmpty) {
+                    return;
+                  }
                   setTipo(controller.text);
                 },
                 child: const Icon(Icons.search),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    tipo = Tipos.pesquisaAvancada;
+                  });
+                },
+                child: const Icon(Icons.person_search_rounded),
               ),
             ],
           ),
@@ -109,6 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPlayerClick: vaipjogador,
                 ),
               );
+            } else if (tipo == Tipos.pesquisaAvancada) {
+              return const PesquisaAvancada();
             } else {
               return Container();
             }
