@@ -10,6 +10,7 @@ class TimesRepository {
   List<Jogador> atacantes = [];
   List<String> formacoes = [];
   String formacaoSem = "";
+  List<EstatisticasMenor> medias = [];
 
   TimesRepository();
 
@@ -32,7 +33,10 @@ class TimesRepository {
           formacoes.add(i.toString());
         }
 
-        goleiro = Jogador.fromJsonAll(body['goleiro'][0]);
+        for (var i in body['goleiro']) {
+          goleiro = Jogador.fromJsonAll(i);
+        }
+
         for (var i in body['defensores']) {
           defensores.add(Jogador.fromJsonAll(i));
         }
@@ -43,8 +47,20 @@ class TimesRepository {
           atacantes.add(Jogador.fromJsonAll(i));
         }
       }
+
+      final response2 = await http
+          .get(Uri.parse('http://localhost:5000/medias/'))
+          .timeout(const Duration(seconds: 5));
+
+      if (response2.statusCode == 200) {
+        var body = jsonDecode(response2.body);
+
+        medias.add(EstatisticasMenor.fromJsonAll(body['media_defensores']));
+        medias.add(EstatisticasMenor.fromJsonAll(body['media_meias']));
+        medias.add(EstatisticasMenor.fromJsonAll(body['media_atacantes']));
+      }
     } catch (e) {
-      debugPrint("Erro: $e");
+      debugPrint("Erro get info: $e");
     }
   }
 
@@ -62,7 +78,9 @@ class TimesRepository {
 
         var body = jsonDecode(response.body);
 
-        goleiro = Jogador.fromJsonAll(body['goleiro'][0]);
+        for (var i in body['goleiro']) {
+          goleiro = Jogador.fromJsonAll(i);
+        }
         for (var i in body['defensores']) {
           defensores.add(Jogador.fromJsonAll(i));
         }
@@ -74,7 +92,7 @@ class TimesRepository {
         }
       }
     } catch (e) {
-      debugPrint("Erro: $e");
+      debugPrint("Erro updateFormacao: $e");
     }
   }
 }
