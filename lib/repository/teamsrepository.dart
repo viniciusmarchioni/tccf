@@ -46,6 +46,8 @@ class TimesRepository {
         for (var i in body['atacantes']) {
           atacantes.add(Jogador.fromJsonAll(i));
         }
+
+        aproveitamento = Aproveitamento.fromJsonAll(body['aproveitamento']);
       }
 
       final response2 = await http
@@ -90,6 +92,7 @@ class TimesRepository {
         for (var i in body['atacantes']) {
           atacantes.add(Jogador.fromJsonAll(i));
         }
+        aproveitamento = Aproveitamento.fromJsonAll(body['aproveitamento']);
       }
     } catch (e) {
       debugPrint("Erro updateFormacao: $e");
@@ -104,7 +107,7 @@ class Aproveitamento {
 
   Aproveitamento();
 
-  Aproveitamento.fromJsonAll(Map<String, int> json) {
+  Aproveitamento.fromJsonAll(Map<String, dynamic> json) {
     vitorias = json['vitorias'] ?? 0;
     empates = json['empates'] ?? 0;
     derrotas = json['derrotas'] ?? 0;

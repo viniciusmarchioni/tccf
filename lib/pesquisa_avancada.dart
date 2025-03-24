@@ -65,8 +65,8 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
       width: 300,
       height: 100,
       color: Colors.white,
-      margin: EdgeInsets.all(10),
-      child: Center(child: Text("data")),
+      margin: const EdgeInsets.all(10),
+      child: const Center(child: Text("data")),
     );
   }
 }
