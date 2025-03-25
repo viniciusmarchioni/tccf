@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.time;
+  Tipos? tipo;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "Cor";
@@ -122,7 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               );
             } else if (tipo == Tipos.pesquisaAvancada) {
-              return const PesquisaAvancada();
+              return PesquisaAvancada(
+                onPlayerClick: vaipjogador,
+              );
             } else {
               return Container();
             }
