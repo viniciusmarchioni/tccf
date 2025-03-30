@@ -1,1 +1,1 @@
-enum Tipos { jogador, time, pesquisa, pesquisaAvancada }
+enum Tipos { jogador, time, pesquisa, pesquisaAvancada, ia }

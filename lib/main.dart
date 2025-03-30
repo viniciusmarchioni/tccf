@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scout/estatisticas_jogador.dart';
 import 'package:scout/estatisticas_time.dart';
+import 'package:scout/ia.dart';
 import 'package:scout/lista_resultados.dart';
 import 'package:scout/pesquisa_avancada.dart';
 import 'package:scout/util/tipos.dart';
@@ -35,7 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo;
+  Tipos? tipo = Tipos.time;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "Cor";
@@ -58,10 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       tipo = null;
       pesquisa = str;
+      controller.clear();
     });
 
     setState(() {
-      tipo = Tipos.pesquisa;
+      if (str == "") {
+        tipo = null;
+      } else {
+        tipo = Tipos.pesquisa;
+      }
     });
   }
 
@@ -74,6 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
           flexibleSpace: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    tipo = Tipos.ia;
+                  });
+                },
+                child: const Icon(Icons.auto_awesome_sharp),
+              ),
               SizedBox(
                 width: 300,
                 child: TextField(
@@ -125,6 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
               return PesquisaAvancada(
                 onPlayerClick: vaipjogador,
               );
+            } else if (tipo == Tipos.ia) {
+              return const Ia();
             } else {
               return Container();
             }

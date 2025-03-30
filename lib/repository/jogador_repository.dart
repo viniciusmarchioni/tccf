@@ -25,7 +25,7 @@ class JogadorRepository {
   Future<void> getInfo(int idJogador) async {
     try {
       var response = await http
-          .get(Uri.parse("http://localhost:5000/teste/$idJogador"))
+          .get(Uri.parse("http://localhost:5000/jogadores/$idJogador"))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -53,7 +53,8 @@ class JogadorRepository {
           destaques.add(Destaque.fromJsonAll(i));
         }
         var response2 = await http
-            .get(Uri.parse("http://localhost:5000/teste/pos/$posicaoFavorita"))
+            .get(Uri.parse(
+                "http://localhost:5000/jogadores/medias/$posicaoFavorita"))
             .timeout(const Duration(seconds: 5));
 
         if (response2.statusCode == 200) {
@@ -69,7 +70,7 @@ class JogadorRepository {
   Future<void> form(int idJogador, String form) async {
     try {
       var response = await http
-          .get(Uri.parse("http://localhost:5000/teste/form/$idJogador/$form"))
+          .get(Uri.parse("http://localhost:5000/jogadores/$idJogador/$form"))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {

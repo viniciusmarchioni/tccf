@@ -13,7 +13,7 @@ class PesquisaRepository {
     jogadores = [];
     try {
       var response = await http
-          .get(Uri.parse('http://localhost:5000/$pesquisa'))
+          .get(Uri.parse('http://localhost:5000/pesquisa/$pesquisa'))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
