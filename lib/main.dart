@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Tipos? tipo = Tipos.pesquisa;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
-  String pesquisa = "Cor";
+  String pesquisa = "C";
 
   void vaiptime(int id) {
     setState(() {
@@ -139,12 +139,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 idJogador: idJogador,
               );
             } else if (tipo == Tipos.pesquisa) {
-              return Center(
-                child: ListaResultados(
-                  pesquisa,
-                  onTeamClick: vaiptime,
-                  onPlayerClick: vaipjogador,
-                ),
+              return ListaResultados(
+                pesquisa,
+                onTeamClick: vaiptime,
+                onPlayerClick: vaipjogador,
               );
             } else if (tipo == Tipos.pesquisaAvancada) {
               return PesquisaAvancada(

@@ -39,75 +39,83 @@ class ListaResultadosState extends State<ListaResultados> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 10,
-      childAspectRatio: 2,
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 5,
-      padding: const EdgeInsets.all(10),
-      children: [
-        for (Time i in pesquisaRepository.times) listEx(i),
-        for (JogadorTime i in pesquisaRepository.jogadores) listJogador(i)
-      ],
+    return Container(
+      margin: const EdgeInsets.all(25),
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(68, 34, 197, 94),
+          border: Border.all(color: Colors.green)),
+      child: Column(
+        children: [
+          const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              "Resultado da pesquisa",
+              style: TextStyle(color: Colors.white, fontSize: 50),
+            )
+          ]),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 3,
+              childAspectRatio: 3,
+              mainAxisSpacing: 50,
+              crossAxisSpacing: 10,
+              children: [
+                for (Time i in pesquisaRepository.times) listaTime(i),
+                for (JogadorTime i in pesquisaRepository.jogadores)
+                  listJogador(i)
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  Widget listEx(Time time) {
+  Widget listaTime(Time time) {
     return GestureDetector(
       onTap: () {
-        //print("indice: $indice");
+        widget.onTeamClick(time.id ?? 131);
       },
-      child: Container(
-        color: Colors.deepOrange,
-        child: GestureDetector(
-          onTap: () {
-            widget.onTeamClick(time.id ?? 131);
-          },
-          child: Row(children: [
-            CachedNetworkImage(
-              imageUrl: time.logo!,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) =>
-                  Image.asset('assets/images/error_image.png'),
-            ),
-            Expanded(
-                child:
-                    Text(time.nome ?? 'Erro', overflow: TextOverflow.ellipsis)),
-          ]),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Expanded(
+          child: CachedNetworkImage(
+            imageUrl: time.logo!,
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) =>
+                Image.asset('assets/images/error_image.png'),
+          ),
         ),
-      ),
+        Text(
+          time.nome ?? "Erro",
+          style: const TextStyle(color: Colors.white),
+        )
+      ]),
     );
   }
 
   Widget listJogador(JogadorTime jogador) {
     return GestureDetector(
       onTap: () {
-        //print("indice: $indice");
+        widget.onPlayerClick(jogador.id ?? 5794);
       },
-      child: Container(
-        color: Colors.white,
-        child: GestureDetector(
-          onTap: () {
-            widget.onPlayerClick(jogador.id ?? 5794);
-          },
-          child: Row(children: [
-            CachedNetworkImage(
-              imageUrl: jogador.image!,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) =>
-                  Image.asset('assets/images/error_image.png'),
-            ),
-            Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(jogador.nome ?? 'Erro', overflow: TextOverflow.ellipsis),
-                Text(jogador.nomeTime ?? '', overflow: TextOverflow.ellipsis)
-              ],
-            )),
-          ]),
+      child: Column(children: [
+        Expanded(
+          child: CircleAvatar(
+            backgroundColor: Colors.green,
+            radius: 65,
+            child: CircleAvatar(
+                radius: 60,
+                backgroundImage: CachedNetworkImageProvider(jogador.image!)),
+          ),
         ),
-      ),
+        Text(
+          jogador.nome ?? "Carregando...",
+          style: const TextStyle(color: Colors.white),
+        ),
+        Text(
+          jogador.nomeTime ?? "Carregando...",
+          style: const TextStyle(color: Colors.white),
+        ),
+      ]),
     );
   }
 }
