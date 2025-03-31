@@ -59,7 +59,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
     return Container(
         decoration: BoxDecoration(
             border: Border.all(color: Colors.green, width: 2),
-            color: const Color.fromARGB(255, 10, 15, 11),
+            color: const Color.fromARGB(255, 17, 34, 23),
             borderRadius: const BorderRadius.all(Radius.circular(20))),
         margin: const EdgeInsets.all(50),
         alignment: Alignment.topLeft,
@@ -543,16 +543,13 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
     } else {
       cor = Colors.green;
     }
-    Widget x = ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        alignment: Alignment.center,
-        color: cor,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text(nota.toStringAsFixed(2)),
-        ),
-      ),
+    Widget x = Container(
+      margin: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: cor, borderRadius: const BorderRadius.all(Radius.circular(5))),
+      padding: const EdgeInsets.all(20),
+      child: Text("${nota.toStringAsFixed(2)}%"),
     );
 
     return x;

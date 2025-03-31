@@ -14,7 +14,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   bool carregando = false;
   bool geral = true;
   bool valorSwitch = true;
-  TextEditingController controller = TextEditingController();
+  String? dropDownValue = "Geral";
   ScrollController controllerSCS = ScrollController();
 
   @override
@@ -31,7 +31,6 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
     await jogadorRepository.getInfo(widget.idJogador);
 
     setState(() {
-      controller.value = const TextEditingValue(text: "Geral");
       jogadorRepository = jogadorRepository;
       carregando = false;
     });
@@ -53,9 +52,10 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(158, 134, 132, 131),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.green, width: 2),
+          color: const Color.fromARGB(255, 17, 34, 23),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       padding: const EdgeInsets.all(25),
       margin: const EdgeInsets.all(50),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -74,29 +74,53 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                 ),
                 Text(
                   jogadorRepository.jogador.nome ?? "Carregando...",
-                  style: const TextStyle(fontSize: 35),
+                  style: const TextStyle(fontSize: 35, color: Colors.white),
                 ),
                 Text(
                   jogadorRepository.nomeTime ?? "Carregando...",
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                DropdownMenu(
-                  controller: controller,
-                  hintText: "Formacão",
-                  onSelected: (value) {
-                    if (value != "Geral") {
-                      awaits2(value!);
-                    } else {
-                      awaits();
-                    }
-                  },
-                  requestFocusOnTap: false,
-                  dropdownMenuEntries: [
-                    const DropdownMenuEntry(value: "Geral", label: "Geral"),
-                    for (String i in jogadorRepository.formacoes)
-                      DropdownMenuEntry(value: i, label: i),
-                  ],
-                )
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15),
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(color: Colors.green)),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      dropdownColor: Colors.green,
+                      value: dropDownValue,
+                      style: const TextStyle(color: Colors.white, fontSize: 30),
+                      items: [
+                        const DropdownMenuItem(
+                            value: "Geral",
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text("Geral"),
+                            )),
+                        for (String i in jogadorRepository.formacoes)
+                          DropdownMenuItem(
+                              value: i,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(i),
+                              )),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != null && value != "Geral") {
+                            dropDownValue = value;
+                            awaits2(value);
+                          } else {
+                            dropDownValue = "Geral";
+                            awaits();
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -107,67 +131,82 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            containerNota(
-                                jogadorRepository.estatisticas?.nota ?? 0),
-                            Container(
-                              margin: const EdgeInsets.all(25),
-                              child: Builder(
-                                builder: (context) {
-                                  List<Widget> estatisticas = [];
-                                  String? posicaoFavorita =
-                                      jogadorRepository.posicaoFavorita;
+                        Container(
+                          margin: const EdgeInsets.all(25),
+                          child: Builder(
+                            builder: (context) {
+                              List<Widget> estatisticas = [];
+                              String? posicaoFavorita =
+                                  jogadorRepository.posicaoFavorita;
 
-                                  if (posicaoFavorita == 'G') {
-                                    estatisticas.add(Text(
-                                        "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}"));
-                                  } else if (posicaoFavorita == 'D') {
-                                    estatisticas.add(Text(
-                                        "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}"));
-                                  } else if (posicaoFavorita == 'M') {
-                                    estatisticas.add(Text(
-                                        "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}"));
-                                  } else {
-                                    estatisticas.add(Text(
-                                        "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}"));
-                                    estatisticas.add(Text(
-                                        "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}"));
-                                  }
+                              if (posicaoFavorita == 'G') {
+                                estatisticas.add(Text(
+                                    "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                              } else if (posicaoFavorita == 'D') {
+                                estatisticas.add(Text(
+                                    "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                              } else if (posicaoFavorita == 'M') {
+                                estatisticas.add(Text(
+                                    "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                              } else {
+                                estatisticas.add(Text(
+                                    "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                                estatisticas.add(Text(
+                                    "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}",
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 25)));
+                              }
 
-                                  return Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        for (Widget i in estatisticas) i,
-                                        Text(
-                                            "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}"),
-                                      ]);
-                                },
-                              ),
-                            ),
-                          ],
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (Widget i in estatisticas) i,
+                                    Text(
+                                        "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}",
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 25)),
+                                  ]);
+                            },
+                          ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Destaques:"),
+                            const Text("Destaques:",
+                                style: TextStyle(color: Colors.white)),
                             Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -199,73 +238,63 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                             ],
                           ),
                         ] else ...[
-                          Row(
-                            children: [
-                              Text("Na ${controller.text}:"),
-                              Switch(
-                                trackColor: valorSwitch
-                                    ? const MaterialStatePropertyAll(
-                                        Colors.green)
-                                    : const MaterialStatePropertyAll(
-                                        Colors.red),
-                                value: valorSwitch,
-                                onChanged: (value) {
-                                  setState(() {
-                                    valorSwitch = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          Builder(
-                            builder: (context) {
-                              if (valorSwitch) {
-                                List<Widget> pontos = grandeComparacao(
-                                    jogadorRepository.estatisticas,
-                                    jogadorRepository.mediaGeral,
-                                    jogadorRepository.posicaoFavorita,
-                                    valorSwitch);
-
-                                return ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 300,
-                                      child: SingleChildScrollView(
-                                        controller: controllerSCS,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            for (Widget i in pontos) i
-                                          ],
-                                        ),
-                                      ),
-                                    ));
-                              } else {
-                                List<Widget> pontos = grandeComparacao(
-                                    jogadorRepository.estatisticas,
-                                    jogadorRepository.mediaGeral,
-                                    jogadorRepository.posicaoFavorita,
-                                    valorSwitch);
-                                return ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 300,
-                                      child: SingleChildScrollView(
-                                        controller: controllerSCS,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            for (Widget i in pontos) i
-                                          ],
-                                        ),
-                                      ),
-                                    ));
-                              }
-                            },
+                          Container(
+                            height: 300,
+                            decoration: BoxDecoration(
+                                color: valorSwitch
+                                    ? const Color.fromARGB(68, 34, 197, 94)
+                                    : const Color.fromARGB(100, 197, 34, 37),
+                                border: Border.all(
+                                    color:
+                                        valorSwitch ? Colors.green : Colors.red,
+                                    width: 2)),
+                            child: Column(
+                              children: [
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                              side: const BorderSide(
+                                                  color: Colors.green)),
+                                          onPressed: () {
+                                            setState(() {
+                                              valorSwitch = true;
+                                            });
+                                          },
+                                          child: const Text(
+                                            "Pontos positivos",
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          )),
+                                      OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                              side: const BorderSide(
+                                                  color: Colors.red)),
+                                          onPressed: () {
+                                            setState(() {
+                                              valorSwitch = false;
+                                            });
+                                          },
+                                          child: const Text(
+                                            "Pontos negativos",
+                                            style: TextStyle(color: Colors.red),
+                                          )),
+                                    ]),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                      child: Column(children: [
+                                    for (var i in grandeComparacao(
+                                        jogadorRepository.estatisticas,
+                                        jogadorRepository.mediaGeral,
+                                        jogadorRepository.posicaoFavorita,
+                                        valorSwitch))
+                                      i
+                                  ])),
+                                ),
+                              ],
+                            ),
                           ),
                           Container(),
                         ]
@@ -288,18 +317,17 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   }
 
   Widget destaque(Destaque destaque) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: Container(
-        color: corNota(destaque.nota ?? 0),
-        height: 50,
-        width: 150,
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          Text(destaque.nota.toString()),
-          Image.network(destaque.logoTimeMandante!),
-          Image.network(destaque.logoTimeVisitante!)
-        ]),
-      ),
+    return Container(
+      height: 50,
+      width: 150,
+      decoration: BoxDecoration(
+          color: corNota(destaque.nota ?? 0),
+          borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        Text(destaque.nota.toString()),
+        Image.network(destaque.logoTimeMandante!),
+        Image.network(destaque.logoTimeVisitante!)
+      ]),
     );
   }
 
@@ -320,23 +348,59 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
 
   Widget containerAtributos(Estatisticas estatisticas, String? formacaoFavorita,
       String? posicaoFavorita) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+    var dic = {"G": "Goleiro", "D": "Defensor", "M": "Meia", "F": "Atacante"};
+
+    return Expanded(
       child: Container(
-        width: 200,
-        height: 125,
+        margin: const EdgeInsets.all(15),
         alignment: Alignment.center,
-        color: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.green, width: 2),
+            color: const Color.fromARGB(255, 17, 34, 23),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (formacaoFavorita != null) ...[
-            Text("Formação favorita: $formacaoFavorita"),
+            const Text("Formação favorita:",
+                style: TextStyle(color: Colors.white, fontSize: 25),
+                overflow: TextOverflow.ellipsis),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.green, width: 2),
+                  color: const Color.fromARGB(255, 17, 34, 23),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Text(formacaoFavorita,
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                  overflow: TextOverflow.ellipsis),
+            )
           ] else ...[
-            Text("Posição favorita: $posicaoFavorita"),
+            const Text("Posição favorita:",
+                style: TextStyle(color: Colors.white, fontSize: 25),
+                overflow: TextOverflow.ellipsis),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.green, width: 2),
+                  color: const Color.fromARGB(255, 17, 34, 23),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Text(dic[posicaoFavorita].toString(),
+                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                  overflow: TextOverflow.ellipsis),
+            )
           ],
-          Text("Nota: ${estatisticas.nota?.toStringAsFixed(2) ?? 0}"),
-          Text("Passes certos: ${estatisticas.passesCertosTotal ?? 0}"),
-          Text("Assistencias: ${estatisticas.assistenciasTotal ?? 0}"),
-          Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}"),
+          Text("Nota: ${estatisticas.nota?.toStringAsFixed(2) ?? 0}",
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+              overflow: TextOverflow.ellipsis),
+          Text("Passes certos: ${estatisticas.passesCertosTotal ?? 0}",
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+              overflow: TextOverflow.ellipsis),
+          Text("Assistencias: ${estatisticas.assistenciasTotal ?? 0}",
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+              overflow: TextOverflow.ellipsis),
+          Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}",
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+              overflow: TextOverflow.ellipsis),
         ]),
       ),
     );
@@ -392,11 +456,13 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
             child: Text.rich(TextSpan(children: [
               TextSpan(
                   text:
-                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. "),
+                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. ",
+                  style: const TextStyle(color: Colors.white)),
               TextSpan(
                   text: jogadorValue.toStringAsFixed(2),
                   style: const TextStyle(color: Colors.green)),
-              const TextSpan(text: "/partida!"),
+              const TextSpan(
+                  text: "/partida!", style: TextStyle(color: Colors.white)),
             ])),
           ));
         }
@@ -411,11 +477,13 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
             child: Text.rich(TextSpan(children: [
               TextSpan(
                   text:
-                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. "),
+                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. ",
+                  style: const TextStyle(color: Colors.white)),
               TextSpan(
                   text: jogadorValue.toStringAsFixed(2),
                   style: const TextStyle(color: Colors.green)),
-              const TextSpan(text: "/partida."),
+              const TextSpan(
+                  text: "/partida.", style: TextStyle(color: Colors.white)),
             ])),
           ));
         }
@@ -431,11 +499,13 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
             child: Text.rich(TextSpan(children: [
               TextSpan(
                   text:
-                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. "),
+                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. ",
+                  style: const TextStyle(color: Colors.white)),
               TextSpan(
                   text: jogadorValue.toStringAsFixed(2),
                   style: const TextStyle(color: Colors.red)),
-              const TextSpan(text: "/partida!"),
+              const TextSpan(
+                  text: "/partida!", style: TextStyle(color: Colors.white)),
             ])),
           ));
         }
@@ -450,11 +520,13 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
             child: Text.rich(TextSpan(children: [
               TextSpan(
                   text:
-                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. "),
+                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. ",
+                  style: const TextStyle(color: Colors.white)),
               TextSpan(
                   text: jogadorValue.toStringAsFixed(2),
                   style: const TextStyle(color: Colors.red)),
-              const TextSpan(text: "/partida."),
+              const TextSpan(
+                  text: "/partida.", style: TextStyle(color: Colors.white)),
             ])),
           ));
         }
