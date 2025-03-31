@@ -36,7 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.time;
+  Tipos? tipo = Tipos.pesquisa;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "Cor";
@@ -59,7 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       tipo = null;
       pesquisa = str;
-      controller.clear();
     });
 
     setState(() {
@@ -74,45 +73,57 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue.shade400,
+        backgroundColor: Colors.black,
         appBar: AppBar(
-          backgroundColor: Colors.blue.shade400,
+          backgroundColor: Colors.black,
           flexibleSpace: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    tipo = Tipos.ia;
-                  });
-                },
-                child: const Icon(Icons.auto_awesome_sharp),
+              const Text(
+                "Logo",
+                style: TextStyle(color: Colors.white),
               ),
               SizedBox(
                 width: 300,
                 child: TextField(
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                              BorderSide(width: 2, color: Colors.white)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                              BorderSide(width: 2, color: Colors.white)),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                      hintText: "Pesquise no Scout AI"),
                   onSubmitted: (value) {
                     setTipo(value);
                   },
                   controller: controller,
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (controller.text.isEmpty) {
-                    return;
-                  }
-                  setTipo(controller.text);
-                },
-                child: const Icon(Icons.search),
-              ),
-              ElevatedButton(
+              OutlinedButton(
+                style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                        Color.fromARGB(50, 0, 100, 55))),
                 onPressed: () {
                   setState(() {
                     tipo = Tipos.pesquisaAvancada;
                   });
                 },
-                child: const Icon(Icons.person_search_rounded),
+                child: const Row(children: [
+                  Icon(Icons.person_search, color: Colors.white),
+                  Text(
+                    "Estatisticas de jogadores",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ]),
               ),
             ],
           ),
