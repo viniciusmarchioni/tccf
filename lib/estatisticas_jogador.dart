@@ -136,100 +136,97 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                        Container(
-                          //margin: const EdgeInsets.all(25),
-                          child: Builder(
-                            builder: (context) {
-                              List<Widget> estatisticas = [];
-                              String? posicaoFavorita =
-                                  jogadorRepository.posicaoFavorita;
+                        Builder(
+                          builder: (context) {
+                            List<Widget> estatisticas = [];
+                            String? posicaoFavorita =
+                                jogadorRepository.posicaoFavorita;
 
-                              if (posicaoFavorita == 'G') {
-                                estatisticas.add(Text(
-                                    "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                              } else if (posicaoFavorita == 'D') {
-                                estatisticas.add(Text(
-                                    "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                              } else if (posicaoFavorita == 'M') {
-                                estatisticas.add(Text(
-                                    "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                              } else {
-                                estatisticas.add(Text(
-                                    "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                                estatisticas.add(Text(
-                                    "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context))));
-                              }
+                            if (posicaoFavorita == 'G') {
+                              estatisticas.add(Text(
+                                  "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                            } else if (posicaoFavorita == 'D') {
+                              estatisticas.add(Text(
+                                  "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                            } else if (posicaoFavorita == 'M') {
+                              estatisticas.add(Text(
+                                  "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                            } else {
+                              estatisticas.add(Text(
+                                  "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                              estatisticas.add(Text(
+                                  "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context))));
+                            }
 
-                              return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    for (Widget i in estatisticas) i,
-                                    Text(
-                                        "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMenor(
-                                                25, context))),
-                                  ]);
-                            },
-                          ),
+                            return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (Widget i in estatisticas) i,
+                                  Text(
+                                      "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(25, context))),
+                                ]);
+                          },
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

@@ -167,290 +167,248 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                   color:
                                       valorSwitch ? Colors.green : Colors.red,
                                   width: 2)),
-                          child: Expanded(
-                            child: Column(
-                              children: [
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                              side: const BorderSide(
-                                                  color: Colors.green)),
-                                          onPressed: () {
-                                            setState(() {
-                                              valorSwitch = true;
-                                            });
-                                          },
-                                          child: const Text(
-                                            "Pontos positivos",
-                                            style:
-                                                TextStyle(color: Colors.green),
-                                          )),
-                                      OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                              side: const BorderSide(
-                                                  color: Colors.red)),
-                                          onPressed: () {
-                                            setState(() {
-                                              valorSwitch = false;
-                                            });
-                                          },
-                                          child: const Text(
-                                            "Pontos negativos",
-                                            style: TextStyle(color: Colors.red),
-                                          )),
-                                    ]),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                      child: Column(
-                                    children: [
-                                      if (valorSwitch) ...[
-                                        for (Jogador i
-                                            in timesRepository.defensores) ...[
-                                          if ((i.estatisticas.estatistica1 ??
-                                                  0) >
-                                              (timesRepository
-                                                      .medias[0].estatistica1 ??
-                                                  0))
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.all(10),
-                                                child: Text.rich(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                  TextSpan(children: [
-                                                    TextSpan(
-                                                        text:
-                                                            "${i.nome} obteve uma média de desarmes maior que a média de defensores da Serie A. ",
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                    TextSpan(
-                                                        text: i.estatisticas
-                                                            .estatistica1
-                                                            ?.toStringAsFixed(
-                                                                2),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.green)),
-                                                    const TextSpan(
-                                                        text: "/partida.",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))
-                                                  ]),
-                                                ))
-                                        ],
-                                        for (Jogador i
-                                            in timesRepository.meias) ...[
-                                          if ((i.estatisticas.estatistica1 ??
-                                                  0) >
-                                              (timesRepository
-                                                      .medias[1].estatistica1 ??
-                                                  0))
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.all(10),
-                                                child: Text.rich(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                  TextSpan(children: [
-                                                    TextSpan(
-                                                        text:
-                                                            "${i.nome} obteve uma média de passes certos acima da média de meias da Serie A. ",
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                    TextSpan(
-                                                        text: i.estatisticas
-                                                            .estatistica1
-                                                            ?.toStringAsFixed(
-                                                                2),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.green)),
-                                                    const TextSpan(
-                                                        text: "/partida!",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))
-                                                  ]),
-                                                ))
-                                        ],
-                                        for (Jogador i
-                                            in timesRepository.atacantes) ...[
-                                          if ((i.estatisticas.estatistica1 ??
-                                                  0) >
-                                              (timesRepository
-                                                      .medias[2].estatistica1 ??
-                                                  0))
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.all(10),
-                                                child: Text.rich(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                  TextSpan(children: [
-                                                    TextSpan(
-                                                        text:
-                                                            "${i.nome} obteve uma média de gols acima dos atacantes da Serie A. ",
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                    TextSpan(
-                                                        text: i.estatisticas
-                                                            .estatistica1
-                                                            ?.toStringAsFixed(
-                                                                2),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.green)),
-                                                    const TextSpan(
-                                                        text: "/partida!",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))
-                                                  ]),
-                                                ))
-                                        ]
-                                      ] else ...[
-                                        for (Jogador i
-                                            in timesRepository.defensores) ...[
-                                          if ((i.estatisticas.estatistica1 ??
-                                                  0) <
-                                              (timesRepository
-                                                      .medias[0].estatistica1 ??
-                                                  0))
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.all(10),
-                                                child: Text.rich(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                  TextSpan(children: [
-                                                    TextSpan(
-                                                        text:
-                                                            "${i.nome} obteve uma média de desarmes abaixo que a média de defensores da Serie A. ",
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                    TextSpan(
-                                                        text: i.estatisticas
-                                                            .estatistica1
-                                                            ?.toStringAsFixed(
-                                                                2),
-                                                        style: const TextStyle(
-                                                            color: Colors.red)),
-                                                    const TextSpan(
-                                                        text: "/partida.",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))
-                                                  ]),
-                                                ))
-                                        ],
-                                        for (Jogador i
-                                            in timesRepository.meias) ...[
-                                          if ((i.estatisticas.estatistica1 ??
-                                                  0) <
-                                              (timesRepository
-                                                      .medias[1].estatistica1 ??
-                                                  0))
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.all(10),
-                                                child: Text.rich(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                  TextSpan(children: [
-                                                    TextSpan(
-                                                        text:
-                                                            "${i.nome} obteve uma média de passes certos abaixo da média de meias da Serie A. ",
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                    TextSpan(
-                                                        text: i.estatisticas
-                                                            .estatistica1
-                                                            ?.toStringAsFixed(
-                                                                2),
-                                                        style: const TextStyle(
-                                                            color: Colors.red)),
-                                                    const TextSpan(
-                                                        text: "/partida!",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))
-                                                  ]),
-                                                ))
-                                        ],
-                                        for (Jogador i
-                                            in timesRepository.atacantes) ...[
-                                          if ((i.estatisticas.estatistica1 ??
-                                                  0) <
-                                              (timesRepository
-                                                      .medias[2].estatistica1 ??
-                                                  0))
-                                            Container(
-                                                margin:
-                                                    const EdgeInsets.all(10),
-                                                child: Text.rich(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                  TextSpan(children: [
-                                                    TextSpan(
-                                                        text:
-                                                            "${i.nome} obteve uma média de gols abaixo dos atacantes da Serie A. ",
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                    TextSpan(
-                                                        text: i.estatisticas
-                                                            .estatistica1
-                                                            ?.toStringAsFixed(
-                                                                2),
-                                                        style: const TextStyle(
-                                                            color: Colors.red)),
-                                                    const TextSpan(
-                                                        text: "/partida!",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))
-                                                  ]),
-                                                ))
-                                        ]
+                          child: Column(
+                            children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(
+                                                color: Colors.green)),
+                                        onPressed: () {
+                                          setState(() {
+                                            valorSwitch = true;
+                                          });
+                                        },
+                                        child: const Text(
+                                          "Pontos positivos",
+                                          style: TextStyle(color: Colors.green),
+                                        )),
+                                    OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(
+                                                color: Colors.red)),
+                                        onPressed: () {
+                                          setState(() {
+                                            valorSwitch = false;
+                                          });
+                                        },
+                                        child: const Text(
+                                          "Pontos negativos",
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                  ]),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                    child: Column(
+                                  children: [
+                                    if (valorSwitch) ...[
+                                      for (Jogador i
+                                          in timesRepository.defensores) ...[
+                                        if ((i.estatisticas.estatistica1 ?? 0) >
+                                            (timesRepository
+                                                    .medias[0].estatistica1 ??
+                                                0))
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text.rich(
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                                TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "${i.nome} obteve uma média de desarmes maior que a média de defensores da Serie A. ",
+                                                      style: const TextStyle(
+                                                          color: Colors.white)),
+                                                  TextSpan(
+                                                      text: i.estatisticas
+                                                          .estatistica1
+                                                          ?.toStringAsFixed(2),
+                                                      style: const TextStyle(
+                                                          color: Colors.green)),
+                                                  const TextSpan(
+                                                      text: "/partida.",
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                ]),
+                                              ))
                                       ],
+                                      for (Jogador i
+                                          in timesRepository.meias) ...[
+                                        if ((i.estatisticas.estatistica1 ?? 0) >
+                                            (timesRepository
+                                                    .medias[1].estatistica1 ??
+                                                0))
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text.rich(
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                                TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "${i.nome} obteve uma média de passes certos acima da média de meias da Serie A. ",
+                                                      style: const TextStyle(
+                                                          color: Colors.white)),
+                                                  TextSpan(
+                                                      text: i.estatisticas
+                                                          .estatistica1
+                                                          ?.toStringAsFixed(2),
+                                                      style: const TextStyle(
+                                                          color: Colors.green)),
+                                                  const TextSpan(
+                                                      text: "/partida!",
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                ]),
+                                              ))
+                                      ],
+                                      for (Jogador i
+                                          in timesRepository.atacantes) ...[
+                                        if ((i.estatisticas.estatistica1 ?? 0) >
+                                            (timesRepository
+                                                    .medias[2].estatistica1 ??
+                                                0))
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text.rich(
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                                TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "${i.nome} obteve uma média de gols acima dos atacantes da Serie A. ",
+                                                      style: const TextStyle(
+                                                          color: Colors.white)),
+                                                  TextSpan(
+                                                      text: i.estatisticas
+                                                          .estatistica1
+                                                          ?.toStringAsFixed(2),
+                                                      style: const TextStyle(
+                                                          color: Colors.green)),
+                                                  const TextSpan(
+                                                      text: "/partida!",
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                ]),
+                                              ))
+                                      ]
+                                    ] else ...[
+                                      for (Jogador i
+                                          in timesRepository.defensores) ...[
+                                        if ((i.estatisticas.estatistica1 ?? 0) <
+                                            (timesRepository
+                                                    .medias[0].estatistica1 ??
+                                                0))
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text.rich(
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                                TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "${i.nome} obteve uma média de desarmes abaixo que a média de defensores da Serie A. ",
+                                                      style: const TextStyle(
+                                                          color: Colors.white)),
+                                                  TextSpan(
+                                                      text: i.estatisticas
+                                                          .estatistica1
+                                                          ?.toStringAsFixed(2),
+                                                      style: const TextStyle(
+                                                          color: Colors.red)),
+                                                  const TextSpan(
+                                                      text: "/partida.",
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                ]),
+                                              ))
+                                      ],
+                                      for (Jogador i
+                                          in timesRepository.meias) ...[
+                                        if ((i.estatisticas.estatistica1 ?? 0) <
+                                            (timesRepository
+                                                    .medias[1].estatistica1 ??
+                                                0))
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text.rich(
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                                TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "${i.nome} obteve uma média de passes certos abaixo da média de meias da Serie A. ",
+                                                      style: const TextStyle(
+                                                          color: Colors.white)),
+                                                  TextSpan(
+                                                      text: i.estatisticas
+                                                          .estatistica1
+                                                          ?.toStringAsFixed(2),
+                                                      style: const TextStyle(
+                                                          color: Colors.red)),
+                                                  const TextSpan(
+                                                      text: "/partida!",
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                ]),
+                                              ))
+                                      ],
+                                      for (Jogador i
+                                          in timesRepository.atacantes) ...[
+                                        if ((i.estatisticas.estatistica1 ?? 0) <
+                                            (timesRepository
+                                                    .medias[2].estatistica1 ??
+                                                0))
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text.rich(
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                                TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "${i.nome} obteve uma média de gols abaixo dos atacantes da Serie A. ",
+                                                      style: const TextStyle(
+                                                          color: Colors.white)),
+                                                  TextSpan(
+                                                      text: i.estatisticas
+                                                          .estatistica1
+                                                          ?.toStringAsFixed(2),
+                                                      style: const TextStyle(
+                                                          color: Colors.red)),
+                                                  const TextSpan(
+                                                      text: "/partida!",
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                ]),
+                                              ))
+                                      ]
                                     ],
-                                  )),
-                                ),
-                              ],
-                            ),
+                                  ],
+                                )),
+                              ),
+                            ],
                           ),
                         ),
                       ],
