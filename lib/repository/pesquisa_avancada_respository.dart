@@ -10,8 +10,7 @@ class PesquisaAvancadaRepository {
   Future<void> pesquisa(Map<String, String> param) async {
     try {
       var response = await http.get(
-          Uri.parse(
-              "https://corinthianspaulista1910.duckdns.org/pesquisaavancada/"),
+          Uri.parse("http://localhost:5000/pesquisaavancada/"),
           headers: param);
 
       if (response.statusCode == 200) {

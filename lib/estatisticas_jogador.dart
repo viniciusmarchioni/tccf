@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scout/repository/jogador_repository.dart';
+import 'package:scout/util/util.dart';
 
 class JogadorEstatisticas extends StatefulWidget {
   final int idJogador;
@@ -70,11 +71,13 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                   backgroundImage: jogadorRepository.jogador.image == null
                       ? null
                       : NetworkImage(jogadorRepository.jogador.image!),
-                  radius: 150,
+                  radius: fatorDeEscalaMenor(150, context),
                 ),
                 Text(
                   jogadorRepository.jogador.nome ?? "Carregando...",
-                  style: const TextStyle(fontSize: 35, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: fatorDeEscalaMenor(35, context),
+                      color: Colors.white),
                 ),
                 Text(
                   jogadorRepository.nomeTime ?? "Carregando...",
@@ -90,7 +93,9 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                     child: DropdownButton(
                       dropdownColor: Colors.green,
                       value: dropDownValue,
-                      style: const TextStyle(color: Colors.white, fontSize: 30),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: fatorDeEscalaMenor(25, context)),
                       items: [
                         const DropdownMenuItem(
                             value: "Geral",
@@ -132,7 +137,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                         Container(
-                          margin: const EdgeInsets.all(25),
+                          //margin: const EdgeInsets.all(25),
                           child: Builder(
                             builder: (context) {
                               List<Widget> estatisticas = [];
@@ -142,51 +147,73 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                               if (posicaoFavorita == 'G') {
                                 estatisticas.add(Text(
                                     "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                               } else if (posicaoFavorita == 'D') {
                                 estatisticas.add(Text(
                                     "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                               } else if (posicaoFavorita == 'M') {
                                 estatisticas.add(Text(
                                     "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                               } else {
                                 estatisticas.add(Text(
                                     "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                                 estatisticas.add(Text(
                                     "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25)));
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
                               }
 
                               return Column(
@@ -196,8 +223,10 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                                     for (Widget i in estatisticas) i,
                                     Text(
                                         "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}",
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 25)),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                25, context))),
                                   ]);
                             },
                           ),
@@ -239,7 +268,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                           ),
                         ] else ...[
                           Container(
-                            height: 300,
+                            height: fatorDeEscalaMenor(300, context),
                             decoration: BoxDecoration(
                                 color: valorSwitch
                                     ? const Color.fromARGB(68, 34, 197, 94)
@@ -318,8 +347,8 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
 
   Widget destaque(Destaque destaque) {
     return Container(
-      height: 50,
-      width: 150,
+      height: fatorDeEscalaMenor(50, context),
+      width: fatorDeEscalaMenor(150, context),
       decoration: BoxDecoration(
           color: corNota(destaque.nota ?? 0),
           borderRadius: const BorderRadius.all(Radius.circular(5))),
@@ -361,8 +390,10 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
             borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           if (formacaoFavorita != null) ...[
-            const Text("Formação favorita:",
-                style: TextStyle(color: Colors.white, fontSize: 25),
+            Text("Formação favorita:",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fatorDeEscalaMenor(25, context)),
                 overflow: TextOverflow.ellipsis),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -371,12 +402,16 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                   color: const Color.fromARGB(255, 17, 34, 23),
                   borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Text(formacaoFavorita,
-                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fatorDeEscalaMenor(25, context)),
                   overflow: TextOverflow.ellipsis),
             )
           ] else ...[
-            const Text("Posição favorita:",
-                style: TextStyle(color: Colors.white, fontSize: 25),
+            Text("Posição favorita:",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fatorDeEscalaMenor(25, context)),
                 overflow: TextOverflow.ellipsis),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -385,21 +420,31 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                   color: const Color.fromARGB(255, 17, 34, 23),
                   borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Text(dic[posicaoFavorita].toString(),
-                  style: const TextStyle(color: Colors.white, fontSize: 25),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fatorDeEscalaMenor(25, context)),
                   overflow: TextOverflow.ellipsis),
             )
           ],
           Text("Nota: ${estatisticas.nota?.toStringAsFixed(2) ?? 0}",
-              style: const TextStyle(color: Colors.white, fontSize: 25),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fatorDeEscalaMenor(25, context)),
               overflow: TextOverflow.ellipsis),
           Text("Passes certos: ${estatisticas.passesCertosTotal ?? 0}",
-              style: const TextStyle(color: Colors.white, fontSize: 25),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fatorDeEscalaMenor(25, context)),
               overflow: TextOverflow.ellipsis),
           Text("Assistencias: ${estatisticas.assistenciasTotal ?? 0}",
-              style: const TextStyle(color: Colors.white, fontSize: 25),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fatorDeEscalaMenor(25, context)),
               overflow: TextOverflow.ellipsis),
           Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}",
-              style: const TextStyle(color: Colors.white, fontSize: 25),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fatorDeEscalaMenor(25, context)),
               overflow: TextOverflow.ellipsis),
         ]),
       ),

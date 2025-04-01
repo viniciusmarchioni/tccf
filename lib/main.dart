@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Scoutcc',
+      title: 'ScoutAI',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade300),
         useMaterial3: true,
@@ -36,7 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.jogador;
+  Tipos? tipo = Tipos.time;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "C";

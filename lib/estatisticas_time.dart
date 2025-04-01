@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scout/repository/teamsrepository.dart';
+import 'package:scout/util/util.dart';
 
 class TimeEstatisticas extends StatefulWidget {
   final int idTime;
@@ -90,8 +91,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                   child: DropdownButton(
                                     dropdownColor: Colors.green,
                                     value: dropDownValue,
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 30),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context)),
                                     items: [
                                       for (String i
                                           in timesRepository.formacoes)
@@ -118,10 +121,11 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                             ]),
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               "Aproveitamento na formação:",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 25),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: fatorDeEscalaMenor(25, context)),
                             ),
                             containerNota(timesRepository.aproveitamento
                                 .getAproveitamento()),
@@ -130,47 +134,40 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                         constroiFormacao(controller.text, timesRepository),
                       ],
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Vitorias: ${timesRepository.aproveitamento.vitorias}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25),
-                                  ),
-                                  Text(
-                                    "Empates: ${timesRepository.aproveitamento.empates}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25),
-                                  ),
-                                  Text(
-                                    "Derrotas: ${timesRepository.aproveitamento.derrotas}",
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 25),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(50),
-                            height: 300,
-                            decoration: BoxDecoration(
-                                color: valorSwitch
-                                    ? const Color.fromARGB(68, 34, 197, 94)
-                                    : const Color.fromARGB(100, 197, 34, 37),
-                                border: Border.all(
-                                    color:
-                                        valorSwitch ? Colors.green : Colors.red,
-                                    width: 2)),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Vitorias: ${timesRepository.aproveitamento.vitorias}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fatorDeEscalaMenor(25, context)),
+                        ),
+                        Text(
+                          "Empates: ${timesRepository.aproveitamento.empates}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fatorDeEscalaMenor(25, context)),
+                        ),
+                        Text(
+                          "Derrotas: ${timesRepository.aproveitamento.derrotas}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fatorDeEscalaMenor(25, context)),
+                        ),
+                        Container(
+                          margin:
+                              EdgeInsets.all(fatorDeEscalaMenor(40, context)),
+                          height: fatorDeEscalaMenor(300, context),
+                          decoration: BoxDecoration(
+                              color: valorSwitch
+                                  ? const Color.fromARGB(68, 34, 197, 94)
+                                  : const Color.fromARGB(100, 197, 34, 37),
+                              border: Border.all(
+                                  color:
+                                      valorSwitch ? Colors.green : Colors.red,
+                                  width: 2)),
+                          child: Expanded(
                             child: Column(
                               children: [
                                 Row(
@@ -223,8 +220,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                                 child: Text.rich(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
                                                   TextSpan(children: [
                                                     TextSpan(
                                                         text:
@@ -261,8 +260,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                                 child: Text.rich(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
                                                   TextSpan(children: [
                                                     TextSpan(
                                                         text:
@@ -299,8 +300,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                                 child: Text.rich(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
                                                   TextSpan(children: [
                                                     TextSpan(
                                                         text:
@@ -338,8 +341,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                                 child: Text.rich(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
                                                   TextSpan(children: [
                                                     TextSpan(
                                                         text:
@@ -375,8 +380,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                                 child: Text.rich(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
                                                   TextSpan(children: [
                                                     TextSpan(
                                                         text:
@@ -412,8 +419,10 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                                 child: Text.rich(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
                                                   TextSpan(children: [
                                                     TextSpan(
                                                         text:
@@ -443,8 +452,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     Container()
                   ],
@@ -474,8 +483,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
         Container(
           color: Colors.green,
           child: SizedBox(
-            height: 400,
-            width: 600,
+            height: fatorDeEscalaMenor(400, context),
+            width: fatorDeEscalaMenor(600, context),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -521,14 +530,14 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
 
   Widget imagemJogador(String? url) {
     if (url == null) {
-      return const CircleAvatar(
-        radius: 25,
-        backgroundImage: AssetImage('assets/images/error_image.png'),
+      return CircleAvatar(
+        radius: fatorDeEscalaMenor(25, context),
+        backgroundImage: const AssetImage('assets/images/error_image.png'),
       );
     }
 
     return CircleAvatar(
-      radius: 25,
+      radius: fatorDeEscalaMenor(25, context),
       backgroundImage: NetworkImage(url),
     );
   }
@@ -544,11 +553,11 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
       cor = Colors.green;
     }
     Widget x = Container(
-      margin: const EdgeInsets.all(10),
+      margin: EdgeInsets.all(fatorDeEscalaMenor(10, context)),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: cor, borderRadius: const BorderRadius.all(Radius.circular(5))),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(fatorDeEscalaMenor(20, context)),
       child: Text("${nota.toStringAsFixed(2)}%"),
     );
 
