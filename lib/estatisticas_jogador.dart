@@ -126,6 +126,35 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                     ),
                   ),
                 ),
+                Builder(
+                  builder: (context) {
+                    if (geral) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Desempenho geral:",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          containerNota(
+                              jogadorRepository.estatisticas?.nota ?? 0)
+                        ],
+                      );
+                    } else {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Desempenho na formação:",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          containerNota(
+                              jogadorRepository.estatisticas?.nota ?? 0)
+                        ],
+                      );
+                    }
+                  },
+                )
               ],
             ),
           ),
@@ -361,8 +390,8 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
     Widget x = ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        width: 100,
-        height: 100,
+        width: fatorDeEscalaMenor(50, context),
+        height: fatorDeEscalaMenor(50, context),
         alignment: Alignment.center,
         color: corNota(nota),
         child: Text(nota.toStringAsFixed(2)),
