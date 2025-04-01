@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scout/repository/pesquisa_avancada_respository.dart';
+import 'package:scout/util/util.dart';
 
 class PesquisaAvancada extends StatefulWidget {
   final void Function(int) onPlayerClick;
@@ -15,7 +16,6 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
   TextEditingController controllerPosicao = TextEditingController();
   TextEditingController controllerFormacao = TextEditingController();
   PesquisaAvancadaRepository repository = PesquisaAvancadaRepository();
-
   Map<String, String> map = {
     "posicao": "",
     "formacao": "",
@@ -30,9 +30,39 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
     "bloqueados": "false",
   };
 
+  final formacoes = [
+    "Formação",
+    "4-4-2",
+    "4-3-3",
+    "4-2-3-1",
+    "3-4-1-2",
+    "4-3-1-2",
+    "4-1-3-2",
+    "3-4-2-1",
+    "3-5-2",
+    "4-4-1-1",
+    "5-4-1",
+    "3-4-3",
+    "4-3-2-1",
+    "4-1-4-1",
+    "5-3-2",
+    "4-2-2-2",
+    "4-5-1",
+    "3-3-3-1",
+    "3-3-1-3",
+    "3-5-1-1",
+    "3-2-4-1",
+    "3-1-4-2",
+  ];
+  final posicoes = ["Posição", "Goleiro", "Defensor", "Meia", "Atacante"];
+  String? dropDownValueForm = "Formação";
+  String? dropDownValuePos = "Posição";
   bool carregando = false;
 
   void setDic(dynamic value, String key) {
+    if (value == "Formação" || value == "Posição") {
+      value = "";
+    }
     setState(() {
       map[key] = value.toString();
     });
@@ -60,75 +90,76 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade400,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-          backgroundColor: Colors.blue.shade400,
-          flexibleSpace: Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  DropdownMenu(
-                    requestFocusOnTap: false,
-                    controller: controllerPosicao,
-                    onSelected: (value) {
-                      setDic(value, "posicao");
-                    },
-                    dropdownMenuEntries: const [
-                      DropdownMenuEntry(value: "", label: "Posição"),
-                      DropdownMenuEntry(value: "G", label: "Goleiro"),
-                      DropdownMenuEntry(value: "D", label: "Defensor"),
-                      DropdownMenuEntry(value: "M", label: "Meia"),
-                      DropdownMenuEntry(value: "F", label: "Atacante"),
+          backgroundColor: Colors.grey.shade900,
+          flexibleSpace: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: fatorDeEscalaMenor(10, context)),
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(color: Colors.green)),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                    value: dropDownValueForm,
+                    items: [
+                      for (var i in formacoes)
+                        DropdownMenuItem(
+                          value: i,
+                          child: Text(i),
+                        )
                     ],
-                  ),
-                  DropdownMenu(
-                    requestFocusOnTap: false,
-                    onSelected: (value) {
+                    onChanged: (value) {
+                      setState(() {
+                        dropDownValueForm = value;
+                      });
                       setDic(value, "formacao");
                     },
-                    controller: controllerFormacao,
-                    dropdownMenuEntries: const [
-                      DropdownMenuEntry(value: "", label: "Formação"),
-                      DropdownMenuEntry(value: "4-4-2", label: "4-4-2"),
-                      DropdownMenuEntry(value: "4-3-3", label: "4-3-3"),
-                      DropdownMenuEntry(value: "4-2-3-1", label: "4-2-3-1"),
-                      DropdownMenuEntry(value: "3-4-1-2", label: "3-4-1-2"),
-                      DropdownMenuEntry(value: "3-4-1-2", label: "3-4-1-2"),
-                      DropdownMenuEntry(value: "4-3-1-2", label: "4-3-1-2"),
-                      DropdownMenuEntry(value: "4-1-3-2", label: "4-1-3-2"),
-                      DropdownMenuEntry(value: "3-4-2-1", label: "3-4-2-1"),
-                      DropdownMenuEntry(value: "3-5-2", label: "3-5-2"),
-                      DropdownMenuEntry(value: "4-4-1-1", label: "4-4-1-1"),
-                      DropdownMenuEntry(value: "5-4-1", label: "5-4-1"),
-                      DropdownMenuEntry(value: "3-4-3", label: "3-4-3"),
-                      DropdownMenuEntry(value: "4-3-2-1", label: "4-3-2-1"),
-                      DropdownMenuEntry(value: "4-1-4-1", label: "4-1-4-1"),
-                      DropdownMenuEntry(value: "5-3-2", label: "5-3-2"),
-                      DropdownMenuEntry(value: "4-2-2-2", label: "4-2-2-2"),
-                      DropdownMenuEntry(value: "4-5-1", label: "4-5-1"),
-                      DropdownMenuEntry(value: "3-3-3-1", label: "3-3-3-1"),
-                      DropdownMenuEntry(value: "3-3-1-3", label: "3-3-1-3"),
-                      DropdownMenuEntry(value: "3-5-1-1", label: "3-5-1-1"),
-                      DropdownMenuEntry(value: "3-2-4-1", label: "3-2-4-1"),
-                      DropdownMenuEntry(value: "3-1-4-2", label: "3-1-4-2"),
+                  )),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: fatorDeEscalaMenor(10, context)),
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(color: Colors.green)),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                    value: dropDownValuePos,
+                    items: [
+                      for (var i in posicoes)
+                        DropdownMenuItem(
+                          value: i,
+                          child: Text(i),
+                        )
                     ],
-                  ),
-                  _Botao(onClick: setDic, texto: "gols"),
-                  _Botao(onClick: setDic, texto: "desarmes"),
-                  _Botao(onClick: setDic, texto: "assistencias"),
-                  _Botao(onClick: setDic, texto: "passes_certos"),
-                  _Botao(onClick: setDic, texto: "chances_criadas"),
-                  _Botao(onClick: setDic, texto: "faltas_sofridas"),
-                  _Botao(onClick: setDic, texto: "dribles_completos"),
-                  _Botao(onClick: setDic, texto: "chutes_no_gol"),
-                  _Botao(onClick: setDic, texto: "bloqueados"),
-                  _BotaoPe(
-                    onClick: (p0) {},
-                  )
-                ],
-              ),
+                    onChanged: (value) {
+                      setState(() {
+                        dropDownValuePos = value;
+                      });
+                      setDic(value, "posicao");
+                    },
+                  )),
+                ),
+                _Botao(onClick: setDic, texto: "gols"),
+                _Botao(onClick: setDic, texto: "desarmes"),
+                _Botao(onClick: setDic, texto: "assistencias"),
+                _Botao(onClick: setDic, texto: "passes_certos"),
+                _Botao(onClick: setDic, texto: "chances_criadas"),
+                _Botao(onClick: setDic, texto: "faltas_sofridas"),
+                _Botao(onClick: setDic, texto: "dribles_completos"),
+                _Botao(onClick: setDic, texto: "chutes_no_gol"),
+                _Botao(onClick: setDic, texto: "bloqueados"),
+                _BotaoPe(
+                  onClick: (p0) {},
+                )
+              ],
             ),
           )),
       body: !carregando
@@ -223,19 +254,26 @@ class _BotaoState extends State<_Botao> {
   bool ativo = false;
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: ativo
-            ? const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.white))
-            : const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.blue)),
-        onPressed: () {
-          setState(() {
-            ativo = !ativo;
-          });
-          widget.onClick(ativo, widget.texto);
-        },
-        child: Text(dic[widget.texto] ?? widget.texto));
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: fatorDeEscalaMenor(10, context)),
+      child: ElevatedButton(
+          style: ativo
+              ? const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.green))
+              : const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                      Color.fromARGB(255, 40, 92, 42))),
+          onPressed: () {
+            setState(() {
+              ativo = !ativo;
+            });
+            widget.onClick(ativo, widget.texto);
+          },
+          child: Text(
+            dic[widget.texto] ?? widget.texto,
+            style: const TextStyle(color: Colors.black),
+          )),
+    );
   }
 }
 
@@ -272,13 +310,17 @@ class _BotaoPeState extends State<_BotaoPe> {
     return ElevatedButton(
         style: ativo
             ? const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.white))
+                backgroundColor: MaterialStatePropertyAll(Colors.green))
             : const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.blue)),
+                backgroundColor:
+                    MaterialStatePropertyAll(Color.fromARGB(255, 40, 92, 42))),
         onPressed: () {
           aumentaIndice();
           widget.onClick(values[index]);
         },
-        child: index < 2 ? Text(states[index]) : const Text("Pé preferido"));
+        child: index < 2
+            ? Text(states[index], style: const TextStyle(color: Colors.black))
+            : const Text("Pé preferido",
+                style: TextStyle(color: Colors.black)));
   }
 }
