@@ -11,6 +11,7 @@ class TimesRepository {
   List<String> formacoes = [];
   Aproveitamento aproveitamento = Aproveitamento();
   List<EstatisticasMenor> medias = [];
+  Time infoTime = Time();
 
   TimesRepository();
 
@@ -26,8 +27,11 @@ class TimesRepository {
         meias = [];
         atacantes = [];
         formacoes = [];
+        infoTime = Time();
 
         var body = jsonDecode(response.body);
+
+        infoTime = Time.fromJsonAll(body['info']);
 
         for (var i in body['formações']) {
           formacoes.add(i.toString());
@@ -154,4 +158,17 @@ class EstatisticasMenor {
       : estatistica1 = json['estatistica1'],
         estatistica2 = json['estatistica2'],
         estatistica3 = json['estatistica3'];
+}
+
+class Time {
+  int? id;
+  String? nome;
+  String? logo;
+
+  Time();
+
+  Time.fromJsonAll(Map<String, dynamic> json)
+      : id = json['id'],
+        nome = json['nome'],
+        logo = json['logo'];
 }

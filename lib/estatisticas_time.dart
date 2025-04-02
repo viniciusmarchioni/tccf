@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scout/repository/teamsrepository.dart';
 import 'package:scout/util/util.dart';
@@ -73,52 +74,57 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text(
-                                "Nome do time",
-                                style: TextStyle(color: Colors.white),
+                        Row(children: [
+                          CachedNetworkImage(
+                            width: fatorDeEscalaMenor(90, context),
+                            imageUrl: timesRepository.infoTime.logo!,
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Image.asset('assets/images/error_image.png'),
+                          ),
+                          Text(
+                            timesRepository.infoTime.nome ?? 'Carregando...',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: fatorDeEscalaMenor(25, context)),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 15),
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                border: Border.all(color: Colors.green)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                dropdownColor: Colors.green,
+                                value: dropDownValue,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(25, context)),
+                                items: [
+                                  for (String i in timesRepository.formacoes)
+                                    DropdownMenuItem(
+                                        value: i,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Text(i),
+                                        )),
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value != null) {
+                                      dropDownValue = value;
+                                      atualizaFormacao(value);
+                                    }
+                                  });
+                                },
                               ),
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 15),
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    border: Border.all(color: Colors.green)),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton(
-                                    dropdownColor: Colors.green,
-                                    value: dropDownValue,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMenor(25, context)),
-                                    items: [
-                                      for (String i
-                                          in timesRepository.formacoes)
-                                        DropdownMenuItem(
-                                            value: i,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0),
-                                              child: Text(i),
-                                            )),
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (value != null) {
-                                          dropDownValue = value;
-                                          atualizaFormacao(value);
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ]),
+                            ),
+                          ),
+                        ]),
                         Row(
                           children: [
                             Text(
