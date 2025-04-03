@@ -57,7 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    init();
+    if (tipo == null) {
+      init();
+    }
   }
 
   void vaipjogador(int id) {
@@ -102,14 +104,18 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           flexibleSpace: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text(
-                "Logo",
-                style: TextStyle(color: Colors.white),
+              GestureDetector(
+                child: Image.asset("assets/images/logo.png"),
+                onTap: () {
+                  setState(() {
+                    tipo = null;
+                  });
+                },
               ),
               SizedBox(
-                width: 300,
+                width: fatorDeEscalaMenor(300, context),
                 child: TextField(
                   decoration: const InputDecoration(
                       filled: true,
@@ -282,15 +288,18 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(color: Colors.green)),
       padding: EdgeInsets.all(fatorDeEscalaMenor(15, context)),
-      child: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Text("Últimos jogos",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMenor(30, context))),
-          for (var i in menuRepository.ultimasPartidas) jogo(i)
-        ]),
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        Text("Últimos jogos",
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: fatorDeEscalaMenor(30, context))),
+        Expanded(
+            child: SingleChildScrollView(
+          child: Column(
+            children: [for (var i in menuRepository.ultimasPartidas) jogo(i)],
+          ),
+        ))
+      ]),
     );
   }
 

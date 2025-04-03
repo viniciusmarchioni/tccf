@@ -19,3 +19,13 @@ double fatorDeEscalaMenor(double valorBom, BuildContext context) {
   }
   return MediaQuery.of(context).size.shortestSide * fatorDeEscala;
 }
+
+double fatorDeEscalaMenorReverso(double valorBom, BuildContext context) {
+  double fatorDeEscala;
+  if (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width) {
+    fatorDeEscala = 1920 / valorBom; // Inverter a relação
+  } else {
+    fatorDeEscala = 945 / valorBom;
+  }
+  return fatorDeEscala / MediaQuery.of(context).size.shortestSide;
+}

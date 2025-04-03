@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:scout/util/util.dart';
 
 class Ia extends StatefulWidget {
   const Ia({super.key});
@@ -13,115 +14,607 @@ class Ia extends StatefulWidget {
 class _IaState extends State<Ia> {
   bool carregando = false;
   IaRepository iaRepository = IaRepository();
-  TextEditingController controllerMandante = TextEditingController();
-  TextEditingController controllerVisitante = TextEditingController();
-  TextEditingController controllerFormMandante = TextEditingController();
-  TextEditingController controllerFormVisitante = TextEditingController();
-  TextEditingController controllerHorario = TextEditingController();
-  TextEditingController controllerClima = TextEditingController();
-
   String resultado = "Sua previsão aqui";
+  String? timeMandante = "Selecione";
+  String? formacaoMandante = "Selecione";
+  String? timeVisitante = "Selecione";
+  String? formacaoVisitante = "Selecione";
+  String? clima = "Selecione";
+  String? horario = "Selecione";
 
   final List<String> opcoesTime = [
+    "Selecione",
     "Corinthians",
     "Palmeiras",
     "São Paulo",
     "Santos"
   ];
 
-  final List<String> opcoesFormacao = ["4-3-1-2", "4-3-3", "3-5-2", "4-4-2"];
+  final timeDic = {
+    "Bahia": "https://media.api-sports.io/football/teams/118.png",
+    "Internacional": "https://media.api-sports.io/football/teams/119.png",
+    "Botafogo": "https://media.api-sports.io/football/teams/120.png",
+    "Palmeiras": "https://media.api-sports.io/football/teams/121.png",
+    "Fluminense": "https://media.api-sports.io/football/teams/124.png",
+    "Sao Paulo": "https://media.api-sports.io/football/teams/126.png",
+    "Flamengo": "https://media.api-sports.io/football/teams/127.png",
+    "Santos": "https://media.api-sports.io/football/teams/128.png",
+    "Gremio": "https://media.api-sports.io/football/teams/130.png",
+    "Corinthians": "https://media.api-sports.io/football/teams/131.png",
+    "Vasco DA Gama": "https://media.api-sports.io/football/teams/133.png",
+    "Atletico Paranaense": "https://media.api-sports.io/football/teams/134.png",
+    "Cruzeiro": "https://media.api-sports.io/football/teams/135.png",
+    "Vitoria": "https://media.api-sports.io/football/teams/136.png",
+    "Criciuma": "https://media.api-sports.io/football/teams/140.png",
+    "Atletico Goianiense": "https://media.api-sports.io/football/teams/144.png",
+    "Juventude": "https://media.api-sports.io/football/teams/152.png",
+    "Fortaleza EC": "https://media.api-sports.io/football/teams/154.png",
+    "RB Bragantino": "https://media.api-sports.io/football/teams/794.png",
+    "Atletico-MG": "https://media.api-sports.io/football/teams/1062.png",
+    "Cuiaba": "https://media.api-sports.io/football/teams/1193.png",
+  };
 
-  final List<String> opcoesHorario = ["Dia", "Noite"];
-  final List<String> opcoesClima = ["Ceu limpo", "Chuva", "Nublado"];
+  final opcoesFormacao = [
+    "Selecione",
+    "4-4-2",
+    "4-3-3",
+    "4-2-3-1",
+    "3-4-1-2",
+    "4-3-1-2",
+    "4-1-3-2",
+    "3-4-2-1",
+    "3-5-2",
+    "4-4-1-1",
+    "5-4-1",
+    "3-4-3",
+    "4-3-2-1",
+    "4-1-4-1",
+    "5-3-2",
+    "4-2-2-2",
+    "4-5-1",
+    "3-3-3-1",
+    "3-3-1-3",
+    "3-5-1-1",
+    "3-2-4-1",
+    "3-1-4-2",
+  ];
+
+  final List<String> opcoesHorario = ["Selecione", "Dia", "Noite"];
+  final List<String> opcoesClima = [
+    "Selecione",
+    "Ceu limpo",
+    "Chuva",
+    "Nublado"
+  ];
 
   Future<void> request() async {
+    if (timeMandante == null ||
+        timeMandante == "Selecione" ||
+        timeVisitante == null ||
+        timeVisitante == "Selecione" ||
+        formacaoMandante == null ||
+        formacaoMandante == "Selecione" ||
+        formacaoVisitante == null ||
+        formacaoVisitante == "Selecione" ||
+        horario == null ||
+        horario == "Selecione" ||
+        clima == null ||
+        clima == "Selecione") {
+      return;
+    }
+
     setState(() {
       carregando = true;
     });
-    iaRepository.mandante = controllerMandante.text;
-    iaRepository.visitante = controllerVisitante.text;
-    iaRepository.formMandante = controllerFormMandante.text;
-    iaRepository.formVisitante = controllerFormVisitante.text;
-    iaRepository.horario = controllerHorario.text;
-    iaRepository.clima = controllerClima.text;
+
+    iaRepository.mandante = timeMandante!;
+    iaRepository.visitante = timeVisitante!;
+    iaRepository.formMandante = formacaoMandante!;
+    iaRepository.formVisitante = formacaoVisitante!;
+    iaRepository.clima = clima!;
+    iaRepository.horario = horario!;
+
     await iaRepository.pesquisa();
 
     setState(() {
       iaRepository = iaRepository;
-      resultado =
-          "Empate: ${iaRepository.chanceEmpate * 100}\n Mandante:${iaRepository.chanceMandante * 100}\n Visitante:${iaRepository.chanceVisitante * 100}";
       carregando = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        if (carregando) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Column(
-                    children: [
-                      DropdownMenu(
-                          controller: controllerMandante,
-                          dropdownMenuEntries: [
-                            for (String i in opcoesTime)
-                              DropdownMenuEntry(value: i, label: i)
-                          ]),
-                      DropdownMenu(
-                          controller: controllerFormMandante,
-                          dropdownMenuEntries: [
-                            for (String i in opcoesFormacao)
-                              DropdownMenuEntry(value: i, label: i)
-                          ]),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      DropdownMenu(
-                          controller: controllerVisitante,
-                          dropdownMenuEntries: [
-                            for (String i in opcoesTime)
-                              DropdownMenuEntry(value: i, label: i)
-                          ]),
-                      DropdownMenu(
-                          controller: controllerFormVisitante,
-                          dropdownMenuEntries: [
-                            for (String i in opcoesFormacao)
-                              DropdownMenuEntry(value: i, label: i)
-                          ]),
-                    ],
-                  )
-                ]),
-                DropdownMenu(
-                    controller: controllerHorario,
-                    dropdownMenuEntries: [
-                      for (String i in opcoesHorario)
-                        DropdownMenuEntry(value: i, label: i)
-                    ]),
-                DropdownMenu(controller: controllerClima, dropdownMenuEntries: [
-                  for (String i in opcoesClima)
-                    DropdownMenuEntry(value: i, label: i)
-                ]),
-                ElevatedButton(
-                    onPressed: () {
-                      request();
-                    },
-                    child: const Text("Gerar previsão")),
-                Text(resultado)
-              ],
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Previsão da partida",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fatorDeEscalaMenor(35, context)),
             ),
-          );
-        }
-      },
+          ],
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(68, 34, 197, 94),
+                      border: Border.all(color: Colors.green),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //Seleção mandante
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            fatorDeEscalaMenor(10, context)),
+                                    child: Row(children: [
+                                      Text(
+                                        "Mandante: ",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                68, 34, 197, 94),
+                                            border:
+                                                Border.all(color: Colors.green),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(20))),
+                                        child: DropdownButtonHideUnderline(
+                                            child: DropdownButton(
+                                          menuMaxHeight: 300,
+                                          dropdownColor: Colors.green,
+                                          value: timeMandante,
+                                          items: [
+                                            for (var i in [
+                                              "Selecione",
+                                              ...timeDic.keys
+                                            ])
+                                              DropdownMenuItem(
+                                                  value: i,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            fatorDeEscalaMenor(
+                                                                8.0, context)),
+                                                    child: Text(i),
+                                                  )),
+                                          ],
+                                          onChanged: (value) {
+                                            if (value != "Selecione" &&
+                                                value == timeVisitante) {
+                                              return;
+                                            }
+                                            setState(() {
+                                              timeMandante = value;
+                                            });
+                                          },
+                                        )),
+                                      )
+                                    ]),
+                                  ),
+                                  //Seleção formação mandante
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            fatorDeEscalaMenor(10, context)),
+                                    child: Row(children: [
+                                      Text(
+                                        "Formação: ",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                68, 34, 197, 94),
+                                            border:
+                                                Border.all(color: Colors.green),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(20))),
+                                        child: DropdownButtonHideUnderline(
+                                            child: DropdownButton(
+                                          menuMaxHeight: 300,
+                                          dropdownColor: Colors.green,
+                                          value: formacaoMandante,
+                                          items: [
+                                            for (var i in opcoesFormacao)
+                                              DropdownMenuItem(
+                                                  value: i,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            fatorDeEscalaMenor(
+                                                                8.0, context)),
+                                                    child: Text(i),
+                                                  )),
+                                          ],
+                                          onChanged: (value) {
+                                            setState(() {
+                                              formacaoMandante = value;
+                                            });
+                                          },
+                                        )),
+                                      )
+                                    ]),
+                                  ),
+                                ],
+                              ),
+                              Builder(
+                                builder: (context) {
+                                  if (timeMandante != null &&
+                                      timeMandante != "Selecione") {
+                                    return Image.network(
+                                      timeDic[timeMandante]!,
+                                      scale:
+                                          fatorDeEscalaMenorReverso(1, context),
+                                    );
+                                  }
+                                  return Container();
+                                },
+                              )
+                            ]),
+                        const Divider(
+                          color: Colors.green,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //Seleção visitante
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            fatorDeEscalaMenor(10, context)),
+                                    child: Row(children: [
+                                      Text(
+                                        "Visitante:   ",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                68, 34, 197, 94),
+                                            border:
+                                                Border.all(color: Colors.green),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(20))),
+                                        child: DropdownButtonHideUnderline(
+                                            child: DropdownButton(
+                                          menuMaxHeight: 300,
+                                          dropdownColor: Colors.green,
+                                          value: timeVisitante,
+                                          items: [
+                                            for (var i in [
+                                              "Selecione",
+                                              ...timeDic.keys
+                                            ])
+                                              DropdownMenuItem(
+                                                  value: i,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: Text(i),
+                                                  )),
+                                          ],
+                                          onChanged: (value) {
+                                            if (value != "Selecione" &&
+                                                value == timeMandante) {
+                                              return;
+                                            }
+                                            setState(() {
+                                              timeVisitante = value;
+                                            });
+                                          },
+                                        )),
+                                      )
+                                    ]),
+                                  ),
+                                  //Seleção formação visitante
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            fatorDeEscalaMenor(10, context)),
+                                    child: Row(children: [
+                                      Text(
+                                        "Formação: ",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                68, 34, 197, 94),
+                                            border:
+                                                Border.all(color: Colors.green),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(20))),
+                                        child: DropdownButtonHideUnderline(
+                                            child: DropdownButton(
+                                          menuMaxHeight: 300,
+                                          dropdownColor: Colors.green,
+                                          value: formacaoVisitante,
+                                          items: [
+                                            for (var i in opcoesFormacao)
+                                              DropdownMenuItem(
+                                                  value: i,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: Text(i),
+                                                  )),
+                                          ],
+                                          onChanged: (value) {
+                                            setState(() {
+                                              formacaoVisitante = value;
+                                            });
+                                          },
+                                        )),
+                                      )
+                                    ]),
+                                  ),
+                                ],
+                              ),
+                              Builder(
+                                builder: (context) {
+                                  if (timeVisitante != null &&
+                                      timeVisitante != "Selecione") {
+                                    return Image.network(
+                                      timeDic[timeVisitante]!,
+                                      scale:
+                                          fatorDeEscalaMenorReverso(1, context),
+                                    );
+                                  }
+                                  return Container();
+                                },
+                              )
+                            ]),
+                        const Divider(
+                          color: Colors.green,
+                        ),
+                        Column(
+                          children: [
+                            //Seleção clima
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  //seleção clima
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            68, 34, 197, 94),
+                                        border: Border.all(color: Colors.green),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: DropdownButtonHideUnderline(
+                                        child: DropdownButton(
+                                      value: clima,
+                                      items: [
+                                        for (var i in opcoesClima)
+                                          DropdownMenuItem(
+                                              value: i,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Text(i),
+                                              )),
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          clima = value;
+                                        });
+                                      },
+                                    )),
+                                  ),
+                                  //Selecao horário
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            68, 34, 197, 94),
+                                        border: Border.all(color: Colors.green),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: DropdownButtonHideUnderline(
+                                        child: DropdownButton(
+                                      value: horario,
+                                      items: [
+                                        for (var i in opcoesHorario)
+                                          DropdownMenuItem(
+                                              value: i,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Text(i),
+                                              )),
+                                      ],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          horario = value;
+                                        });
+                                      },
+                                    )),
+                                  )
+                                ]),
+                            //Botão prever resultado
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                    style: const ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.green)),
+                                    onPressed: () {
+                                      request();
+                                    },
+                                    child: Text(
+                                      "Prever resultado",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(30, context)),
+                                    ))
+                              ],
+                            )
+                          ],
+                        )
+                      ]),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(68, 34, 197, 94),
+                      border: Border.all(color: Colors.green),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
+                  child: Builder(builder: (context) {
+                    if (carregando) {
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.green,
+                      ));
+                    }
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(children: [
+                            Text(
+                              "Resultado",
+                              style: TextStyle(
+                                  color: Colors.green.shade400,
+                                  fontSize: fatorDeEscalaMenor(50, context)),
+                            ),
+                            Builder(
+                              builder: (context) {
+                                if (iaRepository.chanceMandante >
+                                    iaRepository.chanceVisitante) {
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        "Vitória Mandante",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                      Image.network(
+                                        timeDic[iaRepository.mandante]!,
+                                        scale: fatorDeEscalaMenorReverso(
+                                            1, context),
+                                      ),
+                                    ],
+                                  );
+                                } else if (iaRepository.chanceVisitante >
+                                    iaRepository.chanceMandante) {
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        "Vitória Visitante",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                      Image.network(
+                                        timeDic[iaRepository.visitante]!,
+                                        scale: fatorDeEscalaMenorReverso(
+                                            1, context),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        "Empate",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            )
+                          ]),
+                          const Divider(
+                            color: Colors.green,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                "Porcentagens",
+                                style: TextStyle(
+                                    color: Colors.green.shade400,
+                                    fontSize: fatorDeEscalaMenor(40, context)),
+                              ),
+                              Text(
+                                "Empate: ${(iaRepository.chanceEmpate * 100).toStringAsFixed(2)}%",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(20, context)),
+                              ),
+                              Text(
+                                "Vitória Mandante: ${(iaRepository.chanceMandante * 100).toStringAsFixed(2)}%",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(20, context)),
+                              ),
+                              Text(
+                                "Vitória Visitante: ${(iaRepository.chanceVisitante * 100).toStringAsFixed(2)}%",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(20, context)),
+                              )
+                            ],
+                          )
+                        ]);
+                  }),
+                ),
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 }
@@ -142,7 +635,7 @@ class IaRepository {
   Future<void> pesquisa() async {
     try {
       final response = await http.post(
-        Uri.parse("https://corinthianspaulista1910.duckdns.org/ia/"),
+        Uri.parse("http://localhost:5000/ia/"),
         body: jsonEncode({
           "time_mandante": mandante,
           "time_visitante": visitante,
@@ -163,6 +656,15 @@ class IaRepository {
         chanceMandante = body['mandante'];
         chanceVisitante = body['visitante'];
       } else {
+        mandante = "";
+        visitante = "";
+        formMandante = "";
+        formVisitante = "";
+        horario = "";
+        clima = "";
+        chanceEmpate = 0;
+        chanceMandante = 0;
+        chanceVisitante = 0;
         debugPrint(response.statusCode.toString());
       }
     } catch (e) {
