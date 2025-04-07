@@ -57,13 +57,13 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
           border: Border.all(color: Colors.green, width: 2),
           color: const Color.fromARGB(255, 17, 34, 23),
           borderRadius: const BorderRadius.all(Radius.circular(20))),
-      padding: const EdgeInsets.all(25),
-      margin: const EdgeInsets.all(50),
+      padding: EdgeInsets.all(fatorDeEscalaMenor(25, context)),
+      margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Expanded(
           child: Container(
             alignment: Alignment.topCenter,
-            padding: const EdgeInsets.all(25),
+            padding: EdgeInsets.all(fatorDeEscalaMenor(25, context)),
             child: Column(
               children: [
                 CircleAvatar(

@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:scout/util/util.dart';
 
 class Ia extends StatefulWidget {
-  const Ia({super.key});
+  final String? mandante;
+  final String? visitante;
+  const Ia({super.key, this.mandante, this.visitante});
 
   @override
   State<StatefulWidget> createState() => _IaState();
@@ -120,6 +122,14 @@ class _IaState extends State<Ia> {
       iaRepository = iaRepository;
       carregando = false;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    timeMandante = widget.mandante ?? "Selecione";
+    timeVisitante = widget.visitante ?? "Selecione";
   }
 
   @override

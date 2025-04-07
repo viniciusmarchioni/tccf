@@ -46,6 +46,18 @@ class _MyHomePageState extends State<MyHomePage> {
   String pesquisa = "C";
   bool carregando = false;
   MenuRepository menuRepository = MenuRepository();
+  String? _carrousselMandante;
+  String? _carrousselVisitante;
+
+  final dic = {
+    1: "Domingo",
+    2: "Segunda",
+    3: "Terça",
+    4: "Quarta",
+    5: "Quinta",
+    6: "Sexta",
+    7: "Sábado",
+  };
 
   void vaiptime(int id) {
     setState(() {
@@ -66,6 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       idJogador = id;
       tipo = Tipos.jogador;
+    });
+  }
+
+  void vaipIA(String? mandante, String? visitante) {
+    setState(() {
+      _carrousselMandante = mandante;
+      _carrousselVisitante = visitante;
+
+      tipo = Tipos.ia;
     });
   }
 
@@ -180,7 +201,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPlayerClick: vaipjogador,
               );
             } else if (tipo == Tipos.ia) {
-              return const Ia();
+              return Ia(
+                mandante: _carrousselMandante,
+                visitante: _carrousselVisitante,
+              );
             } else {
               return Container(
                 margin: const EdgeInsets.all(25),
@@ -191,10 +215,151 @@ class _MyHomePageState extends State<MyHomePage> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          color: Colors.greenAccent,
-                          child: const Text("Próximos Jogos"),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.all(15),
+                            //padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.green, width: 2),
+                                color: const Color.fromARGB(255, 17, 34, 23),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(20))),
+                            width: fatorDeEscalaMenor(600, context),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Próximos jogos",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(30, context)),
+                                ),
+                                CarouselSlider(
+                                  carouselController:
+                                      CarouselSliderController(),
+                                  items: menuRepository.ultimasPartidas
+                                      .map((partida) {
+                                    return Column(
+                                      children: [
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              //Mandante
+                                              Column(children: [
+                                                Image.network(
+                                                  partida.logoMandante!,
+                                                  height: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  width: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  /*scale:
+                                                      fatorDeEscalaMenorReverso(
+                                                          0.9, context),*/
+                                                ),
+                                                Text(
+                                                  partida.nomeMandante!,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
+                                                )
+                                              ]),
+                                              //Data do jogo
+                                              Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "${partida.data?.hour}:${partida.data?.minute}",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize:
+                                                              fatorDeEscalaMenor(
+                                                                  20, context)),
+                                                    ),
+                                                    Text(
+                                                      dic[partida.data?.weekday]
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize:
+                                                              fatorDeEscalaMenor(
+                                                                  20, context)),
+                                                    ),
+                                                    Text(
+                                                      "${partida.data?.day}/${partida.data?.month}/${(partida.data?.year ?? 0) - 2000}",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize:
+                                                              fatorDeEscalaMenor(
+                                                                  20, context)),
+                                                    )
+                                                  ]),
+                                              //Visitante
+                                              Column(children: [
+                                                Image.network(
+                                                  height: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  width: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  partida.logoVisitante!,
+                                                ),
+                                                Text(
+                                                  partida.nomeVisitante!,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
+                                                )
+                                              ])
+                                            ]),
+                                        //Botão prever
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            ElevatedButton(
+                                                style: const ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStatePropertyAll(
+                                                            Colors.green)),
+                                                onPressed: () {
+                                                  vaipIA(partida.nomeMandante,
+                                                      partida.nomeVisitante);
+                                                },
+                                                child: Text(
+                                                  "Prever",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
+                                                ))
+                                          ],
+                                        )
+                                      ],
+                                    );
+                                  }).toList(),
+                                  options: CarouselOptions(
+                                      height:
+                                          fatorDeEscalaMenor(300 - 19, context),
+                                      viewportFraction: 1,
+                                      animateToClosest: true,
+                                      enlargeCenterPage: true,
+                                      enableInfiniteScroll: true,
+                                      autoPlay: true),
+                                ),
+                                Container()
+                              ],
+                            ),
+                          ),
                         ),
+                        //Carrossel jogadores em destaqu
                         Container(
                           margin: const EdgeInsets.all(15),
                           padding: const EdgeInsets.all(15),
@@ -307,15 +472,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const tamanhoTime = 40.0;
     const tamanhoFonteDia = 15.0;
     const tamanhoFonteTime = 20.0;
-    const dic = {
-      1: "Domingo",
-      2: "Segunda",
-      3: "Terça",
-      4: "Quarta",
-      5: "Quinta",
-      6: "Sexta",
-      7: "Sábado",
-    };
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: fatorDeEscalaMenor(10, context)),
       child: Column(children: [
@@ -391,9 +548,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }),
             _item("Comparações", Icons.person_search, () {}),
             _item("Previsões IA", Icons.auto_awesome_rounded, () {
-              setState(() {
-                tipo = Tipos.ia;
-              });
+              vaipIA(null, null);
             }),
           ]),
     );

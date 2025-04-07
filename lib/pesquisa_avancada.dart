@@ -63,9 +63,7 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
     if (value == "Formação" || value == "Posição") {
       value = "";
     }
-    setState(() {
-      map[key] = value.toString();
-    });
+    map[key] = value.toString();
     pesquisa();
   }
 
@@ -89,64 +87,68 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-          backgroundColor: Colors.grey.shade900,
-          flexibleSpace: SingleChildScrollView(
+    return Column(
+      children: [
+        Column(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Container(),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(color: Colors.green)),
+              child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                dropdownColor: Colors.green,
+                menuMaxHeight: 300,
+                value: dropDownValuePos,
+                items: [
+                  for (var i in posicoes)
+                    DropdownMenuItem(
+                      value: i,
+                      child: Text(i),
+                    )
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    dropDownValuePos = value;
+                  });
+                  setDic(value, "posicao");
+                },
+              )),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(color: Colors.green)),
+              child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                dropdownColor: Colors.green,
+                menuMaxHeight: 300,
+                value: dropDownValueForm,
+                items: [
+                  for (var i in formacoes)
+                    DropdownMenuItem(
+                      value: i,
+                      child: Text(i),
+                    )
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    dropDownValueForm = value;
+                  });
+                  setDic(value, "formacao");
+                },
+              )),
+            ),
+            Container()
+          ]),
+          SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: fatorDeEscalaMenor(10, context)),
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(color: Colors.green)),
-                  child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                    value: dropDownValueForm,
-                    items: [
-                      for (var i in formacoes)
-                        DropdownMenuItem(
-                          value: i,
-                          child: Text(i),
-                        )
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        dropDownValueForm = value;
-                      });
-                      setDic(value, "formacao");
-                    },
-                  )),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: fatorDeEscalaMenor(10, context)),
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(color: Colors.green)),
-                  child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                    value: dropDownValuePos,
-                    items: [
-                      for (var i in posicoes)
-                        DropdownMenuItem(
-                          value: i,
-                          child: Text(i),
-                        )
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        dropDownValuePos = value;
-                      });
-                      setDic(value, "posicao");
-                    },
-                  )),
-                ),
                 _Botao(onClick: setDic, texto: "gols"),
                 _Botao(onClick: setDic, texto: "desarmes"),
                 _Botao(onClick: setDic, texto: "assistencias"),
@@ -161,15 +163,27 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                 )
               ],
             ),
-          )),
-      body: !carregando
-          ? Center(
-              child: SingleChildScrollView(
+          )
+        ]),
+        const Divider(
+          color: Colors.green,
+        ),
+        carregando
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.green,
+                ),
+              )
+            : Expanded(
+                child: SingleChildScrollView(
                   child: Column(
-                children: [for (var i in repository.resultados) cont(i, map)],
-              )),
-            )
-          : const Center(child: CircularProgressIndicator()),
+                    children: [
+                      for (var i in repository.resultados) cont(i, map)
+                    ],
+                  ),
+                ),
+              )
+      ],
     );
   }
 
@@ -194,35 +208,61 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
         widget.onPlayerClick(map['id']);
       },
       child: Container(
-        width: 300,
-        color: Colors.white,
+        width: fatorDeEscalaMenor(300, context),
+        decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 17, 34, 23),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Colors.green)),
         margin: const EdgeInsets.all(10),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          CachedNetworkImage(
-            imageUrl: map['imagem'],
-            height: 100,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) =>
-                Image.asset('assets/images/error_image.png'),
+          CircleAvatar(
+            backgroundColor: Colors.green,
+            radius: fatorDeEscalaMenor(45, context),
+            child: CircleAvatar(
+                radius: fatorDeEscalaMenor(40, context),
+                backgroundImage: CachedNetworkImageProvider(map['imagem']!)),
           ),
           Column(
             children: [
-              Text(map['nome'] ?? 'erro'),
-              Text(map['nomeTime'] ?? 'erro'),
+              Text(
+                map['nome'] ?? 'erro',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fatorDeEscalaMenor(15, context)),
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                map['nomeTime'] ?? 'erro',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fatorDeEscalaMenor(15, context)),
+                overflow: TextOverflow.ellipsis,
+              ),
               for (var i in solicitacao.entries) ...[
-                if (i.value == "true") ...[Text("${dic[i.key]}: ${map[i.key]}")]
+                if (i.value == "true") ...[
+                  Text(
+                    "${dic[i.key]}: ${map[i.key]}",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fatorDeEscalaMenor(15, context)),
+                    overflow: TextOverflow.ellipsis,
+                  )
+                ]
               ]
             ],
           ),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Container(
-              width: 50,
-              height: 50,
+              width: fatorDeEscalaMenor(50, context),
+              height: fatorDeEscalaMenor(50, context),
               alignment: Alignment.center,
               color: Colors.green,
-              child: Text(nota.toStringAsFixed(2)),
+              child: Text(
+                nota.toStringAsFixed(2),
+                style: TextStyle(fontSize: fatorDeEscalaMenor(15, context)),
+              ),
             ),
           ),
         ]),
@@ -234,13 +274,16 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
 class _Botao extends StatefulWidget {
   final void Function(bool, String) onClick;
   final String texto;
+
   const _Botao({required this.onClick, required this.texto});
+
   @override
   State<StatefulWidget> createState() => _BotaoState();
 }
 
 class _BotaoState extends State<_Botao> {
-  Map<String, String> dic = {
+  // Dicionário dentro do estado do widget
+  final dic = {
     "gols": "Gols",
     "desarmes": "Desarmes",
     "assistencias": "Assistencias",
@@ -251,29 +294,48 @@ class _BotaoState extends State<_Botao> {
     "chutes_no_gol": "Chutes no gol",
     "bloqueados": "Bloqueios",
   };
+
   bool ativo = false;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: fatorDeEscalaMenor(10, context)),
-      child: ElevatedButton(
-          style: ativo
-              ? const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.green))
-              : const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                      Color.fromARGB(255, 40, 92, 42))),
-          onPressed: () {
-            setState(() {
-              ativo = !ativo;
-            });
-            widget.onClick(ativo, widget.texto);
-          },
-          child: Text(
-            dic[widget.texto] ?? widget.texto,
-            style: const TextStyle(color: Colors.black),
-          )),
-    );
+    return Builder(builder: (context) {
+      return Container(
+        margin:
+            EdgeInsets.symmetric(horizontal: fatorDeEscalaMenor(10, context)),
+        child: ativo
+            ? ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                onPressed: () {
+                  setState(() {
+                    ativo = !ativo;
+                  });
+
+                  widget.onClick(ativo, widget.texto);
+                },
+                child: Text(
+                  dic[widget.texto] ?? widget.texto,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              )
+            : OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  side: const BorderSide(color: Colors.green, width: 2),
+                ),
+                onPressed: () {
+                  setState(() {
+                    ativo = !ativo;
+                  });
+                  widget.onClick(ativo, widget.texto);
+                },
+                child: Text(
+                  dic[widget.texto] ?? widget.texto,
+                  style: const TextStyle(color: Colors.green),
+                ),
+              ),
+      );
+    });
   }
 }
 
@@ -307,20 +369,29 @@ class _BotaoPeState extends State<_BotaoPe> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: ativo
-            ? const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.green))
-            : const ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Color.fromARGB(255, 40, 92, 42))),
-        onPressed: () {
-          aumentaIndice();
-          widget.onClick(values[index]);
-        },
-        child: index < 2
-            ? Text(states[index], style: const TextStyle(color: Colors.black))
-            : const Text("Pé preferido",
-                style: TextStyle(color: Colors.black)));
+    return Builder(builder: (context) {
+      if (ativo) {
+        return ElevatedButton(
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.green)),
+            onPressed: () {
+              aumentaIndice();
+              widget.onClick(values[index]);
+            },
+            child: Text(states[index],
+                style: const TextStyle(color: Colors.white)));
+      }
+      return OutlinedButton(
+          style: const ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll(Colors.black),
+              side: MaterialStatePropertyAll(
+                  BorderSide(color: Colors.green, width: 2))),
+          onPressed: () {
+            aumentaIndice();
+            widget.onClick(values[index]);
+          },
+          child:
+              Text(states[index], style: const TextStyle(color: Colors.green)));
+    });
   }
 }

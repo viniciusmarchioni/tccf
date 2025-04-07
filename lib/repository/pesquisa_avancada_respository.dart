@@ -17,12 +17,23 @@ class PesquisaAvancadaRepository {
     "chutes_no_gol": "false",
     "bloqueados": "false",
   };
+  final _formatoPosicao = {
+    "Atacante": "F",
+    "Meia": "M",
+    "Defensor": "D",
+    "Goleiro": "G",
+    "": ""
+  };
   PesquisaAvancadaRepository();
   Future<void> pesquisa(Map<String, String> param) async {
     if (mapEquals(param, _map)) {
+      //isso falha
       resultados = [];
       return;
+    } else {
+      debugPrint("Não igual");
     }
+    param['posicao'] = _formatoPosicao[param['posicao']] ?? "";
     try {
       var response = await http.get(
           Uri.parse("http://localhost:5000/pesquisaavancada/"),
