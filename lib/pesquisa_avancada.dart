@@ -22,11 +22,11 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
     "gols": "false",
     "desarmes": "false",
     "assistencias": "false",
-    "passes_certos": "false",
-    "passes_chaves": "false",
-    "faltas_sofridas": "false",
-    "dribles_completos": "false",
-    "chutes_no_gol": "false",
+    "passes-certos": "false",
+    "passes-chaves": "false",
+    "faltas-sofridas": "false",
+    "dribles-completos": "false",
+    "chutes-no-gol": "false",
     "bloqueados": "false",
   };
 
@@ -63,7 +63,11 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
     if (value == "Formação" || value == "Posição") {
       value = "";
     }
-    map[key] = value.toString();
+
+    setState(() {
+      map[key] = value.toString();
+    });
+
     pesquisa();
   }
 
@@ -152,11 +156,11 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                 _Botao(onClick: setDic, texto: "gols"),
                 _Botao(onClick: setDic, texto: "desarmes"),
                 _Botao(onClick: setDic, texto: "assistencias"),
-                _Botao(onClick: setDic, texto: "passes_certos"),
-                _Botao(onClick: setDic, texto: "chances_criadas"),
-                _Botao(onClick: setDic, texto: "faltas_sofridas"),
-                _Botao(onClick: setDic, texto: "dribles_completos"),
-                _Botao(onClick: setDic, texto: "chutes_no_gol"),
+                _Botao(onClick: setDic, texto: "passes-certos"),
+                _Botao(onClick: setDic, texto: "passes-chaves"),
+                _Botao(onClick: setDic, texto: "faltas-sofridas"),
+                _Botao(onClick: setDic, texto: "dribles-completos"),
+                _Botao(onClick: setDic, texto: "chutes-no-gol"),
                 _Botao(onClick: setDic, texto: "bloqueados"),
                 _BotaoPe(
                   onClick: (p0) {},
@@ -192,11 +196,11 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
       "gols": "Gols",
       "desarmes": "Desarmes",
       "assistencias": "Assistencias",
-      "passes_certos": "Passes certos",
-      "chances_criadas": "Chances criadas",
-      "faltas_sofridas": "Faltas sofridas",
-      "dribles_completos": "Dribles completos",
-      "chutes_no_gol": "Chutes no gol",
+      "passes-certos": "Passes certos",
+      "passes-chaves": "Chances criadas",
+      "faltas-sofridas": "Faltas sofridas",
+      "dribles-completos": "Dribles completos",
+      "chutes-no-gol": "Chutes no gol",
       "bloqueados": "Bloqueios",
     };
     double nota = map.containsKey('nota') && map['nota'] is num
@@ -287,11 +291,11 @@ class _BotaoState extends State<_Botao> {
     "gols": "Gols",
     "desarmes": "Desarmes",
     "assistencias": "Assistencias",
-    "passes_certos": "Passes certos",
-    "chances_criadas": "Chances criadas",
-    "faltas_sofridas": "Faltas sofridas",
-    "dribles_completos": "Dribles completos",
-    "chutes_no_gol": "Chutes no gol",
+    "passes-certos": "Passes certos",
+    "passes-chaves": "Chances criadas",
+    "faltas-sofridas": "Faltas sofridas",
+    "dribles-completos": "Dribles completos",
+    "chutes-no-gol": "Chutes no gol",
     "bloqueados": "Bloqueios",
   };
 
@@ -308,10 +312,10 @@ class _BotaoState extends State<_Botao> {
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                 onPressed: () {
                   setState(() {
-                    ativo = !ativo;
+                    ativo = false;
                   });
 
-                  widget.onClick(ativo, widget.texto);
+                  widget.onClick(false, widget.texto);
                 },
                 child: Text(
                   dic[widget.texto] ?? widget.texto,
@@ -325,9 +329,9 @@ class _BotaoState extends State<_Botao> {
                 ),
                 onPressed: () {
                   setState(() {
-                    ativo = !ativo;
+                    ativo = true;
                   });
-                  widget.onClick(ativo, widget.texto);
+                  widget.onClick(true, widget.texto);
                 },
                 child: Text(
                   dic[widget.texto] ?? widget.texto,

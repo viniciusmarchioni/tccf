@@ -592,7 +592,7 @@ class _IaState extends State<Ia> {
                           Column(
                             children: [
                               Text(
-                                "Porcentagens",
+                                "Probabilidades",
                                 style: TextStyle(
                                     color: Colors.green.shade400,
                                     fontSize: fatorDeEscalaMenor(40, context)),

@@ -10,11 +10,11 @@ class PesquisaAvancadaRepository {
     "gols": "false",
     "desarmes": "false",
     "assistencias": "false",
-    "passes_certos": "false",
-    "passes_chaves": "false",
-    "faltas_sofridas": "false",
-    "dribles_completos": "false",
-    "chutes_no_gol": "false",
+    "passes-certos": "false",
+    "passes-chaves": "false",
+    "faltas-sofridas": "false",
+    "dribles-completos": "false",
+    "chutes-no-gol": "false",
     "bloqueados": "false",
   };
   final _formatoPosicao = {
@@ -24,16 +24,27 @@ class PesquisaAvancadaRepository {
     "Goleiro": "G",
     "": ""
   };
+
   PesquisaAvancadaRepository();
   Future<void> pesquisa(Map<String, String> param) async {
-    if (mapEquals(param, _map)) {
-      //isso falha
+    print("======================================");
+    print("param: \n " "posicao: ${param['posicao']}");
+
+    if (param['formacao'] == "" &&
+        param['posicao'] == "" &&
+        param['gols'] == 'false' &&
+        param['desarmes'] == 'false' &&
+        param['assistencias'] == 'false' &&
+        param['passes-certos'] == 'false' &&
+        param['passes-chaves'] == 'false' &&
+        param['faltas-sofridas'] == 'false' &&
+        param['dribles-completos'] == 'false' &&
+        param['chutes-no-gol'] == 'false' &&
+        param['bloqueados'] == 'false') {
       resultados = [];
       return;
-    } else {
-      debugPrint("Não igual");
     }
-    param['posicao'] = _formatoPosicao[param['posicao']] ?? "";
+
     try {
       var response = await http.get(
           Uri.parse("http://localhost:5000/pesquisaavancada/"),
