@@ -229,12 +229,16 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
           ),
           Column(
             children: [
-              Text(
-                map['nome'] ?? 'erro',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: fatorDeEscalaMenor(15, context)),
-                overflow: TextOverflow.ellipsis,
+              SizedBox(
+                width: fatorDeEscalaMenor(150, context),
+                child: Text(
+                  map['nome'] ?? 'erro',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fatorDeEscalaMenor(15, context)),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               Text(
                 map['nomeTime'] ?? 'erro',

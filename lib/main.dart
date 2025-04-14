@@ -185,6 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
             if (tipo == Tipos.time) {
               return TimeEstatisticas(
                 idTime: idTime,
+                onPlayerClick: vaipjogador,
               );
             } else if (tipo == Tipos.jogador) {
               return JogadorEstatisticas(
@@ -248,26 +249,35 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               //Mandante
-                                              Column(children: [
-                                                Image.network(
-                                                  partida.logoMandante!,
-                                                  height: fatorDeEscalaMenor(
-                                                      150, context),
-                                                  width: fatorDeEscalaMenor(
-                                                      150, context),
-                                                  /*scale:
-                                                      fatorDeEscalaMenorReverso(
-                                                          0.9, context),*/
-                                                ),
-                                                Text(
-                                                  partida.nomeMandante!,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          fatorDeEscalaMenor(
-                                                              20, context)),
-                                                )
-                                              ]),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (partida.idMandante !=
+                                                      null) {
+                                                    vaiptime(
+                                                        partida.idMandante!);
+                                                  }
+                                                },
+                                                child: Column(children: [
+                                                  Image.network(
+                                                    partida.logoMandante!,
+                                                    height: fatorDeEscalaMenor(
+                                                        150, context),
+                                                    width: fatorDeEscalaMenor(
+                                                        150, context),
+                                                    /*scale:
+                                                        fatorDeEscalaMenorReverso(
+                                                            0.9, context),*/
+                                                  ),
+                                                  Text(
+                                                    partida.nomeMandante!,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            fatorDeEscalaMenor(
+                                                                20, context)),
+                                                  )
+                                                ]),
+                                              ),
                                               //Data do jogo
                                               Column(
                                                   mainAxisAlignment:
@@ -301,12 +311,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   ]),
                                               //Visitante
                                               Column(children: [
-                                                Image.network(
-                                                  height: fatorDeEscalaMenor(
-                                                      150, context),
-                                                  width: fatorDeEscalaMenor(
-                                                      150, context),
-                                                  partida.logoVisitante!,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    if (partida.idVisitante !=
+                                                        null) {
+                                                      vaiptime(
+                                                          partida.idVisitante!);
+                                                    }
+                                                  },
+                                                  child: Image.network(
+                                                    height: fatorDeEscalaMenor(
+                                                        150, context),
+                                                    width: fatorDeEscalaMenor(
+                                                        150, context),
+                                                    partida.logoVisitante!,
+                                                  ),
                                                 ),
                                                 Text(
                                                   partida.nomeVisitante!,
@@ -384,16 +403,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        CircleAvatar(
-                                          backgroundColor: Colors.green,
-                                          radius:
-                                              fatorDeEscalaMenor(65, context),
+                                        GestureDetector(
+                                          onTap: () => vaipjogador(jogador.id!),
                                           child: CircleAvatar(
-                                              radius: fatorDeEscalaMenor(
-                                                  60, context),
-                                              backgroundImage:
-                                                  CachedNetworkImageProvider(
-                                                      jogador.imagem!)),
+                                            backgroundColor: Colors.green,
+                                            radius:
+                                                fatorDeEscalaMenor(65, context),
+                                            child: CircleAvatar(
+                                                radius: fatorDeEscalaMenor(
+                                                    60, context),
+                                                backgroundImage:
+                                                    CachedNetworkImageProvider(
+                                                        jogador.imagem!)),
+                                          ),
                                         ),
                                         Column(
                                           mainAxisAlignment:
@@ -539,14 +561,17 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _item("Tabela", Icons.emoji_events, () {}),
             _item("Times", Icons.sports_soccer_rounded, () {
               setTipo("Times");
             }),
             _item("Jogadores", Icons.person, () {
               setTipo("Jogadores");
             }),
-            _item("Comparações", Icons.person_search, () {}),
+            _item("Comparações", Icons.person_search, () {
+              setState(() {
+                tipo = Tipos.pesquisaAvancada;
+              });
+            }),
             _item("Previsões IA", Icons.auto_awesome_rounded, () {
               vaipIA(null, null);
             }),

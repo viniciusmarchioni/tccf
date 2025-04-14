@@ -535,7 +535,9 @@ class _IaState extends State<Ia> {
                             Builder(
                               builder: (context) {
                                 if (iaRepository.chanceMandante >
-                                    iaRepository.chanceVisitante) {
+                                        iaRepository.chanceVisitante &&
+                                    iaRepository.chanceMandante >
+                                        iaRepository.chanceEmpate) {
                                   return Column(
                                     children: [
                                       Text(
@@ -553,7 +555,9 @@ class _IaState extends State<Ia> {
                                     ],
                                   );
                                 } else if (iaRepository.chanceVisitante >
-                                    iaRepository.chanceMandante) {
+                                        iaRepository.chanceMandante &&
+                                    iaRepository.chanceVisitante >
+                                        iaRepository.chanceEmpate) {
                                   return Column(
                                     children: [
                                       Text(
@@ -592,7 +596,7 @@ class _IaState extends State<Ia> {
                           Column(
                             children: [
                               Text(
-                                "Porcentagens",
+                                "Probabilidades",
                                 style: TextStyle(
                                     color: Colors.green.shade400,
                                     fontSize: fatorDeEscalaMenor(40, context)),

@@ -42,8 +42,9 @@ class ListaResultadosState extends State<ListaResultados> {
     return Container(
       margin: const EdgeInsets.all(25),
       decoration: BoxDecoration(
-          color: const Color.fromARGB(68, 34, 197, 94),
-          border: Border.all(color: Colors.green)),
+          border: Border.all(color: Colors.green, width: 2),
+          color: const Color.fromARGB(255, 17, 34, 23),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(
         children: [
           const Row(mainAxisAlignment: MainAxisAlignment.center, children: [

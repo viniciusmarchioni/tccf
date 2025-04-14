@@ -17,16 +17,16 @@ class TimesRepository {
 
   Future<void> getInfo(int idTime) async {
     try {
-      final response = await http
+      var response = await http
           .get(Uri.parse('http://localhost:5000/times/$idTime'))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         goleiro = Jogador(EstatisticasMenor());
-        defensores = [];
-        meias = [];
-        atacantes = [];
-        formacoes = [];
+        defensores.clear();
+        meias.clear();
+        atacantes.clear();
+        formacoes.clear();
         infoTime = Time();
 
         var body = jsonDecode(response.body);
@@ -44,9 +44,11 @@ class TimesRepository {
         for (var i in body['defensores']) {
           defensores.add(Jogador.fromJsonAll(i));
         }
+
         for (var i in body['meias']) {
           meias.add(Jogador.fromJsonAll(i));
         }
+
         for (var i in body['atacantes']) {
           atacantes.add(Jogador.fromJsonAll(i));
         }
@@ -54,12 +56,12 @@ class TimesRepository {
         aproveitamento = Aproveitamento.fromJsonAll(body['aproveitamento']);
       }
 
-      final response2 = await http
+      response = await http
           .get(Uri.parse('http://localhost:5000/jogadores/medias/'))
           .timeout(const Duration(seconds: 5));
 
-      if (response2.statusCode == 200) {
-        var body = jsonDecode(response2.body);
+      if (response.statusCode == 200) {
+        var body = jsonDecode(response.body);
 
         medias.add(EstatisticasMenor.fromJsonAll(body['media_defensores']));
         medias.add(EstatisticasMenor.fromJsonAll(body['media_meias']));
@@ -78,9 +80,9 @@ class TimesRepository {
 
       if (response.statusCode == 200) {
         goleiro = Jogador(EstatisticasMenor());
-        defensores = [];
-        meias = [];
-        atacantes = [];
+        defensores.clear();
+        meias.clear();
+        atacantes.clear();
 
         var body = jsonDecode(response.body);
 
@@ -158,6 +160,9 @@ class EstatisticasMenor {
       : estatistica1 = json['estatistica1'],
         estatistica2 = json['estatistica2'],
         estatistica3 = json['estatistica3'];
+
+  List<double> getLista() =>
+      [estatistica1 ?? 0, estatistica2 ?? 0, estatistica3 ?? 0];
 }
 
 class Time {

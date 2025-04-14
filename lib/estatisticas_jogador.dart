@@ -293,63 +293,75 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                             ],
                           ),
                         ] else ...[
-                          Container(
-                            height: fatorDeEscalaMenor(300, context),
-                            decoration: BoxDecoration(
-                                color: valorSwitch
-                                    ? const Color.fromARGB(68, 34, 197, 94)
-                                    : const Color.fromARGB(100, 197, 34, 37),
-                                border: Border.all(
-                                    color:
-                                        valorSwitch ? Colors.green : Colors.red,
-                                    width: 2)),
-                            child: Column(
-                              children: [
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                              side: const BorderSide(
-                                                  color: Colors.green)),
-                                          onPressed: () {
-                                            setState(() {
-                                              valorSwitch = true;
-                                            });
-                                          },
-                                          child: const Text(
-                                            "Pontos positivos",
-                                            style:
-                                                TextStyle(color: Colors.green),
-                                          )),
-                                      OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                              side: const BorderSide(
-                                                  color: Colors.red)),
-                                          onPressed: () {
-                                            setState(() {
-                                              valorSwitch = false;
-                                            });
-                                          },
-                                          child: const Text(
-                                            "Pontos negativos",
-                                            style: TextStyle(color: Colors.red),
-                                          )),
-                                    ]),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                      child: Column(children: [
-                                    for (var i in grandeComparacao(
-                                        jogadorRepository.estatisticas,
-                                        jogadorRepository.mediaGeral,
-                                        jogadorRepository.posicaoFavorita,
-                                        valorSwitch))
-                                      i
-                                  ])),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: fatorDeEscalaMenor(300, context),
+                                decoration: BoxDecoration(
+                                    color: valorSwitch
+                                        ? const Color.fromARGB(68, 34, 197, 94)
+                                        : const Color.fromARGB(
+                                            100, 197, 34, 37),
+                                    border: Border.all(
+                                        color: valorSwitch
+                                            ? Colors.green
+                                            : Colors.red,
+                                        width: 2)),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                  side: const BorderSide(
+                                                      color: Colors.green)),
+                                              onPressed: () {
+                                                setState(() {
+                                                  valorSwitch = true;
+                                                });
+                                              },
+                                              child: const Text(
+                                                "Pontos positivos",
+                                                style: TextStyle(
+                                                    color: Colors.green),
+                                              )),
+                                          OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                  side: const BorderSide(
+                                                      color: Colors.red)),
+                                              onPressed: () {
+                                                setState(() {
+                                                  valorSwitch = false;
+                                                });
+                                              },
+                                              child: const Text(
+                                                "Pontos negativos",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              )),
+                                        ]),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                          child: Column(children: [
+                                        for (var i in grandeComparacao(
+                                            jogadorRepository.estatisticas,
+                                            jogadorRepository.mediaGeral,
+                                            jogadorRepository.posicaoFavorita,
+                                            valorSwitch))
+                                          i
+                                      ])),
+                                    )
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              const Text(
+                                "*Compração com a média geral entre jogadores da posição na serie A",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
                           ),
                           Container(),
                         ]
@@ -477,132 +489,109 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
     );
   }
 
-  List<Widget> grandeComparacao(Estatisticas? jogador, Estatisticas? mediaGeral,
-      String? posicaofav, bool positivo) {
-    List<Widget> lista = [];
+  List<Widget> grandeComparacao(
+    Estatisticas? jogador,
+    Estatisticas? mediaGeral,
+    String? posicaofav,
+    bool positivo,
+  ) {
+    final lista = <Widget>[];
 
     final atributosPositivos = {
-      'chutesAvg': "chutes",
-      'chutesNoGolAvg': "chutes no gol",
-      'golsAvg': "gols",
-      'assistenciasAvg': "assistências",
-      'defesasAvg': "defesas",
-      'passesAvg': "passes",
-      'passesChavesAvg': "passes chave",
-      'passesCertosAvg': "passes certos",
-      'desarmesAvg': "desarmes",
-      'bloqueadosAvg': "bloqueios",
-      'interceptadosAvg': "interceptações",
-      'duelosAvg': "duelos",
-      'duelosGanhosAvg': "duelos ganhos",
-      'driblesTentadosAvg': "dribles tentados",
-      'driblesCompletosAvg': "dribles completos",
-      'jogadoresPassadosAvg': "jogadores passados",
-      'faltasSofridasAvg': "faltas sofridas",
+      'chutesAvg': "Chutes",
+      'chutesNoGolAvg': "Chutes no gol",
+      'golsAvg': "Gols",
+      'assistenciasAvg': "Assistências",
+      'defesasAvg': "Defesas",
+      'passesAvg': "Passes",
+      'passesChavesAvg': "Chances criadas",
+      'passesCertosAvg': "Passes certos",
+      'desarmesAvg': "Desarmes",
+      'bloqueadosAvg': "Bloqueios",
+      'interceptadosAvg': "Interceptações",
+      'duelosAvg': "Duelos",
+      'duelosGanhosAvg': "Duelos ganhos",
+      'driblesTentadosAvg': "Dribles tentados",
+      'driblesCompletosAvg': "Dribles completos",
+      'jogadoresPassadosAvg': "Jogadores passados",
+      'faltasSofridasAvg': "Faltas sofridas",
     };
 
     final atributosNegativos = {
-      'impedimentosAvg': "impedimentos",
-      'faltasCometidasAvg': "faltas cometidas",
-      'cartoesAmarelosAvg': "cartões amarelos",
-      'cartoesVermelhosAvg': "cartões vermelhos",
-      'penaltisCometidosAvg': "penaltis cometidos"
+      'impedimentosAvg': "Impedimentos",
+      'faltasCometidasAvg': "Faltas cometidas",
+      'cartoesAmarelosAvg': "Cartões amarelos",
+      'cartoesVermelhosAvg': "Cartões vermelhos",
+      'penaltisCometidosAvg': "Pênaltis cometidos"
     };
 
-    final posicoes = {
-      "G": "goleiros",
-      "D": "defensores",
-      "M": "meias",
-      "F": "atacantes",
-    };
+    void compararAtributos(
+      Map<String, String> atributos,
+      bool Function(double jogador, double media) condicao,
+      Color corTexto,
+      String sufixo,
+    ) {
+      atributos.forEach((key, label) {
+        final jogadorValor = jogador?.toJson()[key] ?? 0.0;
+        final mediaValor = mediaGeral?.toJson()[key] ?? 0.0;
 
-    if (positivo) {
-      atributosPositivos.forEach((key, value) {
-        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
-        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
-
-        if (jogadorValue > mediaValue) {
-          lista.add(Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            child: Text.rich(TextSpan(children: [
-              TextSpan(
-                  text:
-                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. ",
-                  style: const TextStyle(color: Colors.white)),
-              TextSpan(
-                  text: jogadorValue.toStringAsFixed(2),
-                  style: const TextStyle(color: Colors.green)),
-              const TextSpan(
-                  text: "/partida!", style: TextStyle(color: Colors.white)),
-            ])),
-          ));
-        }
-      });
-      atributosNegativos.forEach((key, value) {
-        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
-        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
-
-        if (jogadorValue < mediaValue) {
-          lista.add(Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            child: Text.rich(TextSpan(children: [
-              TextSpan(
-                  text:
-                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. ",
-                  style: const TextStyle(color: Colors.white)),
-              TextSpan(
-                  text: jogadorValue.toStringAsFixed(2),
-                  style: const TextStyle(color: Colors.green)),
-              const TextSpan(
-                  text: "/partida.", style: TextStyle(color: Colors.white)),
-            ])),
-          ));
-        }
-      });
-    } else {
-      atributosPositivos.forEach((key, value) {
-        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
-        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
-
-        if (jogadorValue < mediaValue) {
-          lista.add(Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            child: Text.rich(TextSpan(children: [
-              TextSpan(
-                  text:
-                      "O jogador tem média $value abaixo da média geral de ${posicoes[posicaofav]} da série A. ",
-                  style: const TextStyle(color: Colors.white)),
-              TextSpan(
-                  text: jogadorValue.toStringAsFixed(2),
-                  style: const TextStyle(color: Colors.red)),
-              const TextSpan(
-                  text: "/partida!", style: TextStyle(color: Colors.white)),
-            ])),
-          ));
-        }
-      });
-      atributosNegativos.forEach((key, value) {
-        double jogadorValue = jogador?.toJson()[key] ?? 0.0;
-        double mediaValue = mediaGeral?.toJson()[key] ?? 0.0;
-
-        if (jogadorValue > mediaValue) {
-          lista.add(Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            child: Text.rich(TextSpan(children: [
-              TextSpan(
-                  text:
-                      "O jogador tem média $value acima da média geral de ${posicoes[posicaofav]} da série A. ",
-                  style: const TextStyle(color: Colors.white)),
-              TextSpan(
-                  text: jogadorValue.toStringAsFixed(2),
-                  style: const TextStyle(color: Colors.red)),
-              const TextSpan(
-                  text: "/partida.", style: TextStyle(color: Colors.white)),
-            ])),
-          ));
+        if (condicao(jogadorValor, mediaValor)) {
+          lista.add(
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "$label: ",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    TextSpan(
+                      text: jogadorValor.toStringAsFixed(2),
+                      style: TextStyle(color: corTexto),
+                    ),
+                    TextSpan(
+                      text: sufixo,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                style: TextStyle(fontSize: fatorDeEscalaMenor(20, context)),
+              ),
+            ),
+          );
         }
       });
     }
+
+    if (positivo) {
+      compararAtributos(
+        atributosPositivos,
+        (j, m) => j > m,
+        Colors.green,
+        "/partida!",
+      );
+      compararAtributos(
+        atributosNegativos,
+        (j, m) => j < m,
+        Colors.green,
+        "/partida!",
+      );
+    } else {
+      compararAtributos(
+        atributosPositivos,
+        (j, m) => j < m,
+        Colors.red,
+        "/partida.",
+      );
+      compararAtributos(
+        atributosNegativos,
+        (j, m) => j > m,
+        Colors.red,
+        "/partida.",
+      );
+    }
+
     return lista;
   }
 }

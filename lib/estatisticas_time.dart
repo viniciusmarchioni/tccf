@@ -5,7 +5,9 @@ import 'package:scout/util/util.dart';
 
 class TimeEstatisticas extends StatefulWidget {
   final int idTime;
-  const TimeEstatisticas({super.key, required this.idTime});
+  final void Function(int) onPlayerClick;
+  const TimeEstatisticas(
+      {super.key, required this.idTime, required this.onPlayerClick});
 
   @override
   State<StatefulWidget> createState() {
@@ -64,362 +66,195 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
             color: const Color.fromARGB(255, 17, 34, 23),
             borderRadius: const BorderRadius.all(Radius.circular(20))),
         margin: const EdgeInsets.all(50),
-        alignment: Alignment.topLeft,
         child: !carregando
             ? Container(
                 padding: const EdgeInsets.all(15),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          CachedNetworkImage(
-                            width: fatorDeEscalaMenor(90, context),
-                            imageUrl: timesRepository.infoTime.logo!,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Image.asset('assets/images/error_image.png'),
-                          ),
-                          Text(
-                            timesRepository.infoTime.nome ?? 'Carregando...',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: fatorDeEscalaMenor(25, context)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 15),
-                            decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                border: Border.all(color: Colors.green)),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                dropdownColor: Colors.green,
-                                value: dropDownValue,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fatorDeEscalaMenor(25, context)),
-                                items: [
-                                  for (String i in timesRepository.formacoes)
-                                    DropdownMenuItem(
-                                        value: i,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(i),
-                                        )),
-                                ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value != null) {
-                                      dropDownValue = value;
-                                      atualizaFormacao(value);
-                                    }
-                                  });
-                                },
-                              ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            CachedNetworkImage(
+                              width: fatorDeEscalaMenor(90, context),
+                              imageUrl: timesRepository.infoTime.logo!,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Image.asset('assets/images/error_image.png'),
                             ),
-                          ),
-                        ]),
-                        Row(
-                          children: [
                             Text(
-                              "Aproveitamento na formação:",
+                              timesRepository.infoTime.nome ?? 'Carregando...',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: fatorDeEscalaMenor(25, context)),
                             ),
-                            containerNota(timesRepository.aproveitamento
-                                .getAproveitamento()),
-                          ],
-                        ),
-                        constroiFormacao(controller.text, timesRepository),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Vitorias: ${timesRepository.aproveitamento.vitorias}",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: fatorDeEscalaMenor(25, context)),
-                        ),
-                        Text(
-                          "Empates: ${timesRepository.aproveitamento.empates}",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: fatorDeEscalaMenor(25, context)),
-                        ),
-                        Text(
-                          "Derrotas: ${timesRepository.aproveitamento.derrotas}",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: fatorDeEscalaMenor(25, context)),
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.all(fatorDeEscalaMenor(40, context)),
-                          height: fatorDeEscalaMenor(300, context),
-                          decoration: BoxDecoration(
-                              color: valorSwitch
-                                  ? const Color.fromARGB(68, 34, 197, 94)
-                                  : const Color.fromARGB(100, 197, 34, 37),
-                              border: Border.all(
-                                  color:
-                                      valorSwitch ? Colors.green : Colors.red,
-                                  width: 2)),
-                          child: Column(
-                            children: [
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(
-                                                color: Colors.green)),
-                                        onPressed: () {
-                                          setState(() {
-                                            valorSwitch = true;
-                                          });
-                                        },
-                                        child: const Text(
-                                          "Pontos positivos",
-                                          style: TextStyle(color: Colors.green),
-                                        )),
-                                    OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(
-                                                color: Colors.red)),
-                                        onPressed: () {
-                                          setState(() {
-                                            valorSwitch = false;
-                                          });
-                                        },
-                                        child: const Text(
-                                          "Pontos negativos",
-                                          style: TextStyle(color: Colors.red),
-                                        )),
-                                  ]),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                    child: Column(
-                                  children: [
-                                    if (valorSwitch) ...[
-                                      for (Jogador i
-                                          in timesRepository.defensores) ...[
-                                        if ((i.estatisticas.estatistica1 ?? 0) >
-                                            (timesRepository
-                                                    .medias[0].estatistica1 ??
-                                                0))
-                                          Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: Text.rich(
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                                TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          "${i.nome} obteve uma média de desarmes maior que a média de defensores da Serie A. ",
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                  TextSpan(
-                                                      text: i.estatisticas
-                                                          .estatistica1
-                                                          ?.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          color: Colors.green)),
-                                                  const TextSpan(
-                                                      text: "/partida.",
-                                                      style: TextStyle(
-                                                          color: Colors.white))
-                                                ]),
-                                              ))
-                                      ],
-                                      for (Jogador i
-                                          in timesRepository.meias) ...[
-                                        if ((i.estatisticas.estatistica1 ?? 0) >
-                                            (timesRepository
-                                                    .medias[1].estatistica1 ??
-                                                0))
-                                          Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: Text.rich(
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                                TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          "${i.nome} obteve uma média de passes certos acima da média de meias da Serie A. ",
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                  TextSpan(
-                                                      text: i.estatisticas
-                                                          .estatistica1
-                                                          ?.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          color: Colors.green)),
-                                                  const TextSpan(
-                                                      text: "/partida!",
-                                                      style: TextStyle(
-                                                          color: Colors.white))
-                                                ]),
-                                              ))
-                                      ],
-                                      for (Jogador i
-                                          in timesRepository.atacantes) ...[
-                                        if ((i.estatisticas.estatistica1 ?? 0) >
-                                            (timesRepository
-                                                    .medias[2].estatistica1 ??
-                                                0))
-                                          Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: Text.rich(
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                                TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          "${i.nome} obteve uma média de gols acima dos atacantes da Serie A. ",
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                  TextSpan(
-                                                      text: i.estatisticas
-                                                          .estatistica1
-                                                          ?.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          color: Colors.green)),
-                                                  const TextSpan(
-                                                      text: "/partida!",
-                                                      style: TextStyle(
-                                                          color: Colors.white))
-                                                ]),
-                                              ))
-                                      ]
-                                    ] else ...[
-                                      for (Jogador i
-                                          in timesRepository.defensores) ...[
-                                        if ((i.estatisticas.estatistica1 ?? 0) <
-                                            (timesRepository
-                                                    .medias[0].estatistica1 ??
-                                                0))
-                                          Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: Text.rich(
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                                TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          "${i.nome} obteve uma média de desarmes abaixo que a média de defensores da Serie A. ",
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                  TextSpan(
-                                                      text: i.estatisticas
-                                                          .estatistica1
-                                                          ?.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          color: Colors.red)),
-                                                  const TextSpan(
-                                                      text: "/partida.",
-                                                      style: TextStyle(
-                                                          color: Colors.white))
-                                                ]),
-                                              ))
-                                      ],
-                                      for (Jogador i
-                                          in timesRepository.meias) ...[
-                                        if ((i.estatisticas.estatistica1 ?? 0) <
-                                            (timesRepository
-                                                    .medias[1].estatistica1 ??
-                                                0))
-                                          Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: Text.rich(
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                                TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          "${i.nome} obteve uma média de passes certos abaixo da média de meias da Serie A. ",
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                  TextSpan(
-                                                      text: i.estatisticas
-                                                          .estatistica1
-                                                          ?.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          color: Colors.red)),
-                                                  const TextSpan(
-                                                      text: "/partida!",
-                                                      style: TextStyle(
-                                                          color: Colors.white))
-                                                ]),
-                                              ))
-                                      ],
-                                      for (Jogador i
-                                          in timesRepository.atacantes) ...[
-                                        if ((i.estatisticas.estatistica1 ?? 0) <
-                                            (timesRepository
-                                                    .medias[2].estatistica1 ??
-                                                0))
-                                          Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: Text.rich(
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                                TextSpan(children: [
-                                                  TextSpan(
-                                                      text:
-                                                          "${i.nome} obteve uma média de gols abaixo dos atacantes da Serie A. ",
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                  TextSpan(
-                                                      text: i.estatisticas
-                                                          .estatistica1
-                                                          ?.toStringAsFixed(2),
-                                                      style: const TextStyle(
-                                                          color: Colors.red)),
-                                                  const TextSpan(
-                                                      text: "/partida!",
-                                                      style: TextStyle(
-                                                          color: Colors.white))
-                                                ]),
-                                              ))
-                                      ]
-                                    ],
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 15),
+                              decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  border: Border.all(color: Colors.green)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  dropdownColor: Colors.green,
+                                  value: dropDownValue,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context)),
+                                  items: [
+                                    for (String i in timesRepository.formacoes)
+                                      DropdownMenuItem(
+                                          value: i,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Text(i),
+                                          )),
                                   ],
-                                )),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        dropDownValue = value;
+                                        atualizaFormacao(value);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                          Row(
+                            children: [
+                              Text(
+                                "Aproveitamento na formação:",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(25, context)),
+                              ),
+                              containerNota(timesRepository.aproveitamento
+                                  .getAproveitamento()),
+                            ],
+                          ),
+                          constroiFormacao(controller.text, timesRepository),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "Vitorias: ${timesRepository.aproveitamento.vitorias}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(25, context)),
+                              ),
+                              Text(
+                                "Empates: ${timesRepository.aproveitamento.empates}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(25, context)),
+                              ),
+                              Text(
+                                "Derrotas: ${timesRepository.aproveitamento.derrotas}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(25, context)),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: fatorDeEscalaMenor(300, context),
+                                      decoration: BoxDecoration(
+                                          color: valorSwitch
+                                              ? const Color.fromARGB(
+                                                  68, 34, 197, 94)
+                                              : const Color.fromARGB(
+                                                  100, 197, 34, 37),
+                                          border: Border.all(
+                                              color: valorSwitch
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                              width: 2)),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                OutlinedButton(
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                            side: const BorderSide(
+                                                                color: Colors
+                                                                    .green)),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        valorSwitch = true;
+                                                      });
+                                                    },
+                                                    child: const Text(
+                                                      "Pontos positivos",
+                                                      style: TextStyle(
+                                                          color: Colors.green),
+                                                    )),
+                                                OutlinedButton(
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                            side:
+                                                                const BorderSide(
+                                                                    color: Colors
+                                                                        .red)),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        valorSwitch = false;
+                                                      });
+                                                    },
+                                                    child: const Text(
+                                                      "Pontos negativos",
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    )),
+                                              ]),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                                child: Column(
+                                              children: [
+                                                for (var i
+                                                    in grandeComparacao())
+                                                  i
+                                              ],
+                                            )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Text(
+                                      "*Compração com a média geral entre jogadores da posição na serie A",
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  ],
+                                ),
+                                Container(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Container()
                   ],
                 ),
               )
@@ -452,13 +287,23 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  imagemJogador(timesRepository.goleiro.image),
+                  GestureDetector(
+                      onTap: () {
+                        widget.onPlayerClick(timesRepository.goleiro.id!);
+                      },
+                      child: imagemJogador(timesRepository.goleiro.image)),
                   Column(
                       //coluna zagueiros
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         for (var i = 0; i < formacaoList[0]; i++)
-                          imagemJogador(timesRepository.defensores[i].image),
+                          GestureDetector(
+                              onTap: () {
+                                widget.onPlayerClick(
+                                    timesRepository.defensores[i].id!);
+                              },
+                              child: imagemJogador(
+                                  timesRepository.defensores[i].image)),
                       ]),
                   for (List<Jogador> i in buffer)
                     Column(
@@ -468,7 +313,12 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                             : MainAxisAlignment.center,
                         children: [
                           if (i.length == 2) Container(),
-                          for (Jogador j in i) imagemJogador(j.image),
+                          for (Jogador j in i)
+                            GestureDetector(
+                                onTap: () {
+                                  widget.onPlayerClick(j.id!);
+                                },
+                                child: imagemJogador(j.image)),
                           if (i.length == 2) Container(),
                         ]),
                   Column(
@@ -478,7 +328,13 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                         for (var z = 0;
                             z < timesRepository.atacantes.length;
                             z++)
-                          imagemJogador(timesRepository.atacantes[z].image),
+                          GestureDetector(
+                              onTap: () {
+                                widget.onPlayerClick(
+                                    timesRepository.atacantes[z].id!);
+                              },
+                              child: imagemJogador(
+                                  timesRepository.atacantes[z].image)),
                         if (atk == 2) Container(),
                       ]),
                 ]),
@@ -526,5 +382,64 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
     );
 
     return x;
+  }
+
+  List<Widget> grandeComparacao() {
+    final descricoes = {
+      'defensores': {0: "Duelos ganhos", 1: "Desarmes", 2: "Bloqueios"},
+      'meias': {0: "Passes certos", 1: "Assistencias", 2: "Chances criadas"},
+      'atacantes': {0: "Gols", 1: "Assistencias", 2: "Chutes no gol"},
+    };
+
+    final grupos = {
+      'defensores': {'jogadores': timesRepository.defensores, 'mediaIndex': 0},
+      'meias': {'jogadores': timesRepository.meias, 'mediaIndex': 1},
+      'atacantes': {'jogadores': timesRepository.atacantes, 'mediaIndex': 2},
+    };
+
+    final List<Widget> widgets = [];
+
+    for (var grupo in grupos.entries) {
+      final nomeGrupo = grupo.key;
+      final jogadores = grupo.value['jogadores'] as List<Jogador>;
+      final mediaIndex = grupo.value['mediaIndex'] as int;
+      final descricao = descricoes[nomeGrupo]!;
+      final mediaStats = timesRepository.medias[mediaIndex].getLista();
+
+      for (var jogador in jogadores) {
+        final stats = jogador.estatisticas.getLista();
+
+        for (int i = 0; i < stats.length; i++) {
+          final valorJogador = stats[i];
+          final valorMedia = mediaStats[i];
+
+          final bool condicao = valorSwitch
+              ? valorJogador > valorMedia
+              : valorJogador < valorMedia;
+
+          if (condicao) {
+            widgets.add(Container(
+              margin: const EdgeInsets.all(10),
+              child: Text.rich(
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: fatorDeEscalaMenor(20, context)),
+                TextSpan(children: [
+                  TextSpan(
+                      text: "${jogador.nome} - ${descricao[i]}: ",
+                      style: const TextStyle(color: Colors.white)),
+                  TextSpan(
+                      text: valorJogador.toStringAsFixed(2),
+                      style: const TextStyle(color: Colors.green)),
+                  const TextSpan(
+                      text: "/partida.", style: TextStyle(color: Colors.white))
+                ]),
+              ),
+            ));
+          }
+        }
+      }
+    }
+
+    return widgets;
   }
 }
