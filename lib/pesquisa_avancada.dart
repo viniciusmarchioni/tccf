@@ -105,6 +105,9 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                   child: DropdownButton(
                 dropdownColor: Colors.green,
                 menuMaxHeight: 300,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
                 value: dropDownValuePos,
                 items: [
                   for (var i in posicoes)
@@ -130,6 +133,9 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                   child: DropdownButton(
                 dropdownColor: Colors.green,
                 menuMaxHeight: 300,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
                 value: dropDownValueForm,
                 items: [
                   for (var i in formacoes)
