@@ -99,6 +99,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                                   border: Border.all(color: Colors.green)),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton(
+                                  menuMaxHeight: 300,
                                   dropdownColor: Colors.green,
                                   value: dropDownValue,
                                   style: TextStyle(

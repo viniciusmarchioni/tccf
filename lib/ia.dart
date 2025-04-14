@@ -24,14 +24,6 @@ class _IaState extends State<Ia> {
   String? clima = "Selecione";
   String? horario = "Selecione";
 
-  final List<String> opcoesTime = [
-    "Selecione",
-    "Corinthians",
-    "Palmeiras",
-    "São Paulo",
-    "Santos"
-  ];
-
   final timeDic = {
     "Bahia": "https://media.api-sports.io/football/teams/118.png",
     "Internacional": "https://media.api-sports.io/football/teams/119.png",
@@ -194,6 +186,10 @@ class _IaState extends State<Ia> {
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
                                           value: timeMandante,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           items: [
                                             for (var i in [
                                               "Selecione",
@@ -248,6 +244,10 @@ class _IaState extends State<Ia> {
                                             child: DropdownButton(
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           value: formacaoMandante,
                                           items: [
                                             for (var i in opcoesFormacao)
@@ -322,6 +322,10 @@ class _IaState extends State<Ia> {
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
                                           value: timeVisitante,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           items: [
                                             for (var i in [
                                               "Selecione",
@@ -376,6 +380,10 @@ class _IaState extends State<Ia> {
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
                                           value: formacaoVisitante,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           items: [
                                             for (var i in opcoesFormacao)
                                               DropdownMenuItem(
@@ -433,6 +441,11 @@ class _IaState extends State<Ia> {
                                     child: DropdownButtonHideUnderline(
                                         child: DropdownButton(
                                       value: clima,
+                                      dropdownColor: Colors.green,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(25, context)),
                                       items: [
                                         for (var i in opcoesClima)
                                           DropdownMenuItem(
@@ -462,6 +475,11 @@ class _IaState extends State<Ia> {
                                     child: DropdownButtonHideUnderline(
                                         child: DropdownButton(
                                       value: horario,
+                                      dropdownColor: Colors.green,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(25, context)),
                                       items: [
                                         for (var i in opcoesHorario)
                                           DropdownMenuItem(
