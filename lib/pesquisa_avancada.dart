@@ -168,9 +168,10 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                 _Botao(onClick: setDic, texto: "dribles-completos"),
                 _Botao(onClick: setDic, texto: "chutes-no-gol"),
                 _Botao(onClick: setDic, texto: "bloqueados"),
+                /*
                 _BotaoPe(
                   onClick: (p0) {},
-                )
+                )*/
               ],
             ),
           )

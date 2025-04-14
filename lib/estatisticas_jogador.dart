@@ -418,6 +418,82 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
       String? posicaoFavorita) {
     var dic = {"G": "Goleiro", "D": "Defensor", "M": "Meia", "F": "Atacante"};
 
+    final pos = jogadorRepository.posicaoFavorita ?? "M";
+
+    List<Widget> est = [];
+
+    if (pos == "G") {
+      est.add(
+        Text("Defesas: ${estatisticas.defesasTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Gols sofridos: ${estatisticas.golsSofridosTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+    } else if (pos == "D") {
+      est.add(
+        Text("Duelos ganhos: ${estatisticas.duelosGanhosTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Bloqueios: ${estatisticas.bloqueadosTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Interceptação: ${estatisticas.interceptadosTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+    } else if (pos == "M") {
+      est.add(
+        Text("Passes certos: ${estatisticas.passesCertosTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Grandes chances criadas: ${estatisticas.passesChavesTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+    } else {
+      est.add(
+        Text("Gols: ${estatisticas.golsTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Assistências: ${estatisticas.assistenciasTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+      est.add(
+        Text("Chutes no gol: ${estatisticas.chutesNoGolTotal ?? 0}",
+            style: TextStyle(
+                color: Colors.white, fontSize: fatorDeEscalaMenor(25, context)),
+            overflow: TextOverflow.ellipsis),
+      );
+    }
+
     return Expanded(
       child: Container(
         margin: const EdgeInsets.all(15),
@@ -470,21 +546,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
                   color: Colors.white,
                   fontSize: fatorDeEscalaMenor(25, context)),
               overflow: TextOverflow.ellipsis),
-          Text("Passes certos: ${estatisticas.passesCertosTotal ?? 0}",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMenor(25, context)),
-              overflow: TextOverflow.ellipsis),
-          Text("Assistencias: ${estatisticas.assistenciasTotal ?? 0}",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMenor(25, context)),
-              overflow: TextOverflow.ellipsis),
-          Text("Dribles completos: ${estatisticas.driblesCompletosTotal ?? 0}",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMenor(25, context)),
-              overflow: TextOverflow.ellipsis),
+          for (var i in est) i
         ]),
       ),
     );
