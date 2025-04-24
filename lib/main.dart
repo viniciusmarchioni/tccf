@@ -5,10 +5,11 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:scout/estatisticas_jogador.dart';
 import 'package:scout/estatisticas_time.dart';
 import 'package:scout/ia.dart';
-import 'package:scout/lista_resultados.dart';
+import 'package:scout/pages/lista_resultados/lista_resultados.dart';
 import 'package:scout/pages/lista_resultados/lista_resultados_mobile.dart';
 import 'package:scout/pages/menu/menu_mobile.dart';
-import 'package:scout/pesquisa_avancada.dart';
+import 'package:scout/pages/pesquisa_avancada/pesquisa_avancada.dart';
+import 'package:scout/pages/pesquisa_avancada/pesquisa_avancada_mobile.dart';
 import 'package:scout/repository/menu_repository.dart';
 import 'package:scout/util/tipos.dart';
 import 'package:scout/util/util.dart';
@@ -43,7 +44,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo;
+  Tipos? tipo = Tipos.pesquisaAvancada;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "C";
@@ -271,8 +272,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               );
             } else if (tipo == Tipos.pesquisaAvancada) {
-              return PesquisaAvancada(
-                onPlayerClick: vaipjogador,
+              return ResponsiveBuilder(
+                builder: (context, sizingInformation) {
+                  if (sizingInformation.isMobile) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          width: fatorDeEscalaMobile(300, context),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        width: 2, color: Colors.white)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        width: 2, color: Colors.white)),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Pesquise no Scout AI"),
+                            onSubmitted: (value) {
+                              setTipo(value);
+                            },
+                          ),
+                        ),
+                        Expanded(
+                            child: PesquisaAvancadaMobile(
+                                onPlayerClick: vaipjogador))
+                      ],
+                    );
+                  }
+                  return PesquisaAvancada(
+                    onPlayerClick: vaipjogador,
+                  );
+                },
               );
             } else if (tipo == Tipos.ia) {
               return Ia(
@@ -283,8 +323,8 @@ class _MyHomePageState extends State<MyHomePage> {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
                   if (!sizingInformation.isDesktop) {
-                    return Center(
-                      child: menuMobile(),
+                    return const Center(
+                      child: MenuMobile(),
                     );
                   }
                   return Container(

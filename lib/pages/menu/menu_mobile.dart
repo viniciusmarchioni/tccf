@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:scout/repository/menu_repository.dart';
 import 'package:scout/util/util.dart';
 
-class menuMobile extends StatefulWidget {
+class MenuMobile extends StatefulWidget {
+  const MenuMobile({super.key});
+
   @override
   State<StatefulWidget> createState() => _MenuMobileState();
 }
 
-class _MenuMobileState extends State<menuMobile> {
+class _MenuMobileState extends State<MenuMobile> {
   MenuRepository menuRepository = MenuRepository();
 
   @override

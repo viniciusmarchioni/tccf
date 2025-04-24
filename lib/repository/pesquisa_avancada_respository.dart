@@ -4,32 +4,9 @@ import 'package:http/http.dart' as http;
 
 class PesquisaAvancadaRepository {
   List<dynamic> resultados = [];
-  final Map<String, String> _map = {
-    "posicao": "",
-    "formacao": "",
-    "gols": "false",
-    "desarmes": "false",
-    "assistencias": "false",
-    "passes-certos": "false",
-    "passes-chaves": "false",
-    "faltas-sofridas": "false",
-    "dribles-completos": "false",
-    "chutes-no-gol": "false",
-    "bloqueados": "false",
-  };
-  final _formatoPosicao = {
-    "Atacante": "F",
-    "Meia": "M",
-    "Defensor": "D",
-    "Goleiro": "G",
-    "": ""
-  };
 
   PesquisaAvancadaRepository();
   Future<void> pesquisa(Map<String, String> param) async {
-    print("======================================");
-    print("param: \n " "posicao: ${param['posicao']}");
-
     if (param['formacao'] == "" &&
         param['posicao'] == "" &&
         param['gols'] == 'false' &&
