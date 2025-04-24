@@ -105,6 +105,9 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                   child: DropdownButton(
                 dropdownColor: Colors.green,
                 menuMaxHeight: 300,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
                 value: dropDownValuePos,
                 items: [
                   for (var i in posicoes)
@@ -130,6 +133,9 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                   child: DropdownButton(
                 dropdownColor: Colors.green,
                 menuMaxHeight: 300,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
                 value: dropDownValueForm,
                 items: [
                   for (var i in formacoes)
@@ -162,9 +168,10 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
                 _Botao(onClick: setDic, texto: "dribles-completos"),
                 _Botao(onClick: setDic, texto: "chutes-no-gol"),
                 _Botao(onClick: setDic, texto: "bloqueados"),
+                /*
                 _BotaoPe(
                   onClick: (p0) {},
-                )
+                )*/
               ],
             ),
           )
@@ -229,12 +236,16 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
           ),
           Column(
             children: [
-              Text(
-                map['nome'] ?? 'erro',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: fatorDeEscalaMenor(15, context)),
-                overflow: TextOverflow.ellipsis,
+              SizedBox(
+                width: fatorDeEscalaMenor(150, context),
+                child: Text(
+                  map['nome'] ?? 'erro',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fatorDeEscalaMenor(15, context)),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               Text(
                 map['nomeTime'] ?? 'erro',
