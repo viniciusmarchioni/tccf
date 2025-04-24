@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:scout/estatisticas_jogador.dart';
 import 'package:scout/estatisticas_time.dart';
-import 'package:scout/ia.dart';
+import 'package:scout/pages/ia/ia.dart';
+import 'package:scout/pages/ia/ia_mobile.dart';
 import 'package:scout/pages/lista_resultados/lista_resultados.dart';
 import 'package:scout/pages/lista_resultados/lista_resultados_mobile.dart';
 import 'package:scout/pages/menu/menu_mobile.dart';
@@ -44,7 +45,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.pesquisaAvancada;
+  Tipos? tipo = Tipos.ia;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "C";
@@ -315,9 +316,51 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               );
             } else if (tipo == Tipos.ia) {
-              return Ia(
-                mandante: _carrousselMandante,
-                visitante: _carrousselVisitante,
+              return ResponsiveBuilder(
+                builder: (context, sizingInformation) {
+                  if (sizingInformation.isMobile) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          width: fatorDeEscalaMobile(300, context),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        width: 2, color: Colors.white)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        width: 2, color: Colors.white)),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Pesquise no Scout AI"),
+                            onSubmitted: (value) {
+                              setTipo(value);
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: IaMobile(
+                            mandante: _carrousselMandante,
+                            visitante: _carrousselVisitante,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Ia(
+                    mandante: _carrousselMandante,
+                    visitante: _carrousselVisitante,
+                  );
+                },
               );
             } else {
               return ResponsiveBuilder(
