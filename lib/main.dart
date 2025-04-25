@@ -47,7 +47,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
-  Tipos? tipo = Tipos.jogador;
+  Tipos? tipo;
   int idTime = 131; // ID Corinthians
   int idJogador = 10007; // ID Yuri
   String pesquisa = "C";
@@ -151,7 +151,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.person_search_rounded),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            tipo = Tipos.pesquisaAvancada;
+                          });
+                        },
                       ),
                     ],
                   );
@@ -166,33 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           tipo = null;
                         });
                       },
-                    ),
-                    SizedBox(
-                      width: fatorDeEscalaMenor(300, context),
-                      child: TextField(
-                        decoration: const InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide:
-                                    BorderSide(width: 2, color: Colors.white)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide:
-                                    BorderSide(width: 2, color: Colors.white)),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.black,
-                            ),
-                            hintText: "Pesquise no Scout AI"),
-                        onSubmitted: (value) {
-                          setTipo(value);
-                        },
-                        controller: controller,
-                      ),
                     ),
                     OutlinedButton(
                       style: const ButtonStyle(
@@ -223,32 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (sizingInformation.isMobile) {
                     return Column(
                       children: [
-                        SizedBox(
-                          width: fatorDeEscalaMobile(300, context),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                                hintText: "Pesquise no Scout AI"),
-                            onSubmitted: (value) {
-                              setTipo(value);
-                            },
-                          ),
-                        ),
+                        pesquisaMobile(context),
                         Expanded(child: TimeEstatisticasMobile(idTime: idTime)),
                       ],
                     );
@@ -262,32 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (sizingInformation.isMobile) {
                     return Column(
                       children: [
-                        SizedBox(
-                          width: fatorDeEscalaMobile(300, context),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                                hintText: "Pesquise no Scout AI"),
-                            onSubmitted: (value) {
-                              setTipo(value);
-                            },
-                          ),
-                        ),
+                        pesquisaMobile(context),
                         Expanded(
                             child:
                                 JogadorEstatisticasMobile(idJogador: idJogador))
@@ -305,32 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (sizingInformation.isMobile) {
                     return Column(
                       children: [
-                        SizedBox(
-                          width: fatorDeEscalaMobile(300, context),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                                hintText: "Pesquise no Scout AI"),
-                            onSubmitted: (value) {
-                              setTipo(value);
-                            },
-                          ),
-                        ),
+                        pesquisaMobile(context),
                         Expanded(
                           child: ListaResultadosMobile(
                             pesquisa,
@@ -354,32 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (sizingInformation.isMobile) {
                     return Column(
                       children: [
-                        SizedBox(
-                          width: fatorDeEscalaMobile(300, context),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                                hintText: "Pesquise no Scout AI"),
-                            onSubmitted: (value) {
-                              setTipo(value);
-                            },
-                          ),
-                        ),
+                        pesquisaMobile(context),
                         Expanded(
                             child: PesquisaAvancadaMobile(
                                 onPlayerClick: vaipjogador))
@@ -397,32 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (sizingInformation.isMobile) {
                     return Column(
                       children: [
-                        SizedBox(
-                          width: fatorDeEscalaMobile(300, context),
-                          child: TextField(
-                            decoration: const InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide: BorderSide(
-                                        width: 2, color: Colors.white)),
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.black,
-                                ),
-                                hintText: "Pesquise no Scout AI"),
-                            onSubmitted: (value) {
-                              setTipo(value);
-                            },
-                          ),
-                        ),
+                        pesquisaMobile(context),
                         Expanded(
                           child: IaMobile(
                             mandante: _carrousselMandante,
@@ -441,9 +293,12 @@ class _MyHomePageState extends State<MyHomePage> {
             } else {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (!sizingInformation.isDesktop) {
-                    return const Center(
-                      child: MenuMobile(),
+                  if (sizingInformation.isMobile) {
+                    return Column(
+                      children: [
+                        pesquisaMobile(context),
+                        const MenuMobile(),
+                      ],
                     );
                   }
                   return Container(
@@ -707,6 +562,31 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           },
         ));
+  }
+
+  SizedBox pesquisaMobile(BuildContext context) {
+    return SizedBox(
+      width: fatorDeEscalaMobile(300, context),
+      child: TextField(
+        decoration: const InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(width: 2, color: Colors.white)),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderSide: BorderSide(width: 2, color: Colors.white)),
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.black,
+            ),
+            hintText: "Pesquise no Scout AI"),
+        onSubmitted: (value) {
+          setTipo(value);
+        },
+      ),
+    );
   }
 
   Container ultimosJogos(BuildContext context) {

@@ -41,34 +41,7 @@ class _MenuMobileState extends State<MenuMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(
-          width: fatorDeEscalaMobile(300, context),
-          child: TextField(
-            decoration: const InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(width: 2, color: Colors.white)),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(width: 2, color: Colors.white)),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                ),
-                hintText: "Pesquise no Scout AI"),
-            onSubmitted: (value) {
-              //setTipo(value);
-            },
-          ),
-        ),
-        menuMobile(context)
-      ],
-    );
+    return menuMobile(context);
   }
 
   Widget menuMobile(BuildContext context) {
@@ -83,9 +56,7 @@ class _MenuMobileState extends State<MenuMobile> {
                   border: Border.all(color: Colors.green, width: 2),
                   color: const Color.fromARGB(255, 17, 34, 23),
                   borderRadius: const BorderRadius.all(Radius.circular(20))),
-              width: fatorDeEscalaMobile(600, context),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Próximos jogos",
@@ -111,12 +82,17 @@ class _MenuMobileState extends State<MenuMobile> {
                                                         fatorDeEscalaMenorReverso(
                                                             0.9, context),*/
                                   ),
-                                  Text(
-                                    partida.nomeMandante!,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMobile(20, context)),
+                                  SizedBox(
+                                    width: 150,
+                                    child: Text(
+                                      partida.nomeMandante!,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMobile(20, context)),
+                                    ),
                                   )
                                 ]),
                                 //Data do jogo
@@ -152,45 +128,52 @@ class _MenuMobileState extends State<MenuMobile> {
                                     width: fatorDeEscalaMobile(100, context),
                                     partida.logoVisitante!,
                                   ),
-                                  Text(
-                                    partida.nomeVisitante!,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMobile(20, context)),
+                                  SizedBox(
+                                    width: 150,
+                                    child: Text(
+                                      partida.nomeVisitante!,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMobile(20, context)),
+                                    ),
                                   )
                                 ])
                               ]),
                           //Botão prever
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Colors.green)),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Prever",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            fatorDeEscalaMobile(20, context)),
-                                  ))
-                            ],
+                          Container(
+                            margin: const EdgeInsets.only(top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                    style: const ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.green)),
+                                    onPressed: () {},
+                                    child: Text(
+                                      "Prever",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMobile(20, context)),
+                                    ))
+                              ],
+                            ),
                           )
                         ],
                       );
                     }).toList(),
                     options: CarouselOptions(
-                        height: fatorDeEscalaMobile(300 - 19, context),
                         viewportFraction: 1,
                         animateToClosest: true,
                         enlargeCenterPage: true,
                         enableInfiniteScroll: true,
                         autoPlay: true),
-                  ),
-                  Container()
+                  )
                 ],
               ),
             ),
@@ -258,7 +241,6 @@ class _MenuMobileState extends State<MenuMobile> {
                           ]);
                     }).toList(),
                     options: CarouselOptions(
-                        height: fatorDeEscalaMobile(200, context),
                         viewportFraction: 1,
                         animateToClosest: true,
                         enlargeCenterPage: true,
@@ -268,7 +250,11 @@ class _MenuMobileState extends State<MenuMobile> {
                 ],
               ),
             ),
-            ultimosJogosMobile(context)
+            Row(
+              children: [
+                Expanded(child: ultimosJogosMobile(context)),
+              ],
+            )
           ],
         ),
       ),
@@ -277,6 +263,7 @@ class _MenuMobileState extends State<MenuMobile> {
 
   Container ultimosJogosMobile(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.all(15),
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 17, 34, 23),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -312,11 +299,16 @@ class _MenuMobileState extends State<MenuMobile> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              partida.nomeMandante?.substring(0, 3).toUpperCase() ?? "...",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMobile(tamanhoFonteTime, context)),
+            SizedBox(
+              width: fatorDeEscalaMobile(100, context),
+              child: Text(
+                partida.nomeMandante ?? "...",
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fatorDeEscalaMobile(tamanhoFonteTime, context)),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             CachedNetworkImage(
               width: fatorDeEscalaMobile(tamanhoTime, context),
@@ -346,10 +338,16 @@ class _MenuMobileState extends State<MenuMobile> {
               errorWidget: (context, url, error) =>
                   Image.asset('assets/images/error_image.png'),
             ),
-            Text(partida.nomeVisitante?.substring(0, 3).toUpperCase() ?? "...",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: fatorDeEscalaMobile(tamanhoFonteTime, context)))
+            SizedBox(
+              width: fatorDeEscalaMobile(100, context),
+              child: Text(partida.nomeVisitante ?? "...",
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize:
+                          fatorDeEscalaMobile(tamanhoFonteTime, context))),
+            )
           ],
         )
       ]),
