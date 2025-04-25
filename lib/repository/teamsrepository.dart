@@ -158,6 +158,9 @@ class EstatisticasMenor {
       : estatistica1 = json['estatistica1'],
         estatistica2 = json['estatistica2'],
         estatistica3 = json['estatistica3'];
+
+  List<double> getLista() =>
+      [estatistica1 ?? 0, estatistica2 ?? 0, estatistica3 ?? 0];
 }
 
 class Time {
