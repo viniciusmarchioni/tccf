@@ -5,7 +5,9 @@ import 'package:scout/util/util.dart';
 
 class TimeEstatisticas extends StatefulWidget {
   final int idTime;
-  const TimeEstatisticas({super.key, required this.idTime});
+  final void Function(int) onPlayerClick;
+  const TimeEstatisticas(
+      {super.key, required this.idTime, required this.onPlayerClick});
 
   @override
   State<StatefulWidget> createState() {
@@ -452,13 +454,21 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  imagemJogador(timesRepository.goleiro.image),
+                  GestureDetector(
+                      onTap: () {
+                        widget.onPlayerClick(timesRepository.goleiro.id!);
+                      },
+                      child: imagemJogador(timesRepository.goleiro.image)),
                   Column(
                       //coluna zagueiros
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        for (var i = 0; i < formacaoList[0]; i++)
-                          imagemJogador(timesRepository.defensores[i].image),
+                        for (Jogador i in timesRepository.defensores)
+                          GestureDetector(
+                              onTap: () {
+                                widget.onPlayerClick(i.id!);
+                              },
+                              child: imagemJogador(i.image)),
                       ]),
                   for (List<Jogador> i in buffer)
                     Column(
@@ -468,7 +478,12 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                             : MainAxisAlignment.center,
                         children: [
                           if (i.length == 2) Container(),
-                          for (Jogador j in i) imagemJogador(j.image),
+                          for (Jogador j in i)
+                            GestureDetector(
+                                onTap: () {
+                                  widget.onPlayerClick(j.id!);
+                                },
+                                child: imagemJogador(j.image)),
                           if (i.length == 2) Container(),
                         ]),
                   Column(
@@ -478,7 +493,13 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                         for (var z = 0;
                             z < timesRepository.atacantes.length;
                             z++)
-                          imagemJogador(timesRepository.atacantes[z].image),
+                          GestureDetector(
+                              onTap: () {
+                                widget.onPlayerClick(
+                                    timesRepository.atacantes[z].id!);
+                              },
+                              child: imagemJogador(
+                                  timesRepository.atacantes[z].image)),
                         if (atk == 2) Container(),
                       ]),
                 ]),

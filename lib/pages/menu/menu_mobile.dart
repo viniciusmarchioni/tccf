@@ -5,7 +5,10 @@ import 'package:scout/repository/menu_repository.dart';
 import 'package:scout/util/util.dart';
 
 class MenuMobile extends StatefulWidget {
-  const MenuMobile({super.key});
+  final void Function(int) onPlayerClick;
+  final void Function(int) onTimeClick;
+  const MenuMobile(
+      {super.key, required this.onPlayerClick, required this.onTimeClick});
 
   @override
   State<StatefulWidget> createState() => _MenuMobileState();
@@ -73,28 +76,30 @@ class _MenuMobileState extends State<MenuMobile> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 //Mandante
-                                Column(children: [
-                                  Image.network(
-                                    partida.logoMandante!,
-                                    height: fatorDeEscalaMobile(100, context),
-                                    width: fatorDeEscalaMobile(100, context),
-                                    /*scale:
-                                                        fatorDeEscalaMenorReverso(
-                                                            0.9, context),*/
-                                  ),
-                                  SizedBox(
-                                    width: 150,
-                                    child: Text(
-                                      partida.nomeMandante!,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:
-                                              fatorDeEscalaMobile(20, context)),
+                                GestureDetector(
+                                  onTap: () {
+                                    widget.onTimeClick(partida.idMandante!);
+                                  },
+                                  child: Column(children: [
+                                    Image.network(
+                                      partida.logoMandante!,
+                                      height: fatorDeEscalaMobile(100, context),
+                                      width: fatorDeEscalaMobile(100, context),
                                     ),
-                                  )
-                                ]),
+                                    SizedBox(
+                                      width: 150,
+                                      child: Text(
+                                        partida.nomeMandante!,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMobile(
+                                                20, context)),
+                                      ),
+                                    )
+                                  ]),
+                                ),
                                 //Data do jogo
                                 Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -122,25 +127,30 @@ class _MenuMobileState extends State<MenuMobile> {
                                       )
                                     ]),
                                 //Visitante
-                                Column(children: [
-                                  Image.network(
-                                    height: fatorDeEscalaMobile(100, context),
-                                    width: fatorDeEscalaMobile(100, context),
-                                    partida.logoVisitante!,
-                                  ),
-                                  SizedBox(
-                                    width: 150,
-                                    child: Text(
-                                      partida.nomeVisitante!,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:
-                                              fatorDeEscalaMobile(20, context)),
+                                GestureDetector(
+                                  onTap: () {
+                                    widget.onTimeClick(partida.idVisitante!);
+                                  },
+                                  child: Column(children: [
+                                    Image.network(
+                                      height: fatorDeEscalaMobile(100, context),
+                                      width: fatorDeEscalaMobile(100, context),
+                                      partida.logoVisitante!,
                                     ),
-                                  )
-                                ])
+                                    SizedBox(
+                                      width: 150,
+                                      child: Text(
+                                        partida.nomeVisitante!,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMobile(
+                                                20, context)),
+                                      ),
+                                    )
+                                  ]),
+                                )
                               ]),
                           //Botão prever
                           Container(
@@ -199,13 +209,18 @@ class _MenuMobileState extends State<MenuMobile> {
                       return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.green,
-                              radius: fatorDeEscalaMobile(65, context),
+                            GestureDetector(
+                              onTap: () {
+                                widget.onPlayerClick(jogador.id!);
+                              },
                               child: CircleAvatar(
-                                  radius: fatorDeEscalaMobile(60, context),
-                                  backgroundImage: CachedNetworkImageProvider(
-                                      jogador.imagem!)),
+                                backgroundColor: Colors.green,
+                                radius: fatorDeEscalaMobile(65, context),
+                                child: CircleAvatar(
+                                    radius: fatorDeEscalaMobile(60, context),
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        jogador.imagem!)),
+                              ),
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,

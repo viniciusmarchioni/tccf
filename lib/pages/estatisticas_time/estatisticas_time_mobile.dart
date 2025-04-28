@@ -5,7 +5,9 @@ import 'package:scout/util/util.dart';
 
 class TimeEstatisticasMobile extends StatefulWidget {
   final int idTime;
-  const TimeEstatisticasMobile({super.key, required this.idTime});
+  final void Function(int) onPlayerClick;
+  const TimeEstatisticasMobile(
+      {super.key, required this.idTime, required this.onPlayerClick});
 
   @override
   State<StatefulWidget> createState() {
@@ -86,8 +88,10 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                             Text(
                               timesRepository.infoTime.nome ?? 'Carregando...',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: fatorDeEscalaMobile(25, context)),
+                                  fontSize: fatorDeEscalaMobile(35, context),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                              textAlign: TextAlign.center,
                             ),
                           ]),
                       constroiFormacao(controller.text, timesRepository),
@@ -95,11 +99,9 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "Aproveitamento na formação:",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: fatorDeEscalaMobile(15, context)),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           containerNota(timesRepository.aproveitamento
                               .getAproveitamento()),
@@ -146,9 +148,9 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                         ],
                       ),
                       Container(
-                        margin:
-                            EdgeInsets.all(fatorDeEscalaMobile(20, context)),
-                        height: fatorDeEscalaMobile(150, context),
+                        height: fatorDeEscalaMobile(300, context),
+                        margin: EdgeInsets.symmetric(
+                            vertical: fatorDeEscalaMobile(10, context)),
                         decoration: BoxDecoration(
                             color: valorSwitch
                                 ? const Color.fromARGB(68, 34, 197, 94)
@@ -176,13 +178,12 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                                         style: TextStyle(
                                             color: Colors.green,
                                             fontSize: fatorDeEscalaMobile(
-                                                10, context)),
+                                                15, context)),
                                       )),
                                   OutlinedButton(
                                       style: OutlinedButton.styleFrom(
                                           side: const BorderSide(
-                                        color: Colors.red,
-                                      )),
+                                              color: Colors.red)),
                                       onPressed: () {
                                         setState(() {
                                           valorSwitch = false;
@@ -193,7 +194,7 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                                         style: TextStyle(
                                             color: Colors.red,
                                             fontSize: fatorDeEscalaMobile(
-                                                10, context)),
+                                                15, context)),
                                       )),
                                 ]),
                             Expanded(
@@ -275,13 +276,21 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    imagemJogador(timesRepository.goleiro.image),
+                    GestureDetector(
+                        onTap: () {
+                          widget.onPlayerClick(timesRepository.goleiro.id!);
+                        },
+                        child: imagemJogador(timesRepository.goleiro.image)),
                     Column(
                         //coluna zagueiros
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          for (var i = 0; i < formacaoList[0]; i++)
-                            imagemJogador(timesRepository.defensores[i].image),
+                          for (Jogador i in timesRepository.defensores)
+                            GestureDetector(
+                                onTap: () {
+                                  widget.onPlayerClick(i.id!);
+                                },
+                                child: imagemJogador(i.image)),
                         ]),
                     for (List<Jogador> i in buffer)
                       Column(
@@ -291,7 +300,12 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                               : MainAxisAlignment.center,
                           children: [
                             if (i.length == 2) Container(),
-                            for (Jogador j in i) imagemJogador(j.image),
+                            for (Jogador j in i)
+                              GestureDetector(
+                                  onTap: () {
+                                    widget.onPlayerClick(j.id!);
+                                  },
+                                  child: imagemJogador(j.image)),
                             if (i.length == 2) Container(),
                           ]),
                     Column(
@@ -301,7 +315,13 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                           for (var z = 0;
                               z < timesRepository.atacantes.length;
                               z++)
-                            imagemJogador(timesRepository.atacantes[z].image),
+                            GestureDetector(
+                                onTap: () {
+                                  widget.onPlayerClick(
+                                      timesRepository.atacantes[z].id!);
+                                },
+                                child: imagemJogador(
+                                    timesRepository.atacantes[z].image)),
                           if (atk == 2) Container(),
                         ]),
                   ]),
@@ -330,26 +350,34 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
     );
   }
 
-  Widget containerNota(double nota) {
-    MaterialColor cor = Colors.green;
-
-    if (nota < 60 && nota > 40) {
-      cor = Colors.amber;
-    } else if (nota < 40) {
-      cor = Colors.red;
+  MaterialColor corNota(double nota) {
+    if (nota >= 60) {
+      return Colors.green;
+    } else if (nota > 50) {
+      return Colors.amber;
     } else {
-      cor = Colors.green;
+      return Colors.red;
     }
-    Widget x = Container(
-      margin: EdgeInsets.all(fatorDeEscalaMenor(10, context)),
+  }
+
+  Widget containerNota(double nota) {
+    return Container(
+      width: fatorDeEscalaMobile(50, context),
+      height: fatorDeEscalaMobile(50, context),
+      margin:
+          EdgeInsets.symmetric(horizontal: fatorDeEscalaMobile(10, context)),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: cor, borderRadius: const BorderRadius.all(Radius.circular(5))),
-      padding: EdgeInsets.all(fatorDeEscalaMenor(20, context)),
-      child: Text("${nota.toStringAsFixed(2)}%"),
+        color: corNota(nota),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        nota.toStringAsFixed(2),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
-
-    return x;
   }
 
   List<Widget> grandeComparacao() {
@@ -391,16 +419,17 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
               child: Text.rich(
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: fatorDeEscalaMobile(12, context)),
-                TextSpan(children: [
-                  TextSpan(
-                      text: "${jogador.nome} - ${descricao[i]}: ",
-                      style: const TextStyle(color: Colors.white)),
-                  TextSpan(
-                      text: valorJogador.toStringAsFixed(2),
-                      style: const TextStyle(color: Colors.green)),
-                  const TextSpan(
-                      text: "/partida.", style: TextStyle(color: Colors.white))
-                ]),
+                TextSpan(
+                    children: [
+                      TextSpan(text: "${jogador.nome} - ${descricao[i]}: "),
+                      TextSpan(
+                          text: valorJogador.toStringAsFixed(2),
+                          style: const TextStyle(color: Colors.green)),
+                      const TextSpan(text: "/partida.")
+                    ],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fatorDeEscalaMobile(18, context))),
               ),
             ));
           }

@@ -171,6 +171,33 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                     ),
+                    SizedBox(
+                      width: fatorDeEscalaMenor(300, context),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.white)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.white)),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.black,
+                            ),
+                            hintText: "Pesquise no Scout AI"),
+                        onSubmitted: (value) {
+                          setTipo(value);
+                        },
+                        controller: controller,
+                      ),
+                    ),
                     OutlinedButton(
                       style: const ButtonStyle(
                           backgroundColor: MaterialStatePropertyAll(
@@ -197,21 +224,28 @@ class _MyHomePageState extends State<MyHomePage> {
             if (tipo == Tipos.time) {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (sizingInformation.isMobile) {
+                  if (!sizingInformation.isDesktop) {
                     return Column(
                       children: [
                         pesquisaMobile(context),
-                        Expanded(child: TimeEstatisticasMobile(idTime: idTime)),
+                        Expanded(
+                            child: TimeEstatisticasMobile(
+                          idTime: idTime,
+                          onPlayerClick: vaipjogador,
+                        )),
                       ],
                     );
                   }
-                  return TimeEstatisticas(idTime: idTime);
+                  return TimeEstatisticas(
+                    idTime: idTime,
+                    onPlayerClick: vaipjogador,
+                  );
                 },
               );
             } else if (tipo == Tipos.jogador) {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (sizingInformation.isMobile) {
+                  if (!sizingInformation.isDesktop) {
                     return Column(
                       children: [
                         pesquisaMobile(context),
@@ -229,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (tipo == Tipos.pesquisa) {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (sizingInformation.isMobile) {
+                  if (!sizingInformation.isDesktop) {
                     return Column(
                       children: [
                         pesquisaMobile(context),
@@ -253,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (tipo == Tipos.pesquisaAvancada) {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (sizingInformation.isMobile) {
+                  if (!sizingInformation.isDesktop) {
                     return Column(
                       children: [
                         pesquisaMobile(context),
@@ -271,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (tipo == Tipos.ia) {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (sizingInformation.isMobile) {
+                  if (!sizingInformation.isDesktop) {
                     return Column(
                       children: [
                         pesquisaMobile(context),
@@ -293,11 +327,12 @@ class _MyHomePageState extends State<MyHomePage> {
             } else {
               return ResponsiveBuilder(
                 builder: (context, sizingInformation) {
-                  if (sizingInformation.isMobile) {
+                  if (!sizingInformation.isDesktop) {
                     return Column(
                       children: [
                         pesquisaMobile(context),
-                        const MenuMobile(),
+                        MenuMobile(
+                            onPlayerClick: vaipjogador, onTimeClick: vaiptime),
                       ],
                     );
                   }
@@ -313,7 +348,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             Expanded(
                               child: Container(
                                 margin: const EdgeInsets.all(15),
-                                //padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Colors.green, width: 2),
@@ -346,27 +380,32 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         .spaceBetween,
                                                 children: [
                                                   //Mandante
-                                                  Column(children: [
-                                                    Image.network(
-                                                      partida.logoMandante!,
-                                                      height:
-                                                          fatorDeEscalaMenor(
-                                                              150, context),
-                                                      width: fatorDeEscalaMenor(
-                                                          150, context),
-                                                      /*scale:
-                                                        fatorDeEscalaMenorReverso(
-                                                            0.9, context),*/
-                                                    ),
-                                                    Text(
-                                                      partida.nomeMandante!,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize:
-                                                              fatorDeEscalaMenor(
-                                                                  20, context)),
-                                                    )
-                                                  ]),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      vaiptime(
+                                                          partida.idMandante!);
+                                                    },
+                                                    child: Column(children: [
+                                                      Image.network(
+                                                        partida.logoMandante!,
+                                                        height:
+                                                            fatorDeEscalaMenor(
+                                                                150, context),
+                                                        width:
+                                                            fatorDeEscalaMenor(
+                                                                150, context),
+                                                      ),
+                                                      Text(
+                                                        partida.nomeMandante!,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                fatorDeEscalaMenor(
+                                                                    20,
+                                                                    context)),
+                                                      )
+                                                    ]),
+                                                  ),
                                                   //Data do jogo
                                                   Column(
                                                       mainAxisAlignment:
@@ -407,24 +446,32 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         )
                                                       ]),
                                                   //Visitante
-                                                  Column(children: [
-                                                    Image.network(
-                                                      height:
-                                                          fatorDeEscalaMenor(
-                                                              150, context),
-                                                      width: fatorDeEscalaMenor(
-                                                          150, context),
-                                                      partida.logoVisitante!,
-                                                    ),
-                                                    Text(
-                                                      partida.nomeVisitante!,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize:
-                                                              fatorDeEscalaMenor(
-                                                                  20, context)),
-                                                    )
-                                                  ])
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      vaiptime(
+                                                          partida.idVisitante!);
+                                                    },
+                                                    child: Column(children: [
+                                                      Image.network(
+                                                        height:
+                                                            fatorDeEscalaMenor(
+                                                                150, context),
+                                                        width:
+                                                            fatorDeEscalaMenor(
+                                                                150, context),
+                                                        partida.logoVisitante!,
+                                                      ),
+                                                      Text(
+                                                        partida.nomeVisitante!,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                fatorDeEscalaMenor(
+                                                                    20,
+                                                                    context)),
+                                                      )
+                                                    ]),
+                                                  )
                                                 ]),
                                             //Botão prever
                                             Row(
@@ -496,16 +543,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
-                                            CircleAvatar(
-                                              backgroundColor: Colors.green,
-                                              radius: fatorDeEscalaMenor(
-                                                  65, context),
+                                            GestureDetector(
+                                              onTap: () {
+                                                vaipjogador(jogador.id!);
+                                              },
                                               child: CircleAvatar(
-                                                  radius: fatorDeEscalaMenor(
-                                                      60, context),
-                                                  backgroundImage:
-                                                      CachedNetworkImageProvider(
-                                                          jogador.imagem!)),
+                                                backgroundColor: Colors.green,
+                                                radius: fatorDeEscalaMenor(
+                                                    65, context),
+                                                child: CircleAvatar(
+                                                    radius: fatorDeEscalaMenor(
+                                                        60, context),
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                            jogador.imagem!)),
+                                              ),
                                             ),
                                             Column(
                                               mainAxisAlignment:
