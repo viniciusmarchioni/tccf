@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:scout/util/util.dart';
 
 class PesquisaRepository {
   List<Time> times = [];
@@ -13,7 +14,7 @@ class PesquisaRepository {
     jogadores = [];
     try {
       var response = await http
-          .get(Uri.parse('http://localhost:5000/pesquisa/$pesquisa'))
+          .get(Uri.parse('$endereco/pesquisa/$pesquisa'))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {

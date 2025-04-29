@@ -652,7 +652,7 @@ class IaRepository {
   Future<void> pesquisa() async {
     try {
       final response = await http.post(
-        Uri.parse("http://localhost:5000/ia/"),
+        Uri.parse("$endereco:5000/ia/"),
         body: jsonEncode({
           "time_mandante": mandante,
           "time_visitante": visitante,

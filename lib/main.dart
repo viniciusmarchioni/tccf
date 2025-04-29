@@ -734,14 +734,17 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _item("Tabela", Icons.emoji_events, () {}),
             _item("Times", Icons.sports_soccer_rounded, () {
               setTipo("Times");
             }),
             _item("Jogadores", Icons.person, () {
               setTipo("Jogadores");
             }),
-            _item("Comparações", Icons.person_search, () {}),
+            _item("Comparações", Icons.person_search, () {
+              setState(() {
+                tipo = Tipos.pesquisaAvancada;
+              });
+            }),
             _item("Previsões IA", Icons.auto_awesome_rounded, () {
               vaipIA(null, null);
             }),

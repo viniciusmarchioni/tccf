@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:scout/util/util.dart';
 
 class PesquisaAvancadaRepository {
   List<dynamic> resultados = [];
@@ -23,8 +24,7 @@ class PesquisaAvancadaRepository {
     }
 
     try {
-      var response = await http.get(
-          Uri.parse("http://localhost:5000/pesquisaavancada/"),
+      var response = await http.get(Uri.parse("$endereco/pesquisaavancada/"),
           headers: param);
 
       if (response.statusCode == 200) {

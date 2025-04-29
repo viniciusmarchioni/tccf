@@ -24,14 +24,6 @@ class _IaState extends State<Ia> {
   String? clima = "Selecione";
   String? horario = "Selecione";
 
-  final List<String> opcoesTime = [
-    "Selecione",
-    "Corinthians",
-    "Palmeiras",
-    "São Paulo",
-    "Santos"
-  ];
-
   final timeDic = {
     "Bahia": "https://media.api-sports.io/football/teams/118.png",
     "Internacional": "https://media.api-sports.io/football/teams/119.png",
@@ -194,6 +186,10 @@ class _IaState extends State<Ia> {
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
                                           value: timeMandante,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           items: [
                                             for (var i in [
                                               "Selecione",
@@ -248,6 +244,10 @@ class _IaState extends State<Ia> {
                                             child: DropdownButton(
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           value: formacaoMandante,
                                           items: [
                                             for (var i in opcoesFormacao)
@@ -322,6 +322,10 @@ class _IaState extends State<Ia> {
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
                                           value: timeVisitante,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           items: [
                                             for (var i in [
                                               "Selecione",
@@ -376,6 +380,10 @@ class _IaState extends State<Ia> {
                                           menuMaxHeight: 300,
                                           dropdownColor: Colors.green,
                                           value: formacaoVisitante,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMenor(
+                                                  25, context)),
                                           items: [
                                             for (var i in opcoesFormacao)
                                               DropdownMenuItem(
@@ -433,6 +441,11 @@ class _IaState extends State<Ia> {
                                     child: DropdownButtonHideUnderline(
                                         child: DropdownButton(
                                       value: clima,
+                                      dropdownColor: Colors.green,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(25, context)),
                                       items: [
                                         for (var i in opcoesClima)
                                           DropdownMenuItem(
@@ -462,6 +475,11 @@ class _IaState extends State<Ia> {
                                     child: DropdownButtonHideUnderline(
                                         child: DropdownButton(
                                       value: horario,
+                                      dropdownColor: Colors.green,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(25, context)),
                                       items: [
                                         for (var i in opcoesHorario)
                                           DropdownMenuItem(
@@ -482,25 +500,29 @@ class _IaState extends State<Ia> {
                                   )
                                 ]),
                             //Botão prever resultado
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                    style: const ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.green)),
-                                    onPressed: () {
-                                      request();
-                                    },
-                                    child: Text(
-                                      "Prever resultado",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:
-                                              fatorDeEscalaMenor(30, context)),
-                                    ))
-                              ],
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: fatorDeEscalaMenor(25, context)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      style: const ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.green)),
+                                      onPressed: () {
+                                        request();
+                                      },
+                                      child: Text(
+                                        "Prever resultado",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                30, context)),
+                                      ))
+                                ],
+                              ),
                             )
                           ],
                         )
@@ -535,7 +557,9 @@ class _IaState extends State<Ia> {
                             Builder(
                               builder: (context) {
                                 if (iaRepository.chanceMandante >
-                                    iaRepository.chanceVisitante) {
+                                        iaRepository.chanceVisitante &&
+                                    iaRepository.chanceMandante >
+                                        iaRepository.chanceEmpate) {
                                   return Column(
                                     children: [
                                       Text(
@@ -553,7 +577,9 @@ class _IaState extends State<Ia> {
                                     ],
                                   );
                                 } else if (iaRepository.chanceVisitante >
-                                    iaRepository.chanceMandante) {
+                                        iaRepository.chanceMandante &&
+                                    iaRepository.chanceVisitante >
+                                        iaRepository.chanceEmpate) {
                                   return Column(
                                     children: [
                                       Text(
@@ -645,7 +671,7 @@ class IaRepository {
   Future<void> pesquisa() async {
     try {
       final response = await http.post(
-        Uri.parse("http://localhost:5000/ia/"),
+        Uri.parse("$endereco/ia/"),
         body: jsonEncode({
           "time_mandante": mandante,
           "time_visitante": visitante,

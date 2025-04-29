@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const String endereco = "https://corinthianspaulista1910.duckdns.org";
+
 double fatorDeEscalaMaior(double valorBom, BuildContext context) {
   double fatorDeEscala = 0;
   if (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width) {

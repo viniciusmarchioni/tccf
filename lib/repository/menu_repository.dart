@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:scout/util/util.dart';
 
 class MenuRepository {
   List<JogadoresDestaque> jogadoresDestaque = [];
@@ -13,7 +14,7 @@ class MenuRepository {
   Future<void> init() async {
     try {
       var response = await http
-          .get(Uri.parse('http://localhost:5000/jogadores/destaques'))
+          .get(Uri.parse('$endereco/jogadores/destaques'))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -26,7 +27,7 @@ class MenuRepository {
       }
 
       response = await http
-          .get(Uri.parse('http://localhost:5000/jogos/ultimos'))
+          .get(Uri.parse('$endereco/jogos/ultimos'))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
@@ -40,22 +41,6 @@ class MenuRepository {
           (a, b) => b.data!.compareTo(a.data!),
         );
       }
-/*
-      response = await http
-          .get(Uri.parse('http://localhost:5000/jogos/proximos'))
-          .timeout(const Duration(seconds: 5));
-
-      if (response.statusCode == 200) {
-        proximasPartidas = [];
-        var body = jsonDecode(response.body);
-
-        for (var i in body['jogos']) {
-          proximasPartidas.add(Partida.fromJsonAll(i));
-        }
-        proximasPartidas.sort(
-          (a, b) => b.data!.compareTo(a.data!),
-        );
-      }*/
     } catch (e) {
       debugPrint(e.toString());
     }
