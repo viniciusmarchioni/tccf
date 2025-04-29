@@ -7,8 +7,12 @@ import 'package:scout/util/util.dart';
 class MenuMobile extends StatefulWidget {
   final void Function(int) onPlayerClick;
   final void Function(int) onTimeClick;
+  final void Function(String? mandante, String? visitante) vaipIA;
   const MenuMobile(
-      {super.key, required this.onPlayerClick, required this.onTimeClick});
+      {super.key,
+      required this.onPlayerClick,
+      required this.onTimeClick,
+      required this.vaipIA});
 
   @override
   State<StatefulWidget> createState() => _MenuMobileState();
@@ -163,7 +167,10 @@ class _MenuMobileState extends State<MenuMobile> {
                                         backgroundColor:
                                             MaterialStatePropertyAll(
                                                 Colors.green)),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      widget.vaipIA(partida.nomeMandante,
+                                          partida.nomeVisitante);
+                                    },
                                     child: Text(
                                       "Prever",
                                       style: TextStyle(

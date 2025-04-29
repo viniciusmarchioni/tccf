@@ -532,11 +532,13 @@ class _IaMobileState extends State<IaMobile> {
                             Builder(
                               builder: (context) {
                                 if (iaRepository.chanceMandante >
-                                    iaRepository.chanceVisitante) {
+                                        iaRepository.chanceVisitante &&
+                                    iaRepository.chanceMandante >
+                                        iaRepository.chanceEmpate) {
                                   return Column(
                                     children: [
                                       Text(
-                                        "Vítoria do ${timeMandante ?? "Mandante"}",
+                                        "Vítoria do mandante",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.white,
@@ -551,11 +553,13 @@ class _IaMobileState extends State<IaMobile> {
                                     ],
                                   );
                                 } else if (iaRepository.chanceVisitante >
-                                    iaRepository.chanceMandante) {
+                                        iaRepository.chanceMandante &&
+                                    iaRepository.chanceVisitante >
+                                        iaRepository.chanceEmpate) {
                                   return Column(
                                     children: [
                                       Text(
-                                        "Vítoria do ${timeMandante ?? "Visitante"}",
+                                        "Vítoria do visitante",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.white,
@@ -652,7 +656,7 @@ class IaRepository {
   Future<void> pesquisa() async {
     try {
       final response = await http.post(
-        Uri.parse("$endereco:5000/ia/"),
+        Uri.parse("$endereco/ia/"),
         body: jsonEncode({
           "time_mandante": mandante,
           "time_visitante": visitante,

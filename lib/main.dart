@@ -332,7 +332,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         pesquisaMobile(context),
                         MenuMobile(
-                            onPlayerClick: vaipjogador, onTimeClick: vaiptime),
+                          onPlayerClick: vaipjogador,
+                          onTimeClick: vaiptime,
+                          vaipIA: vaipIA,
+                        ),
                       ],
                     );
                   }
