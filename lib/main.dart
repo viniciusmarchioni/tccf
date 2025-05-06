@@ -149,14 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           });
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.person_search_rounded),
-                        onPressed: () {
-                          setState(() {
-                            tipo = Tipos.pesquisaAvancada;
-                          });
-                        },
-                      ),
+                      Container(),
                     ],
                   );
                 }
@@ -233,6 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           idTime: idTime,
                           onPlayerClick: vaipjogador,
                         )),
+                        navBarMobile(context)
                       ],
                     );
                   }
@@ -250,8 +244,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         pesquisaMobile(context),
                         Expanded(
-                            child:
-                                JogadorEstatisticasMobile(idJogador: idJogador))
+                            child: JogadorEstatisticasMobile(
+                                idJogador: idJogador)),
+                        navBarMobile(context)
                       ],
                     );
                   }
@@ -274,6 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPlayerClick: vaipjogador,
                           ),
                         ),
+                        navBarMobile(context)
                       ],
                     );
                   }
@@ -293,7 +289,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         pesquisaMobile(context),
                         Expanded(
                             child: PesquisaAvancadaMobile(
-                                onPlayerClick: vaipjogador))
+                                onPlayerClick: vaipjogador)),
+                        navBarMobile(context)
                       ],
                     );
                   }
@@ -315,6 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             visitante: _carrousselVisitante,
                           ),
                         ),
+                        navBarMobile(context)
                       ],
                     );
                   }
@@ -336,6 +334,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onTimeClick: vaiptime,
                           vaipIA: vaipIA,
                         ),
+                        navBarMobile(context)
                       ],
                     );
                   }
@@ -617,6 +616,45 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           },
         ));
+  }
+
+  Container navBarMobile(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          IconButton(
+            iconSize: fatorDeEscalaMobile(50, context),
+            onPressed: () => setTipo("Times"),
+            color: Colors.white,
+            icon: const Icon(Icons.sports_soccer),
+          ),
+          IconButton(
+            iconSize: fatorDeEscalaMobile(50, context),
+            onPressed: () => setTipo("Jogadores"),
+            color: Colors.white,
+            icon: const Icon(Icons.person),
+          ),
+          IconButton(
+            iconSize: fatorDeEscalaMobile(50, context),
+            onPressed: () {
+              setState(() {
+                tipo = Tipos.pesquisaAvancada;
+              });
+            },
+            color: Colors.white,
+            icon: const Icon(Icons.person_search_rounded),
+          ),
+          IconButton(
+            iconSize: fatorDeEscalaMobile(50, context),
+            onPressed: () => vaipIA(null, null),
+            color: Colors.white,
+            icon: const Icon(Icons.auto_awesome_rounded),
+          ),
+        ],
+      ),
+    );
   }
 
   SizedBox pesquisaMobile(BuildContext context) {

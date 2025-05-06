@@ -85,13 +85,18 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                               errorWidget: (context, url, error) =>
                                   Image.asset('assets/images/error_image.png'),
                             ),
-                            Text(
-                              timesRepository.infoTime.nome ?? 'Carregando...',
-                              style: TextStyle(
-                                  fontSize: fatorDeEscalaMobile(35, context),
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                              textAlign: TextAlign.center,
+                            SizedBox(
+                              width: fatorDeEscalaMobile(250, context),
+                              child: Text(
+                                timesRepository.infoTime.nome ??
+                                    'Carregando...',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: fatorDeEscalaMobile(35, context),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ]),
                       constroiFormacao(controller.text, timesRepository),

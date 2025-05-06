@@ -94,66 +94,74 @@ class _PesquisaAvancadaState extends State<PesquisaAvancada> {
     return Column(
       children: [
         Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            Container(),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.green)),
-              child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                dropdownColor: Colors.green,
-                menuMaxHeight: 300,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-                value: dropDownValuePos,
-                items: [
-                  for (var i in posicoes)
-                    DropdownMenuItem(
-                      value: i,
-                      child: Text(i),
-                    )
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    dropDownValuePos = value;
-                  });
-                  setDic(value, "posicao");
-                },
-              )),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.green)),
-              child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                dropdownColor: Colors.green,
-                menuMaxHeight: 300,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-                value: dropDownValueForm,
-                items: [
-                  for (var i in formacoes)
-                    DropdownMenuItem(
-                      value: i,
-                      child: Text(i),
-                    )
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    dropDownValueForm = value;
-                  });
-                  setDic(value, "formacao");
-                },
-              )),
-            ),
-            Container()
-          ]),
+          Container(
+            margin: EdgeInsets.symmetric(
+                vertical: fatorDeEscalaMobile(10, context)),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.green)),
+                    child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                      dropdownColor: Colors.green,
+                      menuMaxHeight: 300,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: fatorDeEscalaMenor(25, context)),
+                      value: dropDownValuePos,
+                      items: [
+                        for (var i in posicoes)
+                          DropdownMenuItem(
+                            value: i,
+                            child: Text(i),
+                          )
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          dropDownValuePos = value;
+                        });
+                        setDic(value, "posicao");
+                      },
+                    )),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.green)),
+                    child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                      dropdownColor: Colors.green,
+                      menuMaxHeight: 300,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: fatorDeEscalaMenor(25, context)),
+                      value: dropDownValueForm,
+                      items: [
+                        for (var i in formacoes)
+                          DropdownMenuItem(
+                            value: i,
+                            child: Text(i),
+                          )
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          dropDownValueForm = value;
+                        });
+                        setDic(value, "formacao");
+                      },
+                    )),
+                  ),
+                  Container()
+                ]),
+          ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -330,7 +338,9 @@ class _BotaoState extends State<_Botao> {
                 },
                 child: Text(
                   dic[widget.texto] ?? widget.texto,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fatorDeEscalaMenor(20, context)),
                 ),
               )
             : OutlinedButton(
@@ -346,7 +356,9 @@ class _BotaoState extends State<_Botao> {
                 },
                 child: Text(
                   dic[widget.texto] ?? widget.texto,
-                  style: const TextStyle(color: Colors.green),
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: fatorDeEscalaMenor(20, context)),
                 ),
               ),
       );

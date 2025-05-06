@@ -58,7 +58,6 @@ class _MenuMobileState extends State<MenuMobile> {
           children: [
             Container(
               margin: const EdgeInsets.all(15),
-              //padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.green, width: 2),
                   color: const Color.fromARGB(255, 17, 34, 23),
@@ -91,7 +90,7 @@ class _MenuMobileState extends State<MenuMobile> {
                                       width: fatorDeEscalaMobile(100, context),
                                     ),
                                     SizedBox(
-                                      width: 150,
+                                      width: fatorDeEscalaMobile(150, context),
                                       child: Text(
                                         partida.nomeMandante!,
                                         overflow: TextOverflow.ellipsis,
@@ -142,7 +141,7 @@ class _MenuMobileState extends State<MenuMobile> {
                                       partida.logoVisitante!,
                                     ),
                                     SizedBox(
-                                      width: 150,
+                                      width: fatorDeEscalaMobile(150, context),
                                       child: Text(
                                         partida.nomeVisitante!,
                                         overflow: TextOverflow.ellipsis,
