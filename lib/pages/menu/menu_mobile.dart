@@ -72,7 +72,7 @@ class _MenuMobileState extends State<MenuMobile> {
                   ),
                   CarouselSlider(
                     carouselController: CarouselSliderController(),
-                    items: menuRepository.ultimasPartidas.map((partida) {
+                    items: menuRepository.proximasPartidas.map((partida) {
                       return Column(
                         children: [
                           Row(
@@ -108,7 +108,7 @@ class _MenuMobileState extends State<MenuMobile> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "${partida.data?.hour}:${partida.data?.minute}",
+                                        "${partida.data?.hour.toString().padLeft(2, '0')}:${partida.data?.minute.toString().padLeft(2, '0')}",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: fatorDeEscalaMobile(
@@ -311,7 +311,7 @@ class _MenuMobileState extends State<MenuMobile> {
       margin: EdgeInsets.symmetric(vertical: fatorDeEscalaMobile(10, context)),
       child: Column(children: [
         Text(
-          "${partida.data?.hour}:${partida.data?.minute}-${dic[partida.data?.weekday]}-${partida.data?.day}/${partida.data?.month}",
+          "${partida.data?.hour.toString().padLeft(2, '0')}:${partida.data?.minute.toString().padLeft(2, '0')}-${dic[partida.data?.weekday]}-${partida.data?.day}/${partida.data?.month}",
           style: TextStyle(
               color: Colors.white,
               fontSize: fatorDeEscalaMobile(tamanhoFonteDia, context)),

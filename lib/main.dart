@@ -372,7 +372,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     CarouselSlider(
                                       carouselController:
                                           CarouselSliderController(),
-                                      items: menuRepository.ultimasPartidas
+                                      items: menuRepository.proximasPartidas
                                           .map((partida) {
                                         return Column(
                                           children: [
@@ -415,7 +415,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               .center,
                                                       children: [
                                                         Text(
-                                                          "${partida.data?.hour}:${partida.data?.minute}",
+                                                          "${partida.data?.hour.toString().padLeft(2, '0')}:${partida.data?.minute.toString().padLeft(2, '0')}",
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -627,8 +627,8 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             iconSize: fatorDeEscalaMobile(50, context),
             onPressed: () => setTipo("Times"),
-            color: Colors.white,
-            icon: const Icon(Icons.sports_soccer),
+            icon: Image.asset("assets/images/escudo.png",
+                height: 50, color: Colors.white),
           ),
           IconButton(
             iconSize: fatorDeEscalaMobile(50, context),
@@ -713,7 +713,7 @@ class _MyHomePageState extends State<MyHomePage> {
       margin: EdgeInsets.symmetric(vertical: fatorDeEscalaMenor(10, context)),
       child: Column(children: [
         Text(
-          "${partida.data?.hour}:${partida.data?.minute}-${dic[partida.data?.weekday]}-${partida.data?.day}/${partida.data?.month}",
+          "${partida.data?.hour.toString().padLeft(2, '0')}:${partida.data?.minute.toString().padLeft(2, '0')}-${dic[partida.data?.weekday]}-${partida.data?.day}/${partida.data?.month}",
           style: TextStyle(
               color: Colors.white,
               fontSize: fatorDeEscalaMenor(tamanhoFonteDia, context)),

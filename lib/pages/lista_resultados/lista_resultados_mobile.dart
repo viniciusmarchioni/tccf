@@ -57,13 +57,16 @@ class ListaResultadosState extends State<ListaResultadosMobile> {
           ]),
           Expanded(
             child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  for (Time i in pesquisaRepository.times) listaTime(i),
-                  for (JogadorTime j in pesquisaRepository.jogadores)
-                    listaJogador(j)
-                ],
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: double.infinity),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (Time i in pesquisaRepository.times) listaTime(i),
+                    for (JogadorTime j in pesquisaRepository.jogadores)
+                      listaJogador(j),
+                  ],
+                ),
               ),
             ),
           )
@@ -73,23 +76,26 @@ class ListaResultadosState extends State<ListaResultadosMobile> {
   }
 
   Widget listaTime(Time time) {
-    return GestureDetector(
-      onTap: () {
-        widget.onTeamClick(time.id ?? 131);
-      },
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        CachedNetworkImage(
-          height: fatorDeEscalaMobile(100, context),
-          imageUrl: time.logo!,
-          placeholder: (context, url) => const CircularProgressIndicator(),
-          errorWidget: (context, url, error) =>
-              Image.asset('assets/images/error_image.png'),
-        ),
-        Text(
-          time.nome ?? "Erro",
-          style: const TextStyle(color: Colors.white),
-        )
-      ]),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: GestureDetector(
+        onTap: () {
+          widget.onTeamClick(time.id ?? 131);
+        },
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          CachedNetworkImage(
+            height: fatorDeEscalaMobile(100, context),
+            imageUrl: time.logo!,
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) =>
+                Image.asset('assets/images/error_image.png'),
+          ),
+          Text(
+            time.nome ?? "Erro",
+            style: const TextStyle(color: Colors.white),
+          )
+        ]),
+      ),
     );
   }
 

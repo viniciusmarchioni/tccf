@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const String endereco = "https://corinthianspaulista1910.duckdns.org";
-//const String endereco = "http://localhost:5000/";
+//const String endereco = "https://corinthianspaulista1910.duckdns.org";
+const String endereco = "http://localhost:5000/";
 
 double fatorDeEscalaMaior(double valorBom, BuildContext context) {
   double fatorDeEscala = 0;

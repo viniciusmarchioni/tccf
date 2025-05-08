@@ -41,6 +41,22 @@ class MenuRepository {
           (a, b) => b.data!.compareTo(a.data!),
         );
       }
+
+      response = await http
+          .get(Uri.parse('$endereco/jogos/proximos'))
+          .timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        proximasPartidas = [];
+        var body = jsonDecode(response.body);
+
+        for (var i in body['jogos']) {
+          proximasPartidas.add(Partida.fromJsonAll(i));
+        }
+        proximasPartidas.sort(
+          (a, b) => b.data!.compareTo(a.data!),
+        );
+      }
     } catch (e) {
       debugPrint(e.toString());
     }
