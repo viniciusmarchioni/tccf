@@ -100,13 +100,14 @@ class ListaResultadosState extends State<ListaResultados> {
       child: Column(children: [
         Expanded(
           child: CircleAvatar(
-            backgroundColor: Colors.green,
-            radius: 65,
-            child: CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 65,
+              child: CircleAvatar(
                 radius: 60,
-                backgroundImage:
-                    CachedNetworkImageProvider(jogador.image ?? "")),
-          ),
+                backgroundImage: CachedNetworkImageProvider(jogador.image ?? "",
+                    errorListener: (p0) =>
+                        Image.asset('assets/images/error_image.png')),
+              )),
         ),
         Text(
           jogador.nome ?? "Carregando...",
