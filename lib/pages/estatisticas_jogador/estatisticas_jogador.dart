@@ -400,7 +400,12 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
           color: corNota(destaque.nota ?? 0),
           borderRadius: const BorderRadius.all(Radius.circular(5))),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        Text(destaque.nota.toString()),
+        Text(
+          destaque.nota.toString(),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         Image.network(destaque.logoTimeMandante!),
         Image.network(destaque.logoTimeVisitante!)
       ]),
@@ -408,18 +413,23 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   }
 
   Widget containerNota(double nota) {
-    Widget x = ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        width: fatorDeEscalaMenor(50, context),
-        height: fatorDeEscalaMenor(50, context),
-        alignment: Alignment.center,
+    return Container(
+      width: fatorDeEscalaMenor(50, context),
+      height: fatorDeEscalaMenor(50, context),
+      margin:
+          EdgeInsets.symmetric(horizontal: fatorDeEscalaMobile(10, context)),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
         color: corNota(nota),
-        child: Text(nota.toStringAsFixed(2)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        nota.toStringAsFixed(2),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
-
-    return x;
   }
 
   Widget containerAtributos(Estatisticas estatisticas, String? formacaoFavorita,

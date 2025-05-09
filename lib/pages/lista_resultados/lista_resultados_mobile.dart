@@ -110,7 +110,7 @@ class ListaResultadosState extends State<ListaResultadosMobile> {
           radius: fatorDeEscalaMobile(55, context),
           child: CircleAvatar(
               radius: fatorDeEscalaMobile(50, context),
-              backgroundImage: CachedNetworkImageProvider(jogador.image!)),
+              backgroundImage: CachedNetworkImageProvider(jogador.image ?? "")),
         ),
         Text(
           jogador.nome ?? "Carregando...",

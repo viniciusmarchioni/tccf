@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   MenuRepository menuRepository = MenuRepository();
   String? _carrousselMandante;
   String? _carrousselVisitante;
+  bool _isHovering = false;
 
   final dic = {
     1: "Domingo",
@@ -156,13 +157,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    GestureDetector(
-                      child: Image.asset("assets/images/logo.png"),
-                      onTap: () {
-                        setState(() {
-                          tipo = null;
-                        });
-                      },
+                    MouseRegion(
+                      onEnter: (event) => setState(() => _isHovering = true),
+                      onHover: (event) => setState(() => _isHovering = true),
+                      onExit: (event) => setState(() => _isHovering = false),
+                      child: GestureDetector(
+                        child: Image.asset(
+                          "assets/images/logo.png",
+                          color: _isHovering ? Colors.green : Colors.white,
+                        ),
+                        onTap: () {
+                          setState(() {
+                            tipo = null;
+                          });
+                        },
+                      ),
                     ),
                     SizedBox(
                       width: fatorDeEscalaMenor(300, context),

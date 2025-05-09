@@ -104,7 +104,8 @@ class ListaResultadosState extends State<ListaResultados> {
             radius: 65,
             child: CircleAvatar(
                 radius: 60,
-                backgroundImage: CachedNetworkImageProvider(jogador.image!)),
+                backgroundImage:
+                    CachedNetworkImageProvider(jogador.image ?? "")),
           ),
         ),
         Text(

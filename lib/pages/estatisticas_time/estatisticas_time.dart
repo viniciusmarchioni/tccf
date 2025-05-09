@@ -84,14 +84,20 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                               errorWidget: (context, url, error) =>
                                   Image.asset('assets/images/error_image.png'),
                             ),
-                            Text(
-                              timesRepository.infoTime.nome ?? 'Carregando...',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: fatorDeEscalaMenor(25, context)),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: fatorDeEscalaMenor(15, context)),
+                              child: Text(
+                                timesRepository.infoTime.nome ??
+                                    'Carregando...',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(25, context)),
+                              ),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(bottom: 15),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: fatorDeEscalaMenor(15, context)),
                               decoration: BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: const BorderRadius.all(
@@ -379,16 +385,20 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
     } else {
       cor = Colors.green;
     }
-    Widget x = Container(
+
+    return Container(
       margin: EdgeInsets.all(fatorDeEscalaMenor(10, context)),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: cor, borderRadius: const BorderRadius.all(Radius.circular(5))),
       padding: EdgeInsets.all(fatorDeEscalaMenor(20, context)),
-      child: Text("${nota.toStringAsFixed(2)}%"),
+      child: Text(
+        nota.toStringAsFixed(2),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
-
-    return x;
   }
 
   List<Widget> grandeComparacao() {
