@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scout/pages/lista_resultados/lista_resultados.dart';
 import 'package:scout/repository/jogador_repository.dart';
 import 'package:scout/util/util.dart';
 
@@ -17,6 +18,8 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
   bool valorSwitch = true;
   String? dropDownValue = "Geral";
   ScrollController controllerSCS = ScrollController();
+  TextEditingController controller = TextEditingController();
+  bool _isHovering = false;
 
   @override
   void initState() {
@@ -52,333 +55,406 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticas> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.green, width: 2),
-          color: const Color.fromARGB(255, 17, 34, 23),
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
-      padding: EdgeInsets.all(fatorDeEscalaMenor(25, context)),
-      margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Expanded(
-          child: Container(
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.all(fatorDeEscalaMenor(25, context)),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  backgroundImage: jogadorRepository.jogador.image == null
-                      ? null
-                      : NetworkImage(jogadorRepository.jogador.image!),
-                  radius: fatorDeEscalaMenor(150, context),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+          backgroundColor: Colors.black,
+          flexibleSpace: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              MouseRegion(
+                onEnter: (event) => setState(() => _isHovering = true),
+                onHover: (event) => setState(() => _isHovering = true),
+                onExit: (event) => setState(() => _isHovering = false),
+                child: GestureDetector(
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    color: _isHovering ? Colors.green : Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                Text(
-                  jogadorRepository.jogador.nome ?? "Carregando...",
-                  style: TextStyle(
-                      fontSize: fatorDeEscalaMenor(35, context),
-                      color: Colors.white),
+              ),
+              SizedBox(
+                width: fatorDeEscalaMenor(300, context),
+                child: TextField(
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                              BorderSide(width: 2, color: Colors.white)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                              BorderSide(width: 2, color: Colors.white)),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                      hintText: "Pesquise no Scout AI"),
+                  onSubmitted: (value) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ListaResultados(controller.text)),
+                    );
+                  },
+                  controller: controller,
                 ),
-                Text(
-                  jogadorRepository.nomeTime ?? "Carregando...",
-                  style: const TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 15),
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(color: Colors.green)),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                      menuMaxHeight: 300,
-                      dropdownColor: Colors.green,
-                      value: dropDownValue,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: fatorDeEscalaMenor(25, context)),
-                      items: [
-                        const DropdownMenuItem(
-                            value: "Geral",
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text("Geral"),
-                            )),
-                        for (String i in jogadorRepository.formacoes)
-                          DropdownMenuItem(
-                              value: i,
+              ),
+              OutlinedButton(
+                style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                        Color.fromARGB(50, 0, 100, 55))),
+                onPressed: () {},
+                child: const Row(children: [
+                  Icon(Icons.person_search, color: Colors.white),
+                  Text(
+                    "Estatisticas de jogadores",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ]),
+              ),
+            ],
+          )),
+      body: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.green, width: 2),
+            color: const Color.fromARGB(255, 17, 34, 23),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        padding: EdgeInsets.all(fatorDeEscalaMenor(25, context)),
+        margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(
+            child: Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.all(fatorDeEscalaMenor(25, context)),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    backgroundImage: jogadorRepository.jogador.image == null
+                        ? null
+                        : NetworkImage(jogadorRepository.jogador.image!),
+                    radius: fatorDeEscalaMenor(150, context),
+                  ),
+                  Text(
+                    jogadorRepository.jogador.nome ?? "Carregando...",
+                    style: TextStyle(
+                        fontSize: fatorDeEscalaMenor(35, context),
+                        color: Colors.white),
+                  ),
+                  Text(
+                    jogadorRepository.nomeTime ?? "Carregando...",
+                    style: const TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.green)),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        menuMaxHeight: 300,
+                        dropdownColor: Colors.green,
+                        value: dropDownValue,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: fatorDeEscalaMenor(25, context)),
+                        items: [
+                          const DropdownMenuItem(
+                              value: "Geral",
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(i),
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text("Geral"),
                               )),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != null && value != "Geral") {
-                            dropDownValue = value;
-                            awaits2(value);
-                          } else {
-                            dropDownValue = "Geral";
-                            awaits();
-                          }
-                        });
-                      },
+                          for (String i in jogadorRepository.formacoes)
+                            DropdownMenuItem(
+                                value: i,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(i),
+                                )),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != null && value != "Geral") {
+                              dropDownValue = value;
+                              awaits2(value);
+                            } else {
+                              dropDownValue = "Geral";
+                              awaits();
+                            }
+                          });
+                        },
+                      ),
                     ),
                   ),
-                ),
-                Builder(
-                  builder: (context) {
-                    if (geral) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Desempenho geral:",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          containerNota(
-                              jogadorRepository.estatisticas?.nota ?? 0)
-                        ],
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Desempenho na formação:",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          containerNota(
-                              jogadorRepository.estatisticas?.nota ?? 0)
-                        ],
-                      );
-                    }
-                  },
-                )
-              ],
+                  Builder(
+                    builder: (context) {
+                      if (geral) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Desempenho geral:",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            containerNota(
+                                jogadorRepository.estatisticas?.nota ?? 0)
+                          ],
+                        );
+                      } else {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Desempenho na formação:",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            containerNota(
+                                jogadorRepository.estatisticas?.nota ?? 0)
+                          ],
+                        );
+                      }
+                    },
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Container(
-            child: !carregando
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                        Builder(
-                          builder: (context) {
-                            List<Widget> estatisticas = [];
-                            String? posicaoFavorita =
-                                jogadorRepository.posicaoFavorita;
+          Expanded(
+            child: Container(
+              child: !carregando
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                          Builder(
+                            builder: (context) {
+                              List<Widget> estatisticas = [];
+                              String? posicaoFavorita =
+                                  jogadorRepository.posicaoFavorita;
 
-                            if (posicaoFavorita == 'G') {
-                              estatisticas.add(Text(
-                                  "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                            } else if (posicaoFavorita == 'D') {
-                              estatisticas.add(Text(
-                                  "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                            } else if (posicaoFavorita == 'M') {
-                              estatisticas.add(Text(
-                                  "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                            } else {
-                              estatisticas.add(Text(
-                                  "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                              estatisticas.add(Text(
-                                  "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(25, context))));
-                            }
+                              if (posicaoFavorita == 'G') {
+                                estatisticas.add(Text(
+                                    "Defesas: ${jogadorRepository.estatisticas?.defesasTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Gols sofridos: ${jogadorRepository.estatisticas?.golsSofridosTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                              } else if (posicaoFavorita == 'D') {
+                                estatisticas.add(Text(
+                                    "Duelos ganhos: ${jogadorRepository.estatisticas?.duelosGanhosTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Bloqueios: ${jogadorRepository.estatisticas?.bloqueadosTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Interceptação: ${jogadorRepository.estatisticas?.interceptadosTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                              } else if (posicaoFavorita == 'M') {
+                                estatisticas.add(Text(
+                                    "Passes certos: ${jogadorRepository.estatisticas?.passesCertosTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Grandes chances criadas: ${jogadorRepository.estatisticas?.passesChavesTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Dribles completos: ${jogadorRepository.estatisticas?.driblesCompletosTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                              } else {
+                                estatisticas.add(Text(
+                                    "Gols: ${jogadorRepository.estatisticas?.golsTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Chutes no gol: ${jogadorRepository.estatisticas?.chutesNoGolTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                                estatisticas.add(Text(
+                                    "Assistencias: ${jogadorRepository.estatisticas?.assistenciasTotal ?? 0}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context))));
+                              }
 
-                            return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  for (Widget i in estatisticas) i,
-                                  Text(
-                                      "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:
-                                              fatorDeEscalaMenor(25, context))),
-                                ]);
-                          },
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("Destaques:",
-                                style: TextStyle(color: Colors.white)),
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(),
-                                  for (Destaque i
-                                      in jogadorRepository.destaques)
-                                    destaque(i),
-                                  Container(),
-                                ]),
-                          ],
-                        ),
-                        if (geral) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(),
-                              containerAtributos(
-                                  jogadorRepository.estatisticasFormFav ??
-                                      Estatisticas(),
-                                  jogadorRepository.formacaoFavorita,
-                                  null),
-                              containerAtributos(
-                                  jogadorRepository.estatisticasPosFav ??
-                                      Estatisticas(),
-                                  null,
-                                  jogadorRepository.posicaoFavorita),
-                              Container(),
-                            ],
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (Widget i in estatisticas) i,
+                                    Text(
+                                        "Partidas jogadas: ${jogadorRepository.partidasJogadas ?? 0}",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fatorDeEscalaMenor(
+                                                25, context))),
+                                  ]);
+                            },
                           ),
-                        ] else ...[
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: fatorDeEscalaMenor(300, context),
-                                decoration: BoxDecoration(
-                                    color: valorSwitch
-                                        ? const Color.fromARGB(68, 34, 197, 94)
-                                        : const Color.fromARGB(
-                                            100, 197, 34, 37),
-                                    border: Border.all(
-                                        color: valorSwitch
-                                            ? Colors.green
-                                            : Colors.red,
-                                        width: 2)),
-                                child: Column(
+                              const Text("Destaques:",
+                                  style: TextStyle(color: Colors.white)),
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                  side: const BorderSide(
-                                                      color: Colors.green)),
-                                              onPressed: () {
-                                                setState(() {
-                                                  valorSwitch = true;
-                                                });
-                                              },
-                                              child: const Text(
-                                                "Pontos positivos",
-                                                style: TextStyle(
-                                                    color: Colors.green),
-                                              )),
-                                          OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                  side: const BorderSide(
-                                                      color: Colors.red)),
-                                              onPressed: () {
-                                                setState(() {
-                                                  valorSwitch = false;
-                                                });
-                                              },
-                                              child: const Text(
-                                                "Pontos negativos",
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              )),
-                                        ]),
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: SingleChildScrollView(
-                                                child: Column(children: [
-                                              for (var i in grandeComparacao(
-                                                  jogadorRepository
-                                                      .estatisticas,
-                                                  jogadorRepository.mediaGeral,
-                                                  jogadorRepository
-                                                      .posicaoFavorita,
-                                                  valorSwitch))
-                                                i
-                                            ])),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const Text(
-                                "*Compração com a média geral entre jogadores da posição na serie A",
-                                style: TextStyle(color: Colors.white),
-                              )
+                                    Container(),
+                                    for (Destaque i
+                                        in jogadorRepository.destaques)
+                                      destaque(i),
+                                    Container(),
+                                  ]),
                             ],
                           ),
-                          Container(),
-                        ]
-                      ])
-                : const Center(child: CircularProgressIndicator()),
-          ),
-        )
-      ]),
+                          if (geral) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(),
+                                containerAtributos(
+                                    jogadorRepository.estatisticasFormFav ??
+                                        Estatisticas(),
+                                    jogadorRepository.formacaoFavorita,
+                                    null),
+                                containerAtributos(
+                                    jogadorRepository.estatisticasPosFav ??
+                                        Estatisticas(),
+                                    null,
+                                    jogadorRepository.posicaoFavorita),
+                                Container(),
+                              ],
+                            ),
+                          ] else ...[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: fatorDeEscalaMenor(300, context),
+                                  decoration: BoxDecoration(
+                                      color: valorSwitch
+                                          ? const Color.fromARGB(
+                                              68, 34, 197, 94)
+                                          : const Color.fromARGB(
+                                              100, 197, 34, 37),
+                                      border: Border.all(
+                                          color: valorSwitch
+                                              ? Colors.green
+                                              : Colors.red,
+                                          width: 2)),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                    side: const BorderSide(
+                                                        color: Colors.green)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    valorSwitch = true;
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  "Pontos positivos",
+                                                  style: TextStyle(
+                                                      color: Colors.green),
+                                                )),
+                                            OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                    side: const BorderSide(
+                                                        color: Colors.red)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    valorSwitch = false;
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  "Pontos negativos",
+                                                  style: TextStyle(
+                                                      color: Colors.red),
+                                                )),
+                                          ]),
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: SingleChildScrollView(
+                                                  child: Column(children: [
+                                                for (var i in grandeComparacao(
+                                                    jogadorRepository
+                                                        .estatisticas,
+                                                    jogadorRepository
+                                                        .mediaGeral,
+                                                    jogadorRepository
+                                                        .posicaoFavorita,
+                                                    valorSwitch))
+                                                  i
+                                              ])),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const Text(
+                                  "*Compração com a média geral entre jogadores da posição na serie A",
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              ],
+                            ),
+                            Container(),
+                          ]
+                        ])
+                  : const Center(child: CircularProgressIndicator()),
+            ),
+          )
+        ]),
+      ),
     );
   }
 

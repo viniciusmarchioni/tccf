@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:scout/pages/estatisticas_jogador/estatisticas_jogador.dart';
+import 'package:scout/pages/lista_resultados/lista_resultados.dart';
 import 'package:scout/repository/teamsrepository.dart';
 import 'package:scout/util/util.dart';
 
 class TimeEstatisticas extends StatefulWidget {
   final int idTime;
-  final void Function(int) onPlayerClick;
-  const TimeEstatisticas(
-      {super.key, required this.idTime, required this.onPlayerClick});
+  const TimeEstatisticas({super.key, required this.idTime});
 
   @override
   State<StatefulWidget> createState() {
@@ -18,9 +18,12 @@ class TimeEstatisticas extends StatefulWidget {
 class _TimeEstatisticaState extends State<TimeEstatisticas> {
   TimesRepository timesRepository = TimesRepository();
   TextEditingController controller = TextEditingController();
+  TextEditingController controllerPesquisa = TextEditingController();
+
   bool carregando = false;
   bool valorSwitch = true;
   String? dropDownValue;
+  bool _isHovering = false;
 
   @override
   void initState() {
@@ -60,220 +63,302 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.green, width: 2),
-            color: const Color.fromARGB(255, 17, 34, 23),
-            borderRadius: const BorderRadius.all(Radius.circular(20))),
-        margin: const EdgeInsets.all(50),
-        child: !carregando
-            ? Container(
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(children: [
-                            CachedNetworkImage(
-                              width: fatorDeEscalaMenor(90, context),
-                              imageUrl: timesRepository.infoTime.logo!,
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Image.asset('assets/images/error_image.png'),
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: fatorDeEscalaMenor(15, context)),
-                              child: Text(
-                                timesRepository.infoTime.nome ??
-                                    'Carregando...',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fatorDeEscalaMenor(25, context)),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+          backgroundColor: Colors.black,
+          flexibleSpace: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              MouseRegion(
+                onEnter: (event) => setState(() => _isHovering = true),
+                onHover: (event) => setState(() => _isHovering = true),
+                onExit: (event) => setState(() => _isHovering = false),
+                child: GestureDetector(
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    color: _isHovering ? Colors.green : Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              SizedBox(
+                width: fatorDeEscalaMenor(300, context),
+                child: TextField(
+                  decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                              BorderSide(width: 2, color: Colors.white)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                              BorderSide(width: 2, color: Colors.white)),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                      hintText: "Pesquise no Scout AI"),
+                  onSubmitted: (value) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ListaResultados(controllerPesquisa.text)),
+                    );
+                  },
+                  controller: controllerPesquisa,
+                ),
+              ),
+              OutlinedButton(
+                style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                        Color.fromARGB(50, 0, 100, 55))),
+                onPressed: () {},
+                child: const Row(children: [
+                  Icon(Icons.person_search, color: Colors.white),
+                  Text(
+                    "Estatisticas de jogadores",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ]),
+              ),
+            ],
+          )),
+      body: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.green, width: 2),
+              color: const Color.fromARGB(255, 17, 34, 23),
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+          margin: const EdgeInsets.all(50),
+          child: !carregando
+              ? Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [
+                              CachedNetworkImage(
+                                width: fatorDeEscalaMenor(90, context),
+                                imageUrl: timesRepository.infoTime.logo!,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                        'assets/images/error_image.png'),
                               ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: fatorDeEscalaMenor(15, context)),
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  border: Border.all(color: Colors.green)),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  menuMaxHeight: 300,
-                                  dropdownColor: Colors.green,
-                                  value: dropDownValue,
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        fatorDeEscalaMenor(15, context)),
+                                child: Text(
+                                  timesRepository.infoTime.nome ??
+                                      'Carregando...',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize:
                                           fatorDeEscalaMenor(25, context)),
-                                  items: [
-                                    for (String i in timesRepository.formacoes)
-                                      DropdownMenuItem(
-                                          value: i,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Text(i),
-                                          )),
-                                  ],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      if (value != null) {
-                                        dropDownValue = value;
-                                        atualizaFormacao(value);
-                                      }
-                                    });
-                                  },
                                 ),
                               ),
-                            ),
-                          ]),
-                          Row(
-                            children: [
-                              Text(
-                                "Aproveitamento na formação:",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fatorDeEscalaMenor(25, context)),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        fatorDeEscalaMenor(15, context)),
+                                decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    border: Border.all(color: Colors.green)),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    menuMaxHeight: 300,
+                                    dropdownColor: Colors.green,
+                                    value: dropDownValue,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            fatorDeEscalaMenor(25, context)),
+                                    items: [
+                                      for (String i
+                                          in timesRepository.formacoes)
+                                        DropdownMenuItem(
+                                            value: i,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              child: Text(i),
+                                            )),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != null) {
+                                          dropDownValue = value;
+                                          atualizaFormacao(value);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
                               ),
-                              containerNota(timesRepository.aproveitamento
-                                  .getAproveitamento()),
-                            ],
-                          ),
-                          constroiFormacao(controller.text, timesRepository),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                "Vitorias: ${timesRepository.aproveitamento.vitorias}",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fatorDeEscalaMenor(25, context)),
-                              ),
-                              Text(
-                                "Empates: ${timesRepository.aproveitamento.empates}",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fatorDeEscalaMenor(25, context)),
-                              ),
-                              Text(
-                                "Derrotas: ${timesRepository.aproveitamento.derrotas}",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: fatorDeEscalaMenor(25, context)),
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            ]),
+                            Row(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: fatorDeEscalaMenor(300, context),
-                                      decoration: BoxDecoration(
-                                          color: valorSwitch
-                                              ? const Color.fromARGB(
-                                                  68, 34, 197, 94)
-                                              : const Color.fromARGB(
-                                                  100, 197, 34, 37),
-                                          border: Border.all(
-                                              color: valorSwitch
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                              width: 2)),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                OutlinedButton(
-                                                    style: OutlinedButton
-                                                        .styleFrom(
-                                                            side: const BorderSide(
-                                                                color: Colors
-                                                                    .green)),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        valorSwitch = true;
-                                                      });
-                                                    },
-                                                    child: const Text(
-                                                      "Pontos positivos",
-                                                      style: TextStyle(
-                                                          color: Colors.green),
-                                                    )),
-                                                OutlinedButton(
-                                                    style: OutlinedButton
-                                                        .styleFrom(
-                                                            side:
-                                                                const BorderSide(
-                                                                    color: Colors
-                                                                        .red)),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        valorSwitch = false;
-                                                      });
-                                                    },
-                                                    child: const Text(
-                                                      "Pontos negativos",
-                                                      style: TextStyle(
-                                                          color: Colors.red),
-                                                    )),
-                                              ]),
-                                          Expanded(
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: SingleChildScrollView(
-                                                      child: Column(
-                                                    children: [
-                                                      for (var i
-                                                          in grandeComparacao())
-                                                        i
-                                                    ],
-                                                  )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Text(
-                                      "*Compração com a média geral entre jogadores da posição na serie A",
-                                      style: TextStyle(color: Colors.white),
-                                    )
-                                  ],
+                                Text(
+                                  "Aproveitamento na formação:",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context)),
                                 ),
-                                Container(),
+                                containerNota(timesRepository.aproveitamento
+                                    .getAproveitamento()),
                               ],
                             ),
-                          ),
-                        ],
+                            constroiFormacao(controller.text, timesRepository),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ));
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Vitorias: ${timesRepository.aproveitamento.vitorias}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context)),
+                                ),
+                                Text(
+                                  "Empates: ${timesRepository.aproveitamento.empates}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context)),
+                                ),
+                                Text(
+                                  "Derrotas: ${timesRepository.aproveitamento.derrotas}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          fatorDeEscalaMenor(25, context)),
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height:
+                                            fatorDeEscalaMenor(300, context),
+                                        decoration: BoxDecoration(
+                                            color: valorSwitch
+                                                ? const Color.fromARGB(
+                                                    68, 34, 197, 94)
+                                                : const Color.fromARGB(
+                                                    100, 197, 34, 37),
+                                            border: Border.all(
+                                                color: valorSwitch
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                width: 2)),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  OutlinedButton(
+                                                      style: OutlinedButton
+                                                          .styleFrom(
+                                                              side: const BorderSide(
+                                                                  color: Colors
+                                                                      .green)),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          valorSwitch = true;
+                                                        });
+                                                      },
+                                                      child: const Text(
+                                                        "Pontos positivos",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.green),
+                                                      )),
+                                                  OutlinedButton(
+                                                      style: OutlinedButton
+                                                          .styleFrom(
+                                                              side: const BorderSide(
+                                                                  color: Colors
+                                                                      .red)),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          valorSwitch = false;
+                                                        });
+                                                      },
+                                                      child: const Text(
+                                                        "Pontos negativos",
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      )),
+                                                ]),
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child:
+                                                        SingleChildScrollView(
+                                                            child: Column(
+                                                      children: [
+                                                        for (var i
+                                                            in grandeComparacao())
+                                                          i
+                                                      ],
+                                                    )),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Text(
+                                        "*Compração com a média geral entre jogadores da posição na serie A",
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    ],
+                                  ),
+                                  Container(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : const Center(
+                  child: CircularProgressIndicator(),
+                )),
+    );
   }
 
   Widget constroiFormacao(String formacao, TimesRepository timesRepository) {
@@ -302,7 +387,13 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        widget.onPlayerClick(timesRepository.goleiro.id!);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => JogadorEstatisticas(
+                                    idJogador: timesRepository.goleiro.id!,
+                                  )),
+                        );
                       },
                       child: imagemJogador(timesRepository.goleiro.image)),
                   Column(
@@ -312,8 +403,14 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                         for (var i = 0; i < formacaoList[0]; i++)
                           GestureDetector(
                               onTap: () {
-                                widget.onPlayerClick(
-                                    timesRepository.defensores[i].id!);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => JogadorEstatisticas(
+                                            idJogador: timesRepository
+                                                .defensores[i].id!,
+                                          )),
+                                );
                               },
                               child: imagemJogador(
                                   timesRepository.defensores[i].image)),
@@ -329,7 +426,14 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                           for (Jogador j in i)
                             GestureDetector(
                                 onTap: () {
-                                  widget.onPlayerClick(j.id!);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            JogadorEstatisticas(
+                                              idJogador: j.id!,
+                                            )),
+                                  );
                                 },
                                 child: imagemJogador(j.image)),
                           if (i.length == 2) Container(),
@@ -343,8 +447,14 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                             z++)
                           GestureDetector(
                               onTap: () {
-                                widget.onPlayerClick(
-                                    timesRepository.atacantes[z].id!);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => JogadorEstatisticas(
+                                            idJogador: timesRepository
+                                                .atacantes[z].id!,
+                                          )),
+                                );
                               },
                               child: imagemJogador(
                                   timesRepository.atacantes[z].image)),
