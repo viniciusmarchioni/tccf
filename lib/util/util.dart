@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 //const String endereco = "https://corinthianspaulista1910.duckdns.org";
 const String endereco = "http://localhost:5000/";
@@ -61,7 +62,66 @@ SizedBox pesquisaMobile(BuildContext context) {
             color: Colors.black,
           ),
           hintText: "Pesquise no Scout AI"),
-      onSubmitted: (value) {},
+      onSubmitted: (value) {
+        context.push("/pesquisa/$value");
+      },
+    ),
+  );
+}
+
+AppBar modeloAppBarMobile(BuildContext context) {
+  return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.black,
+      flexibleSpace: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(),
+          GestureDetector(
+            child: Image.asset(
+              "assets/images/logo.png",
+              scale: fatorDeEscalaMenorReverso(1, context),
+            ),
+            onTap: () {
+              context.push("/");
+            },
+          ),
+          Container(),
+        ],
+      ));
+}
+
+Container navBarMobile(BuildContext context) {
+  return Container(
+    color: Colors.black,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        IconButton(
+          iconSize: fatorDeEscalaMobile(50, context),
+          onPressed: () {
+            context.push("/pesquisa/Times");
+          },
+          icon: Image.asset("assets/images/escudo.png",
+              height: 50, color: Colors.white),
+        ),
+        IconButton(
+          iconSize: fatorDeEscalaMobile(50, context),
+          onPressed: () {
+            context.push("/pesquisa/Jogadores");
+          },
+          color: Colors.white,
+          icon: const Icon(Icons.person),
+        ),
+        IconButton(
+          iconSize: fatorDeEscalaMobile(50, context),
+          onPressed: () {
+            context.push("/Ia");
+          },
+          color: Colors.white,
+          icon: const Icon(Icons.auto_awesome_rounded),
+        ),
+      ],
     ),
   );
 }

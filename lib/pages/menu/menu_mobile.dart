@@ -313,6 +313,7 @@ class _MenuMobileState extends State<MenuMobile> {
               ),
             ),
           ),
+          navBarMobile(context)
         ],
       ),
     );

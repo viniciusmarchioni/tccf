@@ -128,513 +128,572 @@ class _IaMobileState extends State<IaMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Previsão da partida",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMobile(35, context)),
-            ),
-          ],
-        ),
-        Expanded(
-          child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: modeloAppBarMobile(context),
+      body: Column(
+        children: [
+          pesquisaMobile(context),
+          Expanded(
             child: Column(
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: fatorDeEscalaMobile(50, context),
-                      vertical: fatorDeEscalaMobile(10, context)),
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(68, 34, 197, 94),
-                      border: Border.all(color: Colors.green),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20))),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Previsão da partida",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: fatorDeEscalaMobile(35, context)),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
                       children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //Seleção mandante
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical:
-                                            fatorDeEscalaMobile(10, context)),
-                                    child: Row(children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                68, 34, 197, 94),
-                                            border:
-                                                Border.all(color: Colors.green),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(20))),
-                                        child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                          menuMaxHeight: 300,
-                                          dropdownColor: Colors.green,
-                                          value: timeMandante,
-                                          items: [
-                                            for (var i in [
-                                              "Mandante",
-                                              ...timeDic.keys
-                                            ])
-                                              DropdownMenuItem(
-                                                  value: i,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal:
-                                                            fatorDeEscalaMobile(
-                                                                8.0, context)),
-                                                    child: Text(i,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                  )),
-                                          ],
-                                          onChanged: (value) {
-                                            if (value != "Mandante" &&
-                                                value == timeVisitante) {
-                                              return;
-                                            }
-                                            setState(() {
-                                              timeMandante = value;
-                                            });
-                                          },
-                                        )),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: fatorDeEscalaMobile(50, context),
+                              vertical: fatorDeEscalaMobile(10, context)),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(68, 34, 197, 94),
+                              border: Border.all(color: Colors.green),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20))),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          //Seleção mandante
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: fatorDeEscalaMobile(
+                                                    10, context)),
+                                            child: Row(children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        68, 34, 197, 94),
+                                                    border: Border.all(
+                                                        color: Colors.green),
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                20))),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                  menuMaxHeight: 300,
+                                                  dropdownColor: Colors.green,
+                                                  value: timeMandante,
+                                                  items: [
+                                                    for (var i in [
+                                                      "Mandante",
+                                                      ...timeDic.keys
+                                                    ])
+                                                      DropdownMenuItem(
+                                                          value: i,
+                                                          child: Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        fatorDeEscalaMobile(
+                                                                            8.0,
+                                                                            context)),
+                                                            child: Text(i,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                          )),
+                                                  ],
+                                                  onChanged: (value) {
+                                                    if (value != "Mandante" &&
+                                                        value ==
+                                                            timeVisitante) {
+                                                      return;
+                                                    }
+                                                    setState(() {
+                                                      timeMandante = value;
+                                                    });
+                                                  },
+                                                )),
+                                              )
+                                            ]),
+                                          ),
+                                          //Seleção formação mandante
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: fatorDeEscalaMobile(
+                                                    10, context)),
+                                            child: Row(children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        68, 34, 197, 94),
+                                                    border: Border.all(
+                                                        color: Colors.green),
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                20))),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                  menuMaxHeight: 300,
+                                                  dropdownColor: Colors.green,
+                                                  value: formacaoMandante,
+                                                  items: [
+                                                    for (var i
+                                                        in opcoesFormacao)
+                                                      DropdownMenuItem(
+                                                          value: i,
+                                                          child: Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        fatorDeEscalaMobile(
+                                                                            8.0,
+                                                                            context)),
+                                                            child: Text(i,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                          )),
+                                                  ],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      formacaoMandante = value;
+                                                    });
+                                                  },
+                                                )),
+                                              )
+                                            ]),
+                                          ),
+                                        ],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (timeMandante != null &&
+                                              timeMandante != "Mandante") {
+                                            return Image.network(
+                                              timeDic[timeMandante]!,
+                                              scale: fatorDeEscalaMenorReverso(
+                                                  2, context),
+                                            );
+                                          }
+                                          return Container();
+                                        },
                                       )
                                     ]),
-                                  ),
-                                  //Seleção formação mandante
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical:
-                                            fatorDeEscalaMobile(10, context)),
-                                    child: Row(children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                68, 34, 197, 94),
-                                            border:
-                                                Border.all(color: Colors.green),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(20))),
-                                        child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                          menuMaxHeight: 300,
-                                          dropdownColor: Colors.green,
-                                          value: formacaoMandante,
-                                          items: [
-                                            for (var i in opcoesFormacao)
-                                              DropdownMenuItem(
-                                                  value: i,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal:
-                                                            fatorDeEscalaMobile(
-                                                                8.0, context)),
-                                                    child: Text(i,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                  )),
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              formacaoMandante = value;
-                                            });
-                                          },
-                                        )),
+                                const Divider(
+                                  color: Colors.green,
+                                ),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          //Seleção visitante
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: fatorDeEscalaMobile(
+                                                    10, context)),
+                                            child: Row(children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        68, 34, 197, 94),
+                                                    border: Border.all(
+                                                        color: Colors.green),
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                20))),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                  menuMaxHeight: 300,
+                                                  dropdownColor: Colors.green,
+                                                  value: timeVisitante,
+                                                  items: [
+                                                    for (var i in [
+                                                      "Visitante",
+                                                      ...timeDic.keys
+                                                    ])
+                                                      DropdownMenuItem(
+                                                          value: i,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                            child: Text(i,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                          )),
+                                                  ],
+                                                  onChanged: (value) {
+                                                    if (value != "Visitante" &&
+                                                        value == timeMandante) {
+                                                      return;
+                                                    }
+                                                    setState(() {
+                                                      timeVisitante = value;
+                                                    });
+                                                  },
+                                                )),
+                                              )
+                                            ]),
+                                          ),
+                                          //Seleção formação visitante
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: fatorDeEscalaMobile(
+                                                    10, context)),
+                                            child: Row(children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: const Color.fromARGB(
+                                                        68, 34, 197, 94),
+                                                    border: Border.all(
+                                                        color: Colors.green),
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                20))),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                  menuMaxHeight: 300,
+                                                  dropdownColor: Colors.green,
+                                                  value: formacaoVisitante,
+                                                  items: [
+                                                    for (var i
+                                                        in opcoesFormacao)
+                                                      DropdownMenuItem(
+                                                          value: i,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                            child: Text(i,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                          )),
+                                                  ],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      formacaoVisitante = value;
+                                                    });
+                                                  },
+                                                )),
+                                              )
+                                            ]),
+                                          ),
+                                        ],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (timeVisitante != null &&
+                                              timeVisitante != "Visitante") {
+                                            return Image.network(
+                                              timeDic[timeVisitante]!,
+                                              scale: fatorDeEscalaMenorReverso(
+                                                  2, context),
+                                            );
+                                          }
+                                          return Container();
+                                        },
                                       )
                                     ]),
-                                  ),
-                                ],
-                              ),
-                              Builder(
-                                builder: (context) {
-                                  if (timeMandante != null &&
-                                      timeMandante != "Mandante") {
-                                    return Image.network(
-                                      timeDic[timeMandante]!,
-                                      scale:
-                                          fatorDeEscalaMenorReverso(2, context),
-                                    );
-                                  }
-                                  return Container();
-                                },
-                              )
-                            ]),
-                        const Divider(
-                          color: Colors.green,
-                        ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //Seleção visitante
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical:
-                                            fatorDeEscalaMobile(10, context)),
-                                    child: Row(children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                68, 34, 197, 94),
-                                            border:
-                                                Border.all(color: Colors.green),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(20))),
-                                        child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                          menuMaxHeight: 300,
-                                          dropdownColor: Colors.green,
-                                          value: timeVisitante,
-                                          items: [
-                                            for (var i in [
-                                              "Visitante",
-                                              ...timeDic.keys
-                                            ])
-                                              DropdownMenuItem(
-                                                  value: i,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 8.0),
-                                                    child: Text(i,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                  )),
-                                          ],
-                                          onChanged: (value) {
-                                            if (value != "Visitante" &&
-                                                value == timeMandante) {
-                                              return;
-                                            }
-                                            setState(() {
-                                              timeVisitante = value;
-                                            });
-                                          },
-                                        )),
-                                      )
-                                    ]),
-                                  ),
-                                  //Seleção formação visitante
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical:
-                                            fatorDeEscalaMobile(10, context)),
-                                    child: Row(children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                68, 34, 197, 94),
-                                            border:
-                                                Border.all(color: Colors.green),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(20))),
-                                        child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                          menuMaxHeight: 300,
-                                          dropdownColor: Colors.green,
-                                          value: formacaoVisitante,
-                                          items: [
-                                            for (var i in opcoesFormacao)
-                                              DropdownMenuItem(
-                                                  value: i,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 8.0),
-                                                    child: Text(i,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white)),
-                                                  )),
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              formacaoVisitante = value;
-                                            });
-                                          },
-                                        )),
-                                      )
-                                    ]),
-                                  ),
-                                ],
-                              ),
-                              Builder(
-                                builder: (context) {
-                                  if (timeVisitante != null &&
-                                      timeVisitante != "Visitante") {
-                                    return Image.network(
-                                      timeDic[timeVisitante]!,
-                                      scale:
-                                          fatorDeEscalaMenorReverso(2, context),
-                                    );
-                                  }
-                                  return Container();
-                                },
-                              )
-                            ]),
-                        const Divider(
-                          color: Colors.green,
-                        ),
-                        Column(
-                          children: [
-                            //Seleção clima
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: fatorDeEscalaMobile(20, context)),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                const Divider(
+                                  color: Colors.green,
+                                ),
+                                Column(
                                   children: [
-                                    //seleção clima
+                                    //Seleção clima
                                     Container(
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              68, 34, 197, 94),
-                                          border:
-                                              Border.all(color: Colors.green),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
-                                      child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                        dropdownColor: Colors.green,
-                                        value: clima,
-                                        items: [
-                                          for (var i in opcoesClima)
-                                            DropdownMenuItem(
-                                                value: i,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8.0),
-                                                  child: Text(i,
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                )),
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            clima = value;
-                                          });
-                                        },
-                                      )),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical:
+                                              fatorDeEscalaMobile(20, context)),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            //seleção clima
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      68, 34, 197, 94),
+                                                  border: Border.all(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                dropdownColor: Colors.green,
+                                                value: clima,
+                                                items: [
+                                                  for (var i in opcoesClima)
+                                                    DropdownMenuItem(
+                                                        value: i,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Text(i,
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .white)),
+                                                        )),
+                                                ],
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    clima = value;
+                                                  });
+                                                },
+                                              )),
+                                            ),
+                                            //Selecao horário
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      68, 34, 197, 94),
+                                                  border: Border.all(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                dropdownColor: Colors.green,
+                                                value: horario,
+                                                items: [
+                                                  for (var i in opcoesHorario)
+                                                    DropdownMenuItem(
+                                                        value: i,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Text(i,
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .white)),
+                                                        )),
+                                                ],
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    horario = value;
+                                                  });
+                                                },
+                                              )),
+                                            )
+                                          ]),
                                     ),
-                                    //Selecao horário
+                                    //Botão prever resultado
                                     Container(
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              68, 34, 197, 94),
-                                          border:
-                                              Border.all(color: Colors.green),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
-                                      child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                        dropdownColor: Colors.green,
-                                        value: horario,
-                                        items: [
-                                          for (var i in opcoesHorario)
-                                            DropdownMenuItem(
-                                                value: i,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8.0),
-                                                  child: Text(i,
-                                                      style: const TextStyle(
-                                                          color: Colors.white)),
-                                                )),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical:
+                                              fatorDeEscalaMobile(20, context)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                              style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStatePropertyAll(
+                                                          Colors.green)),
+                                              onPressed: () {
+                                                request();
+                                              },
+                                              child: Text(
+                                                "Prever resultado",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMobile(
+                                                            30, context)),
+                                              ))
                                         ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            horario = value;
-                                          });
-                                        },
-                                      )),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ]),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: fatorDeEscalaMobile(50, context),
+                              vertical: fatorDeEscalaMobile(10, context)),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(68, 34, 197, 94),
+                              border: Border.all(color: Colors.green),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20))),
+                          child: Builder(builder: (context) {
+                            if (carregando) {
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                color: Colors.green,
+                              ));
+                            }
+                            return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(children: [
+                                    Text(
+                                      "Resultado",
+                                      style: TextStyle(
+                                          color: Colors.green.shade400,
+                                          fontSize:
+                                              fatorDeEscalaMobile(50, context)),
+                                    ),
+                                    Builder(
+                                      builder: (context) {
+                                        if (iaRepository.chanceMandante >
+                                                iaRepository.chanceVisitante &&
+                                            iaRepository.chanceMandante >
+                                                iaRepository.chanceEmpate) {
+                                          return Column(
+                                            children: [
+                                              Text(
+                                                "Vítoria do mandante",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMobile(
+                                                            30, context)),
+                                              ),
+                                              Image.network(
+                                                timeDic[iaRepository.mandante]!,
+                                                scale:
+                                                    fatorDeEscalaMenorReverso(
+                                                        4, context),
+                                              ),
+                                            ],
+                                          );
+                                        } else if (iaRepository
+                                                    .chanceVisitante >
+                                                iaRepository.chanceMandante &&
+                                            iaRepository.chanceVisitante >
+                                                iaRepository.chanceEmpate) {
+                                          return Column(
+                                            children: [
+                                              Text(
+                                                "Vítoria do visitante",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMobile(
+                                                            30, context)),
+                                              ),
+                                              Image.network(
+                                                timeDic[
+                                                    iaRepository.visitante]!,
+                                                scale:
+                                                    fatorDeEscalaMenorReverso(
+                                                        4, context),
+                                              ),
+                                            ],
+                                          );
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              Text(
+                                                "Empate",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMobile(
+                                                            30, context)),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      },
                                     )
                                   ]),
-                            ),
-                            //Botão prever resultado
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: fatorDeEscalaMobile(20, context)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                      style: const ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Colors.green)),
-                                      onPressed: () {
-                                        request();
-                                      },
-                                      child: Text(
-                                        "Prever resultado",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMobile(
-                                                30, context)),
-                                      ))
-                                ],
-                              ),
-                            )
-                          ],
+                                  const Divider(
+                                    color: Colors.green,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            fatorDeEscalaMobile(20, context)),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Probabilidades",
+                                          style: TextStyle(
+                                              color: Colors.green.shade400,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  40, context)),
+                                        ),
+                                        Text(
+                                          "Empate: ${(iaRepository.chanceEmpate * 100).toStringAsFixed(2)}%",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  20, context)),
+                                        ),
+                                        Text(
+                                          "Vitória Mandante: ${(iaRepository.chanceMandante * 100).toStringAsFixed(2)}%",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  20, context)),
+                                        ),
+                                        Text(
+                                          "Vitória Visitante: ${(iaRepository.chanceVisitante * 100).toStringAsFixed(2)}%",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  20, context)),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]);
+                          }),
                         )
-                      ]),
+                      ],
+                    ),
+                  ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: fatorDeEscalaMobile(50, context),
-                      vertical: fatorDeEscalaMobile(10, context)),
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(68, 34, 197, 94),
-                      border: Border.all(color: Colors.green),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20))),
-                  child: Builder(builder: (context) {
-                    if (carregando) {
-                      return const Center(
-                          child: CircularProgressIndicator(
-                        color: Colors.green,
-                      ));
-                    }
-                    return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(children: [
-                            Text(
-                              "Resultado",
-                              style: TextStyle(
-                                  color: Colors.green.shade400,
-                                  fontSize: fatorDeEscalaMobile(50, context)),
-                            ),
-                            Builder(
-                              builder: (context) {
-                                if (iaRepository.chanceMandante >
-                                        iaRepository.chanceVisitante &&
-                                    iaRepository.chanceMandante >
-                                        iaRepository.chanceEmpate) {
-                                  return Column(
-                                    children: [
-                                      Text(
-                                        "Vítoria do mandante",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMobile(
-                                                30, context)),
-                                      ),
-                                      Image.network(
-                                        timeDic[iaRepository.mandante]!,
-                                        scale: fatorDeEscalaMenorReverso(
-                                            4, context),
-                                      ),
-                                    ],
-                                  );
-                                } else if (iaRepository.chanceVisitante >
-                                        iaRepository.chanceMandante &&
-                                    iaRepository.chanceVisitante >
-                                        iaRepository.chanceEmpate) {
-                                  return Column(
-                                    children: [
-                                      Text(
-                                        "Vítoria do visitante",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMobile(
-                                                30, context)),
-                                      ),
-                                      Image.network(
-                                        timeDic[iaRepository.visitante]!,
-                                        scale: fatorDeEscalaMenorReverso(
-                                            4, context),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return Column(
-                                    children: [
-                                      Text(
-                                        "Empate",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMobile(
-                                                30, context)),
-                                      ),
-                                    ],
-                                  );
-                                }
-                              },
-                            )
-                          ]),
-                          const Divider(
-                            color: Colors.green,
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: fatorDeEscalaMobile(20, context)),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Probabilidades",
-                                  style: TextStyle(
-                                      color: Colors.green.shade400,
-                                      fontSize:
-                                          fatorDeEscalaMobile(40, context)),
-                                ),
-                                Text(
-                                  "Empate: ${(iaRepository.chanceEmpate * 100).toStringAsFixed(2)}%",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMobile(20, context)),
-                                ),
-                                Text(
-                                  "Vitória Mandante: ${(iaRepository.chanceMandante * 100).toStringAsFixed(2)}%",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMobile(20, context)),
-                                ),
-                                Text(
-                                  "Vitória Visitante: ${(iaRepository.chanceVisitante * 100).toStringAsFixed(2)}%",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMobile(20, context)),
-                                )
-                              ],
-                            ),
-                          )
-                        ]);
-                  }),
-                )
+                navBarMobile(context)
               ],
             ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

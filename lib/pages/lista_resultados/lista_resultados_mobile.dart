@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scout/repository/pesquisarepository.dart';
 import 'package:scout/util/util.dart';
 
 class ListaResultadosMobile extends StatefulWidget {
   final String pesquisa;
-  final void Function(int) onTeamClick;
-  final void Function(int) onPlayerClick;
-  const ListaResultadosMobile(this.pesquisa,
-      {super.key, required this.onTeamClick, required this.onPlayerClick});
+  const ListaResultadosMobile(this.pesquisa, {super.key});
 
   @override
   State<StatefulWidget> createState() => ListaResultadosState();
@@ -40,36 +38,50 @@ class ListaResultadosState extends State<ListaResultadosMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(25),
-      decoration: BoxDecoration(
-          color: const Color.fromARGB(68, 34, 197, 94),
-          border: Border.all(color: Colors.green)),
-      child: Column(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: modeloAppBarMobile(context),
+      body: Column(
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              "Resultado da pesquisa",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fatorDeEscalaMobile(25, context)),
-            )
-          ]),
+          pesquisaMobile(context),
           Expanded(
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: double.infinity),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (Time i in pesquisaRepository.times) listaTime(i),
-                    for (JogadorTime j in pesquisaRepository.jogadores)
-                      listaJogador(j),
-                  ],
-                ),
+            child: Container(
+              margin: const EdgeInsets.all(25),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(68, 34, 197, 94),
+                  border: Border.all(color: Colors.green)),
+              child: Column(
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text(
+                      "Resultado da pesquisa",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: fatorDeEscalaMobile(25, context)),
+                    )
+                  ]),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints:
+                            const BoxConstraints(minWidth: double.infinity),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (Time i in pesquisaRepository.times)
+                              listaTime(i),
+                            for (JogadorTime j in pesquisaRepository.jogadores)
+                              listaJogador(j),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-          )
+          ),
+          navBarMobile(context)
         ],
       ),
     );
@@ -80,7 +92,7 @@ class ListaResultadosState extends State<ListaResultadosMobile> {
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
         onTap: () {
-          widget.onTeamClick(time.id ?? 131);
+          context.push('/times/${time.id}');
         },
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           CachedNetworkImage(
@@ -102,7 +114,7 @@ class ListaResultadosState extends State<ListaResultadosMobile> {
   Widget listaJogador(JogadorTime jogador) {
     return GestureDetector(
       onTap: () {
-        widget.onPlayerClick(jogador.id ?? 5794);
+        context.push('/jogadores/${jogador.id}');
       },
       child: Column(children: [
         CircleAvatar(

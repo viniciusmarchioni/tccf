@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:scout/pages/lista_resultados/lista_resultados_mobile.dart';
 import 'package:scout/repository/pesquisarepository.dart';
 import 'package:scout/util/util.dart';
 
@@ -43,97 +45,108 @@ class ListaResultadosState extends State<ListaResultados> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) {
+        if (!sizingInformation.isDesktop) {
+          return ListaResultadosMobile(widget.pesquisa);
+        }
+        return Scaffold(
           backgroundColor: Colors.black,
-          flexibleSpace: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              MouseRegion(
-                onEnter: (event) => setState(() => _isHovering = true),
-                onHover: (event) => setState(() => _isHovering = true),
-                onExit: (event) => setState(() => _isHovering = false),
-                child: GestureDetector(
-                  child: Image.asset(
-                    "assets/images/logo.png",
-                    color: _isHovering ? Colors.green : Colors.white,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-              SizedBox(
-                width: fatorDeEscalaMenor(300, context),
-                child: TextField(
-                  decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                              BorderSide(width: 2, color: Colors.white)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                              BorderSide(width: 2, color: Colors.white)),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.black,
-                      ),
-                      hintText: "Pesquise no Scout AI"),
-                  onSubmitted: (value) {
-                    context.push("/pesquisa/${controller.text}");
-                  },
-                  controller: controller,
-                ),
-              ),
-              OutlinedButton(
-                style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(
-                        Color.fromARGB(50, 0, 100, 55))),
-                onPressed: () {},
-                child: const Row(children: [
-                  Icon(Icons.person_search, color: Colors.white),
-                  Text(
-                    "Estatisticas de jogadores",
-                    style: TextStyle(color: Colors.white),
-                  )
-                ]),
-              ),
-            ],
-          )),
-      body: Container(
-        margin: const EdgeInsets.all(25),
-        decoration: BoxDecoration(
-            color: const Color.fromARGB(68, 34, 197, 94),
-            border: Border.all(color: Colors.green)),
-        child: Column(
-          children: [
-            const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                "Resultado da pesquisa",
-                style: TextStyle(color: Colors.white, fontSize: 50),
-              )
-            ]),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                childAspectRatio: 3,
-                mainAxisSpacing: 50,
-                crossAxisSpacing: 10,
+          appBar: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.black,
+              flexibleSpace: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  for (Time i in pesquisaRepository.times) listaTime(i),
-                  for (JogadorTime i in pesquisaRepository.jogadores)
-                    listJogador(i)
+                  MouseRegion(
+                    onEnter: (event) => setState(() => _isHovering = true),
+                    onHover: (event) => setState(() => _isHovering = true),
+                    onExit: (event) => setState(() => _isHovering = false),
+                    child: GestureDetector(
+                      child: Image.asset(
+                        "assets/images/logo.png",
+                        color: _isHovering ? Colors.green : Colors.white,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: fatorDeEscalaMenor(300, context),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide:
+                                  BorderSide(width: 2, color: Colors.white)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide:
+                                  BorderSide(width: 2, color: Colors.white)),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.black,
+                          ),
+                          hintText: "Pesquise no Scout AI"),
+                      onSubmitted: (value) {
+                        context.push("/pesquisa/${controller.text}");
+                      },
+                      controller: controller,
+                    ),
+                  ),
+                  OutlinedButton(
+                    style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Color.fromARGB(50, 0, 100, 55))),
+                    onPressed: () {},
+                    child: const Row(children: [
+                      Icon(Icons.person_search, color: Colors.white),
+                      Text(
+                        "Estatisticas de jogadores",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ]),
+                  ),
                 ],
-              ),
-            )
-          ],
-        ),
-      ),
+              )),
+          body: Container(
+            margin: const EdgeInsets.all(25),
+            decoration: BoxDecoration(
+                color: const Color.fromARGB(68, 34, 197, 94),
+                border: Border.all(color: Colors.green)),
+            child: Column(
+              children: [
+                const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Resultado da pesquisa",
+                        style: TextStyle(color: Colors.white, fontSize: 50),
+                      )
+                    ]),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    childAspectRatio: 3,
+                    mainAxisSpacing: 50,
+                    crossAxisSpacing: 10,
+                    children: [
+                      for (Time i in pesquisaRepository.times) listaTime(i),
+                      for (JogadorTime i in pesquisaRepository.jogadores)
+                        listJogador(i)
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

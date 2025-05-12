@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scout/repository/teamsrepository.dart';
 import 'package:scout/util/util.dart';
 
 class TimeEstatisticasMobile extends StatefulWidget {
   final int idTime;
-  final void Function(int) onPlayerClick;
-  const TimeEstatisticasMobile(
-      {super.key, required this.idTime, required this.onPlayerClick});
+  const TimeEstatisticasMobile({super.key, required this.idTime});
 
   @override
   State<StatefulWidget> createState() {
@@ -60,163 +59,195 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.green, width: 2),
-              color: const Color.fromARGB(255, 17, 34, 23),
-              borderRadius: const BorderRadius.all(Radius.circular(20))),
-          margin: const EdgeInsets.all(10),
-          alignment: Alignment.topLeft,
-          child: !carregando
-              ? Container(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CachedNetworkImage(
-                              width: fatorDeEscalaMobile(80, context),
-                              imageUrl: timesRepository.infoTime.logo!,
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Image.asset('assets/images/error_image.png'),
-                            ),
-                            SizedBox(
-                              width: fatorDeEscalaMobile(250, context),
-                              child: Text(
-                                timesRepository.infoTime.nome ??
-                                    'Carregando...',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: fatorDeEscalaMobile(35, context),
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ]),
-                      constroiFormacao(controller.text, timesRepository),
-                      escolhaFormacao(context),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Aproveitamento na formação:",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          containerNota(timesRepository.aproveitamento
-                              .getAproveitamento()),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: fatorDeEscalaMobile(20, context),
-                                  vertical: fatorDeEscalaMobile(20, context)),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.greenAccent, width: 2),
-                                  color: const Color.fromARGB(255, 17, 34, 23),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20))),
-                              child: Column(children: [
-                                Text(
-                                  "Vitorias: ${timesRepository.aproveitamento.vitorias}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMobile(25, context)),
-                                ),
-                                Text(
-                                  "Empates: ${timesRepository.aproveitamento.empates}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMobile(25, context)),
-                                ),
-                                Text(
-                                  "Derrotas: ${timesRepository.aproveitamento.derrotas}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMobile(25, context)),
-                                ),
-                              ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: fatorDeEscalaMobile(300, context),
-                        margin: EdgeInsets.symmetric(
-                            vertical: fatorDeEscalaMobile(10, context)),
-                        decoration: BoxDecoration(
-                            color: valorSwitch
-                                ? const Color.fromARGB(68, 34, 197, 94)
-                                : const Color.fromARGB(100, 197, 34, 37),
-                            border: Border.all(
-                                color: valorSwitch ? Colors.green : Colors.red,
-                                width: 2)),
-                        child: Column(
-                          children: [
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: modeloAppBarMobile(context),
+      body: Column(
+        children: [
+          pesquisaMobile(context),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.green, width: 2),
+                      color: const Color.fromARGB(255, 17, 34, 23),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
+                  margin: const EdgeInsets.all(10),
+                  alignment: Alignment.topLeft,
+                  child: !carregando
+                      ? Container(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CachedNetworkImage(
+                                      width: fatorDeEscalaMobile(80, context),
+                                      imageUrl: timesRepository.infoTime.logo!,
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                              'assets/images/error_image.png'),
+                                    ),
+                                    SizedBox(
+                                      width: fatorDeEscalaMobile(250, context),
+                                      child: Text(
+                                        timesRepository.infoTime.nome ??
+                                            'Carregando...',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: fatorDeEscalaMobile(
+                                                35, context),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ]),
+                              constroiFormacao(
+                                  controller.text, timesRepository),
+                              escolhaFormacao(context),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: Colors.green)),
-                                      onPressed: () {
-                                        setState(() {
-                                          valorSwitch = true;
-                                        });
-                                      },
-                                      child: Text(
-                                        "Pontos positivos",
-                                        style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: fatorDeEscalaMobile(
-                                                15, context)),
+                                  const Text(
+                                    "Aproveitamento na formação:",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  containerNota(timesRepository.aproveitamento
+                                      .getAproveitamento()),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal:
+                                              fatorDeEscalaMobile(20, context),
+                                          vertical:
+                                              fatorDeEscalaMobile(20, context)),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.greenAccent,
+                                              width: 2),
+                                          color: const Color.fromARGB(
+                                              255, 17, 34, 23),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(20))),
+                                      child: Column(children: [
+                                        Text(
+                                          "Vitorias: ${timesRepository.aproveitamento.vitorias}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  25, context)),
+                                        ),
+                                        Text(
+                                          "Empates: ${timesRepository.aproveitamento.empates}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  25, context)),
+                                        ),
+                                        Text(
+                                          "Derrotas: ${timesRepository.aproveitamento.derrotas}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: fatorDeEscalaMobile(
+                                                  25, context)),
+                                        ),
+                                      ]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                height: fatorDeEscalaMobile(300, context),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: fatorDeEscalaMobile(10, context)),
+                                decoration: BoxDecoration(
+                                    color: valorSwitch
+                                        ? const Color.fromARGB(68, 34, 197, 94)
+                                        : const Color.fromARGB(
+                                            100, 197, 34, 37),
+                                    border: Border.all(
+                                        color: valorSwitch
+                                            ? Colors.green
+                                            : Colors.red,
+                                        width: 2)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                    side: const BorderSide(
+                                                        color: Colors.green)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    valorSwitch = true;
+                                                  });
+                                                },
+                                                child: Text(
+                                                  "Pontos positivos",
+                                                  style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize:
+                                                          fatorDeEscalaMobile(
+                                                              15, context)),
+                                                )),
+                                            OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                    side: const BorderSide(
+                                                        color: Colors.red)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    valorSwitch = false;
+                                                  });
+                                                },
+                                                child: Text(
+                                                  "Pontos negativos",
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize:
+                                                          fatorDeEscalaMobile(
+                                                              15, context)),
+                                                )),
+                                          ]),
+                                    ),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                          child: Column(
+                                        children: [
+                                          for (var i in grandeComparacao()) i
+                                        ],
                                       )),
-                                  OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(
-                                              color: Colors.red)),
-                                      onPressed: () {
-                                        setState(() {
-                                          valorSwitch = false;
-                                        });
-                                      },
-                                      child: Text(
-                                        "Pontos negativos",
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontSize: fatorDeEscalaMobile(
-                                                15, context)),
-                                      )),
-                                ]),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                  child: Column(
-                                children: [for (var i in grandeComparacao()) i],
-                              )),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : const Center(
-                  child: CircularProgressIndicator(),
-                )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        )),
+            ),
+          ),
+          navBarMobile(context)
+        ],
+      ),
     );
   }
 
@@ -283,7 +314,8 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          widget.onPlayerClick(timesRepository.goleiro.id!);
+                          context
+                              .push('/jogadores/${timesRepository.goleiro.id}');
                         },
                         child: imagemJogador(timesRepository.goleiro.image)),
                     Column(
@@ -293,7 +325,7 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                           for (Jogador i in timesRepository.defensores)
                             GestureDetector(
                                 onTap: () {
-                                  widget.onPlayerClick(i.id!);
+                                  context.push('/jogadores/${i.id}');
                                 },
                                 child: imagemJogador(i.image)),
                         ]),
@@ -308,7 +340,7 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                             for (Jogador j in i)
                               GestureDetector(
                                   onTap: () {
-                                    widget.onPlayerClick(j.id!);
+                                    context.push('/jogadores/${j.id}');
                                   },
                                   child: imagemJogador(j.image)),
                             if (i.length == 2) Container(),
@@ -322,8 +354,8 @@ class _TimeEstatisticaMobileState extends State<TimeEstatisticasMobile> {
                               z++)
                             GestureDetector(
                                 onTap: () {
-                                  widget.onPlayerClick(
-                                      timesRepository.atacantes[z].id!);
+                                  context.push(
+                                      "/jogadores/${timesRepository.atacantes[z].id}");
                                 },
                                 child: imagemJogador(
                                     timesRepository.atacantes[z].image)),

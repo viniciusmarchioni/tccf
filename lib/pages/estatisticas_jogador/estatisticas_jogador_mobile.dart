@@ -54,23 +54,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticasMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black,
-          flexibleSpace: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(),
-              GestureDetector(
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  scale: fatorDeEscalaMenorReverso(1, context),
-                ),
-                onTap: () {},
-              ),
-              Container(),
-            ],
-          )),
+      appBar: modeloAppBarMobile(context),
       body: Column(
         children: [
           pesquisaMobile(context),
@@ -262,6 +246,7 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticasMobile> {
               ),
             ),
           ),
+          navBarMobile(context)
         ],
       ),
     );

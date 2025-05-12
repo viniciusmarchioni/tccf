@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:scout/pages/ia/ia_mobile.dart';
 import 'package:scout/util/util.dart';
 
 class Ia extends StatefulWidget {
@@ -127,601 +129,634 @@ class _IaState extends State<Ia> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.black,
-        flexibleSpace: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            MouseRegion(
-              onEnter: (event) => setState(() => _isHovering = true),
-              onHover: (event) => setState(() => _isHovering = true),
-              onExit: (event) => setState(() => _isHovering = false),
-              child: GestureDetector(
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  color: _isHovering ? Colors.green : Colors.white,
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            SizedBox(
-              width: fatorDeEscalaMenor(300, context),
-              child: TextField(
-                decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(width: 2, color: Colors.white)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(width: 2, color: Colors.white)),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.black,
-                    ),
-                    hintText: "Pesquise no Scout AI"),
-                onSubmitted: (value) {
-                  context.push("/pesquisa/$value");
-                },
-                controller: controller,
-              ),
-            ),
-            OutlinedButton(
-              style: const ButtonStyle(
-                  backgroundColor:
-                      MaterialStatePropertyAll(Color.fromARGB(50, 0, 100, 55))),
-              onPressed: () {},
-              child: const Row(children: [
-                Icon(Icons.person_search, color: Colors.white),
-                Text(
-                  "Estatisticas de jogadores",
-                  style: TextStyle(color: Colors.white),
-                )
-              ]),
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Previsão da partida",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: fatorDeEscalaMenor(35, context)),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Row(
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) {
+        if (!sizingInformation.isDesktop) {
+          return IaMobile(
+            mandante: widget.mandante,
+            visitante: widget.visitante,
+          );
+        }
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.black,
+            flexibleSpace: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(68, 34, 197, 94),
-                        border: Border.all(color: Colors.green),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20))),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Seleção mandante
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical:
-                                              fatorDeEscalaMenor(10, context)),
-                                      child: Row(children: [
-                                        Text(
-                                          "Mandante: ",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  68, 34, 197, 94),
-                                              border: Border.all(
-                                                  color: Colors.green),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(20))),
-                                          child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                            menuMaxHeight: 300,
-                                            dropdownColor: Colors.green,
-                                            value: timeMandante,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: fatorDeEscalaMenor(
-                                                    25, context)),
-                                            items: [
-                                              for (var i in [
-                                                "Selecione",
-                                                ...timeDic.keys
-                                              ])
-                                                DropdownMenuItem(
-                                                    value: i,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                          horizontal:
-                                                              fatorDeEscalaMenor(
-                                                                  8.0,
-                                                                  context)),
-                                                      child: Text(i),
-                                                    )),
-                                            ],
-                                            onChanged: (value) {
-                                              if (value != "Selecione" &&
-                                                  value == timeVisitante) {
-                                                return;
-                                              }
-                                              setState(() {
-                                                timeMandante = value;
-                                              });
-                                            },
-                                          )),
-                                        )
-                                      ]),
-                                    ),
-                                    //Seleção formação mandante
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical:
-                                              fatorDeEscalaMenor(10, context)),
-                                      child: Row(children: [
-                                        Text(
-                                          "Formação: ",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  68, 34, 197, 94),
-                                              border: Border.all(
-                                                  color: Colors.green),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(20))),
-                                          child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                            menuMaxHeight: 300,
-                                            dropdownColor: Colors.green,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: fatorDeEscalaMenor(
-                                                    25, context)),
-                                            value: formacaoMandante,
-                                            items: [
-                                              for (var i in opcoesFormacao)
-                                                DropdownMenuItem(
-                                                    value: i,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.symmetric(
-                                                          horizontal:
-                                                              fatorDeEscalaMenor(
-                                                                  8.0,
-                                                                  context)),
-                                                      child: Text(i),
-                                                    )),
-                                            ],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                formacaoMandante = value;
-                                              });
-                                            },
-                                          )),
-                                        )
-                                      ]),
-                                    ),
-                                  ],
-                                ),
-                                Builder(
-                                  builder: (context) {
-                                    if (timeMandante != null &&
-                                        timeMandante != "Selecione") {
-                                      return Image.network(
-                                        timeDic[timeMandante]!,
-                                        scale: fatorDeEscalaMenorReverso(
-                                            1, context),
-                                      );
-                                    }
-                                    return Container();
-                                  },
-                                )
-                              ]),
-                          const Divider(
-                            color: Colors.green,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Seleção visitante
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical:
-                                              fatorDeEscalaMenor(10, context)),
-                                      child: Row(children: [
-                                        Text(
-                                          "Visitante:   ",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  68, 34, 197, 94),
-                                              border: Border.all(
-                                                  color: Colors.green),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(20))),
-                                          child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                            menuMaxHeight: 300,
-                                            dropdownColor: Colors.green,
-                                            value: timeVisitante,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: fatorDeEscalaMenor(
-                                                    25, context)),
-                                            items: [
-                                              for (var i in [
-                                                "Selecione",
-                                                ...timeDic.keys
-                                              ])
-                                                DropdownMenuItem(
-                                                    value: i,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 8.0),
-                                                      child: Text(i),
-                                                    )),
-                                            ],
-                                            onChanged: (value) {
-                                              if (value != "Selecione" &&
-                                                  value == timeMandante) {
-                                                return;
-                                              }
-                                              setState(() {
-                                                timeVisitante = value;
-                                              });
-                                            },
-                                          )),
-                                        )
-                                      ]),
-                                    ),
-                                    //Seleção formação visitante
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical:
-                                              fatorDeEscalaMenor(10, context)),
-                                      child: Row(children: [
-                                        Text(
-                                          "Formação: ",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                  68, 34, 197, 94),
-                                              border: Border.all(
-                                                  color: Colors.green),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(20))),
-                                          child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                            menuMaxHeight: 300,
-                                            dropdownColor: Colors.green,
-                                            value: formacaoVisitante,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: fatorDeEscalaMenor(
-                                                    25, context)),
-                                            items: [
-                                              for (var i in opcoesFormacao)
-                                                DropdownMenuItem(
-                                                    value: i,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 8.0),
-                                                      child: Text(i),
-                                                    )),
-                                            ],
-                                            onChanged: (value) {
-                                              setState(() {
-                                                formacaoVisitante = value;
-                                              });
-                                            },
-                                          )),
-                                        )
-                                      ]),
-                                    ),
-                                  ],
-                                ),
-                                Builder(
-                                  builder: (context) {
-                                    if (timeVisitante != null &&
-                                        timeVisitante != "Selecione") {
-                                      return Image.network(
-                                        timeDic[timeVisitante]!,
-                                        scale: fatorDeEscalaMenorReverso(
-                                            1, context),
-                                      );
-                                    }
-                                    return Container();
-                                  },
-                                )
-                              ]),
-                          const Divider(
-                            color: Colors.green,
-                          ),
-                          Column(
+                MouseRegion(
+                  onEnter: (event) => setState(() => _isHovering = true),
+                  onHover: (event) => setState(() => _isHovering = true),
+                  onExit: (event) => setState(() => _isHovering = false),
+                  child: GestureDetector(
+                    child: Image.asset(
+                      "assets/images/logo.png",
+                      color: _isHovering ? Colors.green : Colors.white,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: fatorDeEscalaMenor(300, context),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide:
+                                BorderSide(width: 2, color: Colors.white)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide:
+                                BorderSide(width: 2, color: Colors.white)),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        hintText: "Pesquise no Scout AI"),
+                    onSubmitted: (value) {
+                      context.push("/pesquisa/$value");
+                    },
+                    controller: controller,
+                  ),
+                ),
+                OutlinedButton(
+                  style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Color.fromARGB(50, 0, 100, 55))),
+                  onPressed: () {},
+                  child: const Row(children: [
+                    Icon(Icons.person_search, color: Colors.white),
+                    Text(
+                      "Estatisticas de jogadores",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ]),
+                ),
+              ],
+            ),
+          ),
+          body: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Previsão da partida",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fatorDeEscalaMenor(35, context)),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(68, 34, 197, 94),
+                            border: Border.all(color: Colors.green),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20))),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              //Seleção clima
                               Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    //seleção clima
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              68, 34, 197, 94),
-                                          border:
-                                              Border.all(color: Colors.green),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
-                                      child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                        value: clima,
-                                        dropdownColor: Colors.green,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMenor(
-                                                25, context)),
-                                        items: [
-                                          for (var i in opcoesClima)
-                                            DropdownMenuItem(
-                                                value: i,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8.0),
-                                                  child: Text(i),
-                                                )),
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            clima = value;
-                                          });
-                                        },
-                                      )),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        //Seleção mandante
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: fatorDeEscalaMenor(
+                                                  10, context)),
+                                          child: Row(children: [
+                                            Text(
+                                              "Mandante: ",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      68, 34, 197, 94),
+                                                  border: Border.all(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                menuMaxHeight: 300,
+                                                dropdownColor: Colors.green,
+                                                value: timeMandante,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            25, context)),
+                                                items: [
+                                                  for (var i in [
+                                                    "Selecione",
+                                                    ...timeDic.keys
+                                                  ])
+                                                    DropdownMenuItem(
+                                                        value: i,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  fatorDeEscalaMenor(
+                                                                      8.0,
+                                                                      context)),
+                                                          child: Text(i),
+                                                        )),
+                                                ],
+                                                onChanged: (value) {
+                                                  if (value != "Selecione" &&
+                                                      value == timeVisitante) {
+                                                    return;
+                                                  }
+                                                  setState(() {
+                                                    timeMandante = value;
+                                                  });
+                                                },
+                                              )),
+                                            )
+                                          ]),
+                                        ),
+                                        //Seleção formação mandante
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: fatorDeEscalaMenor(
+                                                  10, context)),
+                                          child: Row(children: [
+                                            Text(
+                                              "Formação: ",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      68, 34, 197, 94),
+                                                  border: Border.all(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                menuMaxHeight: 300,
+                                                dropdownColor: Colors.green,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            25, context)),
+                                                value: formacaoMandante,
+                                                items: [
+                                                  for (var i in opcoesFormacao)
+                                                    DropdownMenuItem(
+                                                        value: i,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  fatorDeEscalaMenor(
+                                                                      8.0,
+                                                                      context)),
+                                                          child: Text(i),
+                                                        )),
+                                                ],
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    formacaoMandante = value;
+                                                  });
+                                                },
+                                              )),
+                                            )
+                                          ]),
+                                        ),
+                                      ],
                                     ),
-                                    //Selecao horário
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              68, 34, 197, 94),
-                                          border:
-                                              Border.all(color: Colors.green),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
-                                      child: DropdownButtonHideUnderline(
-                                          child: DropdownButton(
-                                        value: horario,
-                                        dropdownColor: Colors.green,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMenor(
-                                                25, context)),
-                                        items: [
-                                          for (var i in opcoesHorario)
-                                            DropdownMenuItem(
-                                                value: i,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8.0),
-                                                  child: Text(i),
-                                                )),
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            horario = value;
-                                          });
-                                        },
-                                      )),
+                                    Builder(
+                                      builder: (context) {
+                                        if (timeMandante != null &&
+                                            timeMandante != "Selecione") {
+                                          return Image.network(
+                                            timeDic[timeMandante]!,
+                                            scale: fatorDeEscalaMenorReverso(
+                                                1, context),
+                                          );
+                                        }
+                                        return Container();
+                                      },
                                     )
                                   ]),
-                              //Botão prever resultado
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: fatorDeEscalaMenor(25, context)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                        style: const ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.green)),
-                                        onPressed: () {
-                                          request();
-                                        },
-                                        child: Text(
-                                          "Prever resultado",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
-                                        ))
-                                  ],
-                                ),
-                              )
-                            ],
-                          )
-                        ]),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(68, 34, 197, 94),
-                        border: Border.all(color: Colors.green),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20))),
-                    child: Builder(builder: (context) {
-                      if (carregando) {
-                        return const Center(
-                            child: CircularProgressIndicator(
-                          color: Colors.green,
-                        ));
-                      }
-                      return Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(children: [
-                              Text(
-                                "Resultado",
-                                style: TextStyle(
-                                    color: Colors.green.shade400,
-                                    fontSize: fatorDeEscalaMenor(50, context)),
+                              const Divider(
+                                color: Colors.green,
                               ),
-                              Builder(
-                                builder: (context) {
-                                  if (iaRepository.chanceMandante >
-                                          iaRepository.chanceVisitante &&
-                                      iaRepository.chanceMandante >
-                                          iaRepository.chanceEmpate) {
-                                    return Column(
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          "Vitória Mandante",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
+                                        //Seleção visitante
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: fatorDeEscalaMenor(
+                                                  10, context)),
+                                          child: Row(children: [
+                                            Text(
+                                              "Visitante:   ",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      68, 34, 197, 94),
+                                                  border: Border.all(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                menuMaxHeight: 300,
+                                                dropdownColor: Colors.green,
+                                                value: timeVisitante,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            25, context)),
+                                                items: [
+                                                  for (var i in [
+                                                    "Selecione",
+                                                    ...timeDic.keys
+                                                  ])
+                                                    DropdownMenuItem(
+                                                        value: i,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Text(i),
+                                                        )),
+                                                ],
+                                                onChanged: (value) {
+                                                  if (value != "Selecione" &&
+                                                      value == timeMandante) {
+                                                    return;
+                                                  }
+                                                  setState(() {
+                                                    timeVisitante = value;
+                                                  });
+                                                },
+                                              )),
+                                            )
+                                          ]),
                                         ),
-                                        Image.network(
-                                          timeDic[iaRepository.mandante]!,
-                                          scale: fatorDeEscalaMenorReverso(
-                                              1, context),
+                                        //Seleção formação visitante
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: fatorDeEscalaMenor(
+                                                  10, context)),
+                                          child: Row(children: [
+                                            Text(
+                                              "Formação: ",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      68, 34, 197, 94),
+                                                  border: Border.all(
+                                                      color: Colors.green),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child:
+                                                  DropdownButtonHideUnderline(
+                                                      child: DropdownButton(
+                                                menuMaxHeight: 300,
+                                                dropdownColor: Colors.green,
+                                                value: formacaoVisitante,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            25, context)),
+                                                items: [
+                                                  for (var i in opcoesFormacao)
+                                                    DropdownMenuItem(
+                                                        value: i,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Text(i),
+                                                        )),
+                                                ],
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    formacaoVisitante = value;
+                                                  });
+                                                },
+                                              )),
+                                            )
+                                          ]),
                                         ),
                                       ],
-                                    );
-                                  } else if (iaRepository.chanceVisitante >
-                                          iaRepository.chanceMandante &&
-                                      iaRepository.chanceVisitante >
-                                          iaRepository.chanceEmpate) {
-                                    return Column(
+                                    ),
+                                    Builder(
+                                      builder: (context) {
+                                        if (timeVisitante != null &&
+                                            timeVisitante != "Selecione") {
+                                          return Image.network(
+                                            timeDic[timeVisitante]!,
+                                            scale: fatorDeEscalaMenorReverso(
+                                                1, context),
+                                          );
+                                        }
+                                        return Container();
+                                      },
+                                    )
+                                  ]),
+                              const Divider(
+                                color: Colors.green,
+                              ),
+                              Column(
+                                children: [
+                                  //Seleção clima
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                        Text(
-                                          "Vitória Visitante",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
+                                        //seleção clima
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                  68, 34, 197, 94),
+                                              border: Border.all(
+                                                  color: Colors.green),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(20))),
+                                          child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                            value: clima,
+                                            dropdownColor: Colors.green,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: fatorDeEscalaMenor(
+                                                    25, context)),
+                                            items: [
+                                              for (var i in opcoesClima)
+                                                DropdownMenuItem(
+                                                    value: i,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8.0),
+                                                      child: Text(i),
+                                                    )),
+                                            ],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                clima = value;
+                                              });
+                                            },
+                                          )),
                                         ),
-                                        Image.network(
-                                          timeDic[iaRepository.visitante]!,
-                                          scale: fatorDeEscalaMenorReverso(
-                                              1, context),
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return Column(
+                                        //Selecao horário
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                  68, 34, 197, 94),
+                                              border: Border.all(
+                                                  color: Colors.green),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(20))),
+                                          child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                            value: horario,
+                                            dropdownColor: Colors.green,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: fatorDeEscalaMenor(
+                                                    25, context)),
+                                            items: [
+                                              for (var i in opcoesHorario)
+                                                DropdownMenuItem(
+                                                    value: i,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8.0),
+                                                      child: Text(i),
+                                                    )),
+                                            ],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                horario = value;
+                                              });
+                                            },
+                                          )),
+                                        )
+                                      ]),
+                                  //Botão prever resultado
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            fatorDeEscalaMenor(25, context)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          "Empate",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: fatorDeEscalaMenor(
-                                                  30, context)),
-                                        ),
+                                        ElevatedButton(
+                                            style: const ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStatePropertyAll(
+                                                        Colors.green)),
+                                            onPressed: () {
+                                              request();
+                                            },
+                                            child: Text(
+                                              "Prever resultado",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ))
                                       ],
-                                    );
-                                  }
-                                },
+                                    ),
+                                  )
+                                ],
                               )
                             ]),
-                            const Divider(
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(fatorDeEscalaMenor(50, context)),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(68, 34, 197, 94),
+                            border: Border.all(color: Colors.green),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20))),
+                        child: Builder(builder: (context) {
+                          if (carregando) {
+                            return const Center(
+                                child: CircularProgressIndicator(
                               color: Colors.green,
-                            ),
-                            Column(
+                            ));
+                          }
+                          return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text(
-                                  "Probabilidades",
-                                  style: TextStyle(
-                                      color: Colors.green.shade400,
-                                      fontSize:
-                                          fatorDeEscalaMenor(40, context)),
+                                Column(children: [
+                                  Text(
+                                    "Resultado",
+                                    style: TextStyle(
+                                        color: Colors.green.shade400,
+                                        fontSize:
+                                            fatorDeEscalaMenor(50, context)),
+                                  ),
+                                  Builder(
+                                    builder: (context) {
+                                      if (iaRepository.chanceMandante >
+                                              iaRepository.chanceVisitante &&
+                                          iaRepository.chanceMandante >
+                                              iaRepository.chanceEmpate) {
+                                        return Column(
+                                          children: [
+                                            Text(
+                                              "Vitória Mandante",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                            Image.network(
+                                              timeDic[iaRepository.mandante]!,
+                                              scale: fatorDeEscalaMenorReverso(
+                                                  1, context),
+                                            ),
+                                          ],
+                                        );
+                                      } else if (iaRepository.chanceVisitante >
+                                              iaRepository.chanceMandante &&
+                                          iaRepository.chanceVisitante >
+                                              iaRepository.chanceEmpate) {
+                                        return Column(
+                                          children: [
+                                            Text(
+                                              "Vitória Visitante",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                            Image.network(
+                                              timeDic[iaRepository.visitante]!,
+                                              scale: fatorDeEscalaMenorReverso(
+                                                  1, context),
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        return Column(
+                                          children: [
+                                            Text(
+                                              "Empate",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: fatorDeEscalaMenor(
+                                                      30, context)),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    },
+                                  )
+                                ]),
+                                const Divider(
+                                  color: Colors.green,
                                 ),
-                                Text(
-                                  "Empate: ${(iaRepository.chanceEmpate * 100).toStringAsFixed(2)}%",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(20, context)),
-                                ),
-                                Text(
-                                  "Vitória Mandante: ${(iaRepository.chanceMandante * 100).toStringAsFixed(2)}%",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(20, context)),
-                                ),
-                                Text(
-                                  "Vitória Visitante: ${(iaRepository.chanceVisitante * 100).toStringAsFixed(2)}%",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize:
-                                          fatorDeEscalaMenor(20, context)),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "Probabilidades",
+                                      style: TextStyle(
+                                          color: Colors.green.shade400,
+                                          fontSize:
+                                              fatorDeEscalaMenor(40, context)),
+                                    ),
+                                    Text(
+                                      "Empate: ${(iaRepository.chanceEmpate * 100).toStringAsFixed(2)}%",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(20, context)),
+                                    ),
+                                    Text(
+                                      "Vitória Mandante: ${(iaRepository.chanceMandante * 100).toStringAsFixed(2)}%",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(20, context)),
+                                    ),
+                                    Text(
+                                      "Vitória Visitante: ${(iaRepository.chanceVisitante * 100).toStringAsFixed(2)}%",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:
+                                              fatorDeEscalaMenor(20, context)),
+                                    )
+                                  ],
                                 )
-                              ],
-                            )
-                          ]);
-                    }),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                              ]);
+                        }),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
