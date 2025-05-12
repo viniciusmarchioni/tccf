@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:scout/pages/estatisticas_jogador/estatisticas_jogador.dart';
-import 'package:scout/pages/lista_resultados/lista_resultados.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scout/repository/teamsrepository.dart';
 import 'package:scout/util/util.dart';
 
@@ -24,6 +23,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
   bool valorSwitch = true;
   String? dropDownValue;
   bool _isHovering = false;
+  bool _inicializou = false;
 
   @override
   void initState() {
@@ -66,6 +66,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.black,
           flexibleSpace: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -80,7 +81,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                     color: _isHovering ? Colors.green : Colors.white,
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                    context.push("/");
                   },
                 ),
               ),
@@ -104,12 +105,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                       ),
                       hintText: "Pesquise no Scout AI"),
                   onSubmitted: (value) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ListaResultados(controllerPesquisa.text)),
-                    );
+                    context.push("/pesquisa/$value");
                   },
                   controller: controllerPesquisa,
                 ),
@@ -387,13 +383,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => JogadorEstatisticas(
-                                    idJogador: timesRepository.goleiro.id!,
-                                  )),
-                        );
+                        context
+                            .push('/jogadores/${timesRepository.goleiro.id}');
                       },
                       child: imagemJogador(timesRepository.goleiro.image)),
                   Column(
@@ -403,14 +394,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                         for (var i = 0; i < formacaoList[0]; i++)
                           GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => JogadorEstatisticas(
-                                            idJogador: timesRepository
-                                                .defensores[i].id!,
-                                          )),
-                                );
+                                context.push(
+                                    '/jogadores/${timesRepository.defensores[i].id}');
                               },
                               child: imagemJogador(
                                   timesRepository.defensores[i].image)),
@@ -426,14 +411,7 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                           for (Jogador j in i)
                             GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            JogadorEstatisticas(
-                                              idJogador: j.id!,
-                                            )),
-                                  );
+                                  context.push('/jogadores/${j.id}');
                                 },
                                 child: imagemJogador(j.image)),
                           if (i.length == 2) Container(),
@@ -447,14 +425,8 @@ class _TimeEstatisticaState extends State<TimeEstatisticas> {
                             z++)
                           GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => JogadorEstatisticas(
-                                            idJogador: timesRepository
-                                                .atacantes[z].id!,
-                                          )),
-                                );
+                                context.push(
+                                    "/jogadores/${timesRepository.atacantes[z].id}");
                               },
                               child: imagemJogador(
                                   timesRepository.atacantes[z].image)),

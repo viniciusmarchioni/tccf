@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:scout/pages/estatisticas_jogador/estatisticas_jogador.dart';
 import 'package:scout/pages/estatisticas_time/estatisticas_time.dart';
 import 'package:scout/pages/ia/ia.dart';
 import 'package:scout/pages/lista_resultados/lista_resultados.dart';
+import 'package:scout/pages/menu/menu_mobile.dart';
 import 'package:scout/repository/menu_repository.dart';
 import 'package:scout/util/tipos.dart';
 import 'package:scout/util/util.dart';
@@ -18,13 +21,60 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final GoRouter _router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const MyHomePage(title: 'Scout'),
+        ),
+        GoRoute(
+          path: '/pesquisa/:pesquisa',
+          builder: (context, state) {
+            String pesquisa = state.pathParameters['pesquisa'] ?? "Times";
+            return ListaResultados(pesquisa: pesquisa);
+          },
+        ),
+        GoRoute(
+          path: '/jogadores/:id',
+          builder: (context, state) {
+            int jogadorId = int.parse(state.pathParameters['id'] ?? '131');
+            return JogadorEstatisticas(idJogador: jogadorId);
+          },
+        ),
+        GoRoute(
+          path: '/times/:id',
+          builder: (context, state) {
+            int timeId = int.parse(state.pathParameters['id'] ?? '10007');
+            return TimeEstatisticas(
+              idTime: timeId,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/ia/:mandante/:visitante',
+          builder: (context, state) {
+            String? mandante = state.pathParameters['mandante'];
+            String? visitante = state.pathParameters['visitante'];
+            return Ia(mandante: mandante, visitante: visitante);
+          },
+        ),
+        GoRoute(
+          path: '/ia',
+          builder: (context, state) {
+            return const Ia();
+          },
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
       title: 'ScoutAI',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade300),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Scout'),
+      routerConfig: _router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -45,7 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String pesquisa = "C";
   bool carregando = false;
   MenuRepository menuRepository = MenuRepository();
-  bool _isHovering = false;
 
   final dic = {
     1: "Domingo",
@@ -80,344 +129,319 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) {
+        if (!sizingInformation.isDesktop) {
+          return const MenuMobile();
+        }
+        return Scaffold(
             backgroundColor: Colors.black,
-            flexibleSpace: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MouseRegion(
-                  onEnter: (event) => setState(() => _isHovering = true),
-                  onHover: (event) => setState(() => _isHovering = true),
-                  onExit: (event) => setState(() => _isHovering = false),
-                  child: GestureDetector(
-                    child: Image.asset(
-                      "assets/images/logo.png",
-                      color: _isHovering ? Colors.green : Colors.white,
+            appBar: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.black,
+                flexibleSpace: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      child: Image.asset(
+                        "assets/images/logo.png",
+                        color: Colors.white,
+                      ),
                     ),
-                    onTap: () {
-                      setState(() {
-                        tipo = null;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: fatorDeEscalaMenor(300, context),
-                  child: TextField(
-                    decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide:
-                                BorderSide(width: 2, color: Colors.white)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            borderSide:
-                                BorderSide(width: 2, color: Colors.white)),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.black,
-                        ),
-                        hintText: "Pesquise no Scout AI"),
-                    onSubmitted: (value) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ListaResultados(controller.text)),
-                      );
-                    },
-                    controller: controller,
-                  ),
-                ),
-                OutlinedButton(
-                  style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
-                          Color.fromARGB(50, 0, 100, 55))),
-                  onPressed: () {
-                    setState(() {
-                      tipo = Tipos.pesquisaAvancada;
-                    });
-                  },
-                  child: const Row(children: [
-                    Icon(Icons.person_search, color: Colors.white),
-                    Text(
-                      "Estatisticas de jogadores",
-                      style: TextStyle(color: Colors.white),
-                    )
-                  ]),
-                ),
-              ],
-            )),
-        body: Container(
-          margin: const EdgeInsets.all(25),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              menu(context),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    SizedBox(
+                      width: fatorDeEscalaMenor(300, context),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.white)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.white)),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.black,
+                            ),
+                            hintText: "Pesquise no Scout AI"),
+                        onSubmitted: (value) {
+                          context.push("/pesquisa/$value");
+                        },
+                        controller: controller,
+                      ),
+                    ),
+                    OutlinedButton(
+                      style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(
+                              Color.fromARGB(50, 0, 100, 55))),
+                      onPressed: () {
+                        setState(() {
+                          tipo = Tipos.pesquisaAvancada;
+                        });
+                      },
+                      child: const Row(children: [
+                        Icon(Icons.person_search, color: Colors.white),
+                        Text(
+                          "Estatisticas de jogadores",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ]),
+                    ),
+                  ],
+                )),
+            body: Container(
+              margin: const EdgeInsets.all(25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.green, width: 2),
-                          color: const Color.fromARGB(255, 17, 34, 23),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20))),
-                      width: fatorDeEscalaMenor(600, context),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Próximos jogos",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: fatorDeEscalaMenor(30, context)),
-                          ),
-                          CarouselSlider(
-                            carouselController: CarouselSliderController(),
-                            items:
-                                menuRepository.proximasPartidas.map((partida) {
-                              return Column(
-                                children: [
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        //Mandante
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      TimeEstatisticas(
-                                                        idTime:
-                                                            partida.idMandante!,
-                                                      )),
-                                            );
-                                          },
-                                          child: Column(children: [
-                                            Image.network(
-                                              partida.logoMandante!,
-                                              height: fatorDeEscalaMenor(
-                                                  150, context),
-                                              width: fatorDeEscalaMenor(
-                                                  150, context),
-                                            ),
-                                            Text(
-                                              partida.nomeMandante!,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: fatorDeEscalaMenor(
-                                                      20, context)),
-                                            )
-                                          ]),
-                                        ),
-                                        //Data do jogo
-                                        Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "${partida.data?.hour.toString().padLeft(2, '0')}:${partida.data?.minute.toString().padLeft(2, '0')}",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                              ),
-                                              Text(
-                                                dic[partida.data?.weekday]
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                              ),
-                                              Text(
-                                                "${partida.data?.day}/${partida.data?.month}/${(partida.data?.year ?? 0) - 2000}",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        fatorDeEscalaMenor(
-                                                            20, context)),
-                                              )
-                                            ]),
-                                        //Visitante
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      TimeEstatisticas(
-                                                        idTime: partida
-                                                            .idVisitante!,
-                                                      )),
-                                            );
-                                          },
-                                          child: Column(children: [
-                                            Image.network(
-                                              height: fatorDeEscalaMenor(
-                                                  150, context),
-                                              width: fatorDeEscalaMenor(
-                                                  150, context),
-                                              partida.logoVisitante!,
-                                            ),
-                                            Text(
-                                              partida.nomeVisitante!,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: fatorDeEscalaMenor(
-                                                      20, context)),
-                                            )
-                                          ]),
-                                        )
-                                      ]),
-                                  //Botão prever
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                  menu(context),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.green, width: 2),
+                              color: const Color.fromARGB(255, 17, 34, 23),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20))),
+                          width: fatorDeEscalaMenor(600, context),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Próximos jogos",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fatorDeEscalaMenor(30, context)),
+                              ),
+                              CarouselSlider(
+                                carouselController: CarouselSliderController(),
+                                items: menuRepository.proximasPartidas
+                                    .map((partida) {
+                                  return Column(
                                     children: [
-                                      ElevatedButton(
-                                          style: const ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.green)),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Ia(
-                                                        mandante: partida
-                                                            .nomeMandante,
-                                                        visitante: partida
-                                                            .nomeVisitante,
-                                                      )),
-                                            );
-                                          },
-                                          child: Text(
-                                            "Prever",
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            //Mandante
+                                            GestureDetector(
+                                              onTap: () {
+                                                context.push(
+                                                    '/times/${partida.idMandante}');
+                                              },
+                                              child: Column(children: [
+                                                Image.network(
+                                                  partida.logoMandante!,
+                                                  height: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  width: fatorDeEscalaMenor(
+                                                      150, context),
+                                                ),
+                                                Text(
+                                                  partida.nomeMandante!,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
+                                                )
+                                              ]),
+                                            ),
+                                            //Data do jogo
+                                            Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "${partida.data?.hour.toString().padLeft(2, '0')}:${partida.data?.minute.toString().padLeft(2, '0')}",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            fatorDeEscalaMenor(
+                                                                20, context)),
+                                                  ),
+                                                  Text(
+                                                    dic[partida.data?.weekday]
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            fatorDeEscalaMenor(
+                                                                20, context)),
+                                                  ),
+                                                  Text(
+                                                    "${partida.data?.day}/${partida.data?.month}/${(partida.data?.year ?? 0) - 2000}",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            fatorDeEscalaMenor(
+                                                                20, context)),
+                                                  )
+                                                ]),
+                                            //Visitante
+                                            GestureDetector(
+                                              onTap: () {
+                                                context.push(
+                                                    '/times/${partida.idVisitante}');
+                                              },
+                                              child: Column(children: [
+                                                Image.network(
+                                                  height: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  width: fatorDeEscalaMenor(
+                                                      150, context),
+                                                  partida.logoVisitante!,
+                                                ),
+                                                Text(
+                                                  partida.nomeVisitante!,
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          fatorDeEscalaMenor(
+                                                              20, context)),
+                                                )
+                                              ]),
+                                            )
+                                          ]),
+                                      //Botão prever
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                              style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStatePropertyAll(
+                                                          Colors.green)),
+                                              onPressed: () {
+                                                context.push(
+                                                    "/ia/${partida.nomeMandante}/${partida.nomeVisitante}");
+                                              },
+                                              child: Text(
+                                                "Prever",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        fatorDeEscalaMenor(
+                                                            20, context)),
+                                              ))
+                                        ],
+                                      )
+                                    ],
+                                  );
+                                }).toList(),
+                                options: CarouselOptions(
+                                    height:
+                                        fatorDeEscalaMenor(300 - 19, context),
+                                    viewportFraction: 1,
+                                    animateToClosest: true,
+                                    enlargeCenterPage: true,
+                                    enableInfiniteScroll: true,
+                                    autoPlay: true),
+                              ),
+                              Container()
+                            ],
+                          ),
+                        ),
+                      ),
+                      //Carrossel jogadores em destaqu
+                      Container(
+                        margin: const EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green, width: 2),
+                            color: const Color.fromARGB(255, 17, 34, 23),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20))),
+                        width: fatorDeEscalaMenor(600, context),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Jogadores em destaque",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: fatorDeEscalaMenor(30, context)),
+                            ),
+                            CarouselSlider(
+                              items: menuRepository.jogadoresDestaque
+                                  .map((jogador) {
+                                return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          context
+                                              .push('/jogadores/${jogador.id}');
+                                        },
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.green,
+                                          radius:
+                                              fatorDeEscalaMenor(65, context),
+                                          child: CircleAvatar(
+                                              radius: fatorDeEscalaMenor(
+                                                  60, context),
+                                              backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                      jogador.imagem!)),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            jogador.nome!,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: fatorDeEscalaMenor(
+                                                    25, context)),
+                                          ),
+                                          Text(
+                                            jogador.nomeTime!,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: fatorDeEscalaMenor(
                                                     20, context)),
-                                          ))
-                                    ],
-                                  )
-                                ],
-                              );
-                            }).toList(),
-                            options: CarouselOptions(
-                                height: fatorDeEscalaMenor(300 - 19, context),
-                                viewportFraction: 1,
-                                animateToClosest: true,
-                                enlargeCenterPage: true,
-                                enableInfiniteScroll: true,
-                                autoPlay: true),
-                          ),
-                          Container()
-                        ],
+                                          ),
+                                          Text(
+                                            "Desempenho: ${jogador.nota!.toStringAsFixed(2)}",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: fatorDeEscalaMenor(
+                                                    20, context)),
+                                          ),
+                                        ],
+                                      )
+                                    ]);
+                              }).toList(),
+                              options: CarouselOptions(
+                                  height: fatorDeEscalaMenor(200, context),
+                                  viewportFraction: 1,
+                                  animateToClosest: true,
+                                  enlargeCenterPage: true,
+                                  enableInfiniteScroll: true,
+                                  autoPlay: true),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  //Carrossel jogadores em destaqu
-                  Container(
-                    margin: const EdgeInsets.all(15),
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.green, width: 2),
-                        color: const Color.fromARGB(255, 17, 34, 23),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20))),
-                    width: fatorDeEscalaMenor(600, context),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Jogadores em destaque",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: fatorDeEscalaMenor(30, context)),
-                        ),
-                        CarouselSlider(
-                          items:
-                              menuRepository.jogadoresDestaque.map((jogador) {
-                            return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                JogadorEstatisticas(
-                                                    idJogador: jogador.id!)),
-                                      );
-                                    },
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.green,
-                                      radius: fatorDeEscalaMenor(65, context),
-                                      child: CircleAvatar(
-                                          radius:
-                                              fatorDeEscalaMenor(60, context),
-                                          backgroundImage:
-                                              CachedNetworkImageProvider(
-                                                  jogador.imagem!)),
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        jogador.nome!,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMenor(
-                                                25, context)),
-                                      ),
-                                      Text(
-                                        jogador.nomeTime!,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMenor(
-                                                20, context)),
-                                      ),
-                                      Text(
-                                        "Desempenho: ${jogador.nota!.toStringAsFixed(2)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fatorDeEscalaMenor(
-                                                20, context)),
-                                      ),
-                                    ],
-                                  )
-                                ]);
-                          }).toList(),
-                          options: CarouselOptions(
-                              height: fatorDeEscalaMenor(200, context),
-                              viewportFraction: 1,
-                              animateToClosest: true,
-                              enlargeCenterPage: true,
-                              enableInfiniteScroll: true,
-                              autoPlay: true),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ultimosJogos(context),
                 ],
               ),
-              ultimosJogos(context),
-            ],
-          ),
-        ));
+            ));
+      },
+    );
   }
 
   Container navBarMobile(BuildContext context) {
@@ -432,7 +456,8 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ListaResultados("Times")),
+                    builder: (context) =>
+                        const ListaResultados(pesquisa: "Times")),
               );
             },
             icon: Image.asset("assets/images/escudo.png",
@@ -444,7 +469,8 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ListaResultados("Jogadores")),
+                    builder: (context) =>
+                        const ListaResultados(pesquisa: "Jogadores")),
               );
             },
             color: Colors.white,
@@ -501,7 +527,10 @@ class _MyHomePageState extends State<MyHomePage> {
         onSubmitted: (value) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ListaResultados(value)),
+            MaterialPageRoute(
+                builder: (context) => ListaResultados(
+                      pesquisa: value,
+                    )),
           );
         },
       ),
@@ -602,18 +631,10 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _item("Times", Icons.sports_soccer_rounded, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ListaResultados("Times")),
-              );
+              context.push("/pesquisa/Times");
             }),
             _item("Jogadores", Icons.person, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ListaResultados("Jogadores")),
-              );
+              context.push("/pesquisa/Jogadores");
             }),
             _item("Comparações", Icons.person_search, () {
               setState(() {
@@ -621,14 +642,7 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             }),
             _item("Previsões IA", Icons.auto_awesome_rounded, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const Ia(
-                          mandante: null,
-                          visitante: null,
-                        )),
-              );
+              context.push("/ia");
             }),
           ]),
     );

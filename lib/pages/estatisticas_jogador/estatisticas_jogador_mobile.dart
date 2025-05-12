@@ -52,177 +52,217 @@ class _JogadorEstatisticaState extends State<JogadorEstatisticasMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.green, width: 2),
-            color: const Color.fromARGB(255, 17, 34, 23),
-            borderRadius: const BorderRadius.all(Radius.circular(20))),
-        margin: const EdgeInsets.all(10),
-        padding: EdgeInsets.all(fatorDeEscalaMobile(15, context)),
-        child: Column(
-          children: [
-            Text(
-              jogadorRepository.jogador.nome ?? "Carregando...",
-              style: TextStyle(
-                  fontSize: fatorDeEscalaMobile(35, context),
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.grey,
-              backgroundImage: jogadorRepository.jogador.image == null
-                  ? null
-                  : NetworkImage(jogadorRepository.jogador.image!),
-              radius: fatorDeEscalaMobile(100, context),
-            ),
-            Text(
-              jogadorRepository.nomeTime ?? "Carregando...",
-              style: TextStyle(
-                  fontSize: fatorDeEscalaMobile(20, context),
-                  color: Colors.white),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: fatorDeEscalaMobile(15, context)),
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.green)),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton(
-                  dropdownColor: Colors.green,
-                  value: dropDownValue,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: fatorDeEscalaMobile(25, context)),
-                  items: [
-                    const DropdownMenuItem(
-                        value: "Geral",
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text("Geral"),
-                        )),
-                    for (String i in jogadorRepository.formacoes)
-                      DropdownMenuItem(
-                          value: i,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(i),
-                          )),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      if (value != null && value != "Geral") {
-                        dropDownValue = value;
-                        awaits2(value);
-                      } else {
-                        dropDownValue = "Geral";
-                        awaits();
-                      }
-                    });
-                  },
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.black,
+          flexibleSpace: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(),
+              GestureDetector(
+                child: Image.asset(
+                  "assets/images/logo.png",
+                  scale: fatorDeEscalaMenorReverso(1, context),
                 ),
+                onTap: () {},
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  geral ? "Desempenho Geral:" : "Desempenho na formação:",
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                containerNota(jogadorRepository.estatisticas?.nota ?? 0)
-              ],
-            ),
-            estatisticasPosicao(),
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Text("Destaques:",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: fatorDeEscalaMobile(18, context))),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(),
-                      for (Destaque i in jogadorRepository.destaques)
-                        destaque(i),
-                      Container(),
-                    ]),
-              ),
-            ]),
-            Container(
-              height: fatorDeEscalaMobile(300, context),
-              margin: EdgeInsets.symmetric(
-                  vertical: fatorDeEscalaMobile(10, context)),
-              decoration: BoxDecoration(
-                  color: valorSwitch
-                      ? const Color.fromARGB(68, 34, 197, 94)
-                      : const Color.fromARGB(100, 197, 34, 37),
-                  border: Border.all(
-                      color: valorSwitch ? Colors.green : Colors.red,
-                      width: 2)),
-              child: Column(
-                children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.green)),
-                            onPressed: () {
-                              setState(() {
-                                valorSwitch = true;
-                              });
-                            },
-                            child: Text(
-                              "Pontos positivos",
-                              style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: fatorDeEscalaMobile(15, context)),
-                            )),
-                        OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.red)),
-                            onPressed: () {
-                              setState(() {
-                                valorSwitch = false;
-                              });
-                            },
-                            child: Text(
-                              "Pontos negativos",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: fatorDeEscalaMobile(15, context)),
-                            )),
-                      ]),
-                  Expanded(
-                    child: SingleChildScrollView(
-                        child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(children: [
-                            for (var i in grandeComparacao(
-                                jogadorRepository.estatisticas,
-                                jogadorRepository.mediaGeral,
-                                jogadorRepository.posicaoFavorita,
-                                valorSwitch))
-                              i
-                          ]),
+              Container(),
+            ],
+          )),
+      body: Column(
+        children: [
+          pesquisaMobile(context),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green, width: 2),
+                    color: const Color.fromARGB(255, 17, 34, 23),
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+                margin: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(fatorDeEscalaMobile(15, context)),
+                child: Column(
+                  children: [
+                    Text(
+                      jogadorRepository.jogador.nome ?? "Carregando...",
+                      style: TextStyle(
+                          fontSize: fatorDeEscalaMobile(35, context),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      backgroundImage: jogadorRepository.jogador.image == null
+                          ? null
+                          : NetworkImage(jogadorRepository.jogador.image!),
+                      radius: fatorDeEscalaMobile(100, context),
+                    ),
+                    Text(
+                      jogadorRepository.nomeTime ?? "Carregando...",
+                      style: TextStyle(
+                          fontSize: fatorDeEscalaMobile(20, context),
+                          color: Colors.white),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: fatorDeEscalaMobile(15, context)),
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: Colors.green)),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          dropdownColor: Colors.green,
+                          value: dropDownValue,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fatorDeEscalaMobile(25, context)),
+                          items: [
+                            const DropdownMenuItem(
+                                value: "Geral",
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text("Geral"),
+                                )),
+                            for (String i in jogadorRepository.formacoes)
+                              DropdownMenuItem(
+                                  value: i,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Text(i),
+                                  )),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              if (value != null && value != "Geral") {
+                                dropDownValue = value;
+                                awaits2(value);
+                              } else {
+                                dropDownValue = "Geral";
+                                awaits();
+                              }
+                            });
+                          },
                         ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          geral
+                              ? "Desempenho Geral:"
+                              : "Desempenho na formação:",
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 20),
+                        ),
+                        containerNota(jogadorRepository.estatisticas?.nota ?? 0)
                       ],
-                    )),
-                  ),
-                ],
+                    ),
+                    estatisticasPosicao(),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Destaques:",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: fatorDeEscalaMobile(18, context))),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(),
+                                  for (Destaque i
+                                      in jogadorRepository.destaques)
+                                    destaque(i),
+                                  Container(),
+                                ]),
+                          ),
+                        ]),
+                    Container(
+                      height: fatorDeEscalaMobile(300, context),
+                      margin: EdgeInsets.symmetric(
+                          vertical: fatorDeEscalaMobile(10, context)),
+                      decoration: BoxDecoration(
+                          color: valorSwitch
+                              ? const Color.fromARGB(68, 34, 197, 94)
+                              : const Color.fromARGB(100, 197, 34, 37),
+                          border: Border.all(
+                              color: valorSwitch ? Colors.green : Colors.red,
+                              width: 2)),
+                      child: Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: Colors.green)),
+                                    onPressed: () {
+                                      setState(() {
+                                        valorSwitch = true;
+                                      });
+                                    },
+                                    child: Text(
+                                      "Pontos positivos",
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize:
+                                              fatorDeEscalaMobile(15, context)),
+                                    )),
+                                OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: Colors.red)),
+                                    onPressed: () {
+                                      setState(() {
+                                        valorSwitch = false;
+                                      });
+                                    },
+                                    child: Text(
+                                      "Pontos negativos",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize:
+                                              fatorDeEscalaMobile(15, context)),
+                                    )),
+                              ]),
+                          Expanded(
+                            child: SingleChildScrollView(
+                                child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(children: [
+                                    for (var i in grandeComparacao(
+                                        jogadorRepository.estatisticas,
+                                        jogadorRepository.mediaGeral,
+                                        jogadorRepository.posicaoFavorita,
+                                        valorSwitch))
+                                      i
+                                  ]),
+                                ),
+                              ],
+                            )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

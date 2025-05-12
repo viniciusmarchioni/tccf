@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'package:responsive_builder/responsive_builder.dart';
-import 'package:scout/pages/lista_resultados/lista_resultados.dart';
 import 'package:scout/util/util.dart';
 
 class Ia extends StatefulWidget {
@@ -132,6 +130,7 @@ class _IaState extends State<Ia> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.black,
         flexibleSpace: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -168,11 +167,7 @@ class _IaState extends State<Ia> {
                     ),
                     hintText: "Pesquise no Scout AI"),
                 onSubmitted: (value) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ListaResultados(controller.text)),
-                  );
+                  context.push("/pesquisa/$value");
                 },
                 controller: controller,
               ),

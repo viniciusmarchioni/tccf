@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:scout/pages/estatisticas_jogador/estatisticas_jogador.dart';
-import 'package:scout/pages/estatisticas_time/estatisticas_time.dart';
+import 'package:go_router/go_router.dart';
 import 'package:scout/repository/pesquisarepository.dart';
 import 'package:scout/util/util.dart';
 
 class ListaResultados extends StatefulWidget {
   final String pesquisa;
-  const ListaResultados(this.pesquisa, {super.key});
+  const ListaResultados({
+    super.key,
+    required this.pesquisa,
+  });
 
   @override
   State<StatefulWidget> createState() => ListaResultadosState();
@@ -44,6 +46,7 @@ class ListaResultadosState extends State<ListaResultados> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.black,
           flexibleSpace: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -82,12 +85,7 @@ class ListaResultadosState extends State<ListaResultados> {
                       ),
                       hintText: "Pesquise no Scout AI"),
                   onSubmitted: (value) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ListaResultados(controller.text)),
-                    );
+                    context.push("/pesquisa/${controller.text}");
                   },
                   controller: controller,
                 ),
@@ -142,13 +140,7 @@ class ListaResultadosState extends State<ListaResultados> {
   Widget listaTime(Time time) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TimeEstatisticas(
-                    idTime: time.id ?? 131,
-                  )),
-        );
+        context.push('/times/${time.id}');
       },
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Expanded(
@@ -170,12 +162,7 @@ class ListaResultadosState extends State<ListaResultados> {
   Widget listJogador(JogadorTime jogador) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  JogadorEstatisticas(idJogador: jogador.id ?? 10007)),
-        );
+        context.push('/jogadores/${jogador.id}');
       },
       child: Column(children: [
         Expanded(
